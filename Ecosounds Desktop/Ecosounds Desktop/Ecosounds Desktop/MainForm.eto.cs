@@ -42,9 +42,10 @@ namespace Ecosounds_Desktop
         private DynamicLayout Analysis()
         {
             var container = new DynamicLayout();
+            container.ID = "AnalysisContainer";
+            container.Padding = new Padding(5);
             container.BeginHorizontal();
             
-
             var selectAnalysisLabel = new Label { Text = "Select Analysis Types", Style = "header" };
             var analysisTypesTable = new TableLayout
             {
@@ -67,9 +68,19 @@ namespace Ecosounds_Desktop
             container.AddRow(selectAnalysisLabel);
             container.AddRow(analysisTypesTable);
 
-            var selectFilesLabel = new Label { Text = "Select Audio Files ", Style = "header" };
+            #region Audio File Selection
+            var audioPanel = new DynamicLayout();
+            audioPanel.ID = "AudioPanel";
 
-            container.AddRow(selectFilesLabel);
+            audioPanel.BeginHorizontal();
+
+            var selectFilesLabel = new Label { Text = "Select Audio Files ", Style = "header" };
+            audioPanel.AddRow(selectFilesLabel);
+
+            audioPanel.EndHorizontal();
+            #endregion
+
+            container.AddRow(audioPanel);
             container.EndBeginHorizontal();
 
             return container;
@@ -85,7 +96,7 @@ namespace Ecosounds_Desktop
 
             Eto.Style.Add<Label>("title", label =>
             {
-                label.Font = new Font(SystemFont.Default, 13);
+                label.Font = new Font(FontFamilies.Sans, 14);
                 label.Size = new Size(130, 50);
                 label.BackgroundColor = titleColor;
                 label.TextColor = Colors.LightGrey;
@@ -94,7 +105,7 @@ namespace Ecosounds_Desktop
             });
             Eto.Style.Add<Label>("title-button", label =>
             {
-                label.Font = new Font(SystemFont.Default, 10);
+                label.Font = new Font(FontFamilies.Sans, 12);
                 label.Size = new Size(80, 50);
                 label.BackgroundColor = titleColor;
                 label.TextColor = Colors.LightGrey;
@@ -104,7 +115,7 @@ namespace Ecosounds_Desktop
             });
             Eto.Style.Add<Label>("title-button-selected", label =>
             {
-                label.Font = new Font(SystemFont.Default, 10);
+                label.Font = new Font(FontFamilies.Sans, 12);
                 label.Size = new Size(80, 50);
                 label.BackgroundColor = highlightColor;
                 label.TextColor = Colors.LightGrey;
@@ -114,8 +125,8 @@ namespace Ecosounds_Desktop
             });
             Eto.Style.Add<Label>("header", label =>
             {
-                label.Font = new Font(SystemFont.Bold, 12);
-                label.TextAlignment = TextAlignment.Center;
+                label.Font = new Font(FontFamilies.Sans, 12);
+                label.TextAlignment = TextAlignment.Left;
                 label.VerticalAlignment = VerticalAlignment.Center;
             });
 
