@@ -1,0 +1,9 @@
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\bin\Debug\netstandard1.6\Ecosounds Desktop.deps.json
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\bin\Debug\netstandard1.6\Ecosounds Desktop.dll
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\bin\Debug\netstandard1.6\Ecosounds Desktop.pdb
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\obj\Debug\netstandard1.6\Ecosounds Desktop.csprojAssemblyReference.cache
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\obj\Debug\netstandard1.6\Ecosounds Desktop.csproj.CoreCompileInputs.cache
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\obj\Debug\netstandard1.6\Ecosounds Desktop.AssemblyInfoInputs.cache
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\obj\Debug\netstandard1.6\Ecosounds Desktop.AssemblyInfo.cs
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\obj\Debug\netstandard1.6\Ecosounds Desktop.dll
+D:\Documents\GitHub\VRES\Ecosounds Desktop\Ecosounds Desktop\Ecosounds Desktop\obj\Debug\netstandard1.6\Ecosounds Desktop.pdb
