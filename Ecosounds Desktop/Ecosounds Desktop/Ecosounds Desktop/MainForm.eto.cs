@@ -61,21 +61,31 @@ namespace Ecosounds_Desktop
                         new TableCell(new CheckBox{ Text = "Indicies CSV to Image" , Enabled = false}, true),
                         new TableCell(new CheckBox{ Text = "Oscillations Generic" , Enabled = false}, true),
                         new TableCell(new CheckBox{ Text = "Event Recogniser"}, true)
-                        )
+                        ),
+                    null
                 }
             };
 
             container.AddRow(selectAnalysisLabel);
             container.AddRow(analysisTypesTable);
 
+            //Audio file selection
             #region Audio File Selection
-            var audioPanel = new DynamicLayout();
-            audioPanel.ID = "AudioPanel";
+            var audioPanel = new DynamicLayout
+            {
+                ID = "AudioPanel",
+                Visible = true
+            };
 
             audioPanel.BeginHorizontal();
 
             var selectFilesLabel = new Label { Text = "Select Audio Files ", Style = "header" };
-            audioPanel.AddRow(selectFilesLabel);
+            var selectFilesButton = new Button
+            {
+                Text = "Browse",
+                Command = new Command((sender, e) => new Dialog { Content = new Label { Text = "About My App" }, ClientSize = new Size(200, 200) }.ShowModal(this)) { MenuText = "About my App" }
+            };
+            audioPanel.AddRow(selectFilesLabel, null, selectFilesButton);
 
             audioPanel.EndHorizontal();
             #endregion
@@ -88,8 +98,8 @@ namespace Ecosounds_Desktop
 
         void InitializeComponent()
         {
-            this.ClientSize = new Size(600, 400);
-            this.Title = "Ecosounds Desktop";
+            ClientSize = new Size(600, 400);
+            Title = "Ecosounds Desktop";
 
             var titleColor = RGBColor(34f, 34f, 34f);
             var highlightColor = RGBColor(2f, 2f, 2f);
