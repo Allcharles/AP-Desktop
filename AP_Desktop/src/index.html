@@ -3,6 +3,9 @@
   <head>
     <link rel="stylesheet" type="text/css" href="./css/container.css">
     <link rel="stylesheet" type="text/css" href="./css/form.css">
+    <link rel="stylesheet" type="text/css" href="./css/checkbox.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet"> 
     <meta charset="utf-8" />
     <title>AP Desktop</title>
   </head>
@@ -17,12 +20,30 @@
       <div class="group">
         <p class="question">Select Analysis Types</p>
         <ul style="list-style-type: none" class="horizontal">
-          <li><input type="checkbox" name="analysis" value="AED">Acoustic Event Detection</li>
-          <li><input type="checkbox" name="analysis" value="Audio2csv">Audio to CSV</li>
-          <li><input type="checkbox" name="analysis" value="Audio2Sonogram">Audio to Sonogram</li>
-          <li><input type="checkbox" name="analysis" value="EventRecogniser">Event Recogniser</li>
-          <li><input type="checkbox" name="analysis" value="IndiciesCsv2Image">Audio to Sonogram</li>
-          <li><input type="checkbox" name="analysis" value="OscillationsGeneric">Generic Oscillation Search</li>
+          <li>
+            <input id="AED" value="AED" class="checkbox-custom" name="analysis" type="checkbox">
+            <label for="AED" class="checkbox-custom-label">Acoustic Event Detection</label>
+          </li>
+          <li>
+            <input id="Audio2csv" value="Audio2csv" class="checkbox-custom" name="analysis" type="checkbox">
+            <label for="Audio2csv" class="checkbox-custom-label">Audio to CSV</label>
+          </li>
+          <li>
+            <input id="Audio2Sonogram" value="Audio2Sonogram" class="checkbox-custom" name="analysis" type="checkbox">
+            <label for="Audio2Sonogram" class="checkbox-custom-label">Audio to Sonogram</label>
+          </li>
+          <li>
+            <input id="EventRecogniser" value="EventRecogniser" class="checkbox-custom" name="analysis" type="checkbox">
+            <label for="EventRecogniser" class="checkbox-custom-label">Event Recogniser</label>
+          </li>
+          <li>
+            <input id="IndiciesCsv2Image" value="IndiciesCsv2Image" class="checkbox-custom" name="analysis" type="checkbox">
+            <label for="IndiciesCsv2Image" class="checkbox-custom-label">Indicies CSV to Image</label>
+          </li>
+          <li>
+            <input id="OscillationsGeneric" value="OscillationsGeneric" class="checkbox-custom" name="analysis" type="checkbox">
+            <label for="OscillationsGeneric" class="checkbox-custom-label">Generic Oscillation Search</label>
+          </li>
         </ul>
       </div>
     </div>
