@@ -1,13 +1,16 @@
 ul.horizontal {
     margin: 0;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding: 0;
     overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 ul.horizontal li {
     float: left;
-    width: 200px;
+    min-width: 200px;
+    width: 25%;
+    align-self: center;
 }
 
 .question {
@@ -20,9 +23,10 @@ ul.horizontal li {
 }
 
 .group {
+    max-width: 1200px;
     background-color: whitesmoke;
     border-radius: 10px;
     overflow: hidden;
-    margin: 10px 10px 0px 10px;
+    margin: 10px auto 0px auto;
     padding: 0px 10px 10px 10px;
 }
