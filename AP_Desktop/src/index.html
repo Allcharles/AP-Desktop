@@ -17,9 +17,9 @@
       <button>Utilities</button>
     </div>
     <div id="container">
-      <div class="group">
-        <p class="question">Select Analysis Types</p>
-        <ul style="list-style-type: none" class="horizontal">
+      <div class="group" id="select">
+        <div class="question"><p class="questionText">Select Analysis Types</p></div>
+        <div class="group-content">
           <li>
             <input id="AED" value="AED" class="checkbox-custom" name="analysis" type="checkbox">
             <label for="AED" class="checkbox-custom-label">Acoustic Event Detection</label>
@@ -44,7 +44,17 @@
             <input id="OscillationsGeneric" value="OscillationsGeneric" class="checkbox-custom" name="analysis" type="checkbox">
             <label for="OscillationsGeneric" class="checkbox-custom-label">Generic Oscillation Search</label>
           </li>
-        </ul>
+        </div>
+      </div>
+
+      <div class="group" id="audio">
+        <div class="question"><p class="questionText">Select Audio Files</p><div class="fileupload">Upload</div></div>
+        <div class="group-content">
+          <p style=" display: none;">No files selected yet.</p>
+          <li>File1.wav</li>
+          <li>File1.wav</li>
+          <li>File1.wav</li>
+        </div>
       </div>
     </div>
     <div id="footer">

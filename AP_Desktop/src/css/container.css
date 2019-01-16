@@ -24,6 +24,7 @@ body {
     background: none;
     box-shadow: none;
     border-radius: 0px;
+    cursor: default;
 }
  
 #header button#page {
@@ -42,6 +43,7 @@ body {
     background: none;
     box-shadow: none;
     border-radius: 0px;
+    cursor: pointer;
 }
 
 #header button:hover {
