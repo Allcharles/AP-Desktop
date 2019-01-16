@@ -13,6 +13,11 @@
   padding-bottom: 14px;
 }
 
+.group-content p {
+  margin: 0;
+  padding: 0;
+}
+
 .question {
   background-color: #003100;
   margin: 0px -14px;
@@ -56,6 +61,8 @@ ul li.files:last-child {
 }
 
 .fileupload {
+  width: 100px;
+  justify-content: center;
   color: white;
   background-color: #002000;
   font-size: 16px;

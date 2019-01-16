@@ -107,8 +107,8 @@
           <div class="fileupload"><a>Select Files</a></div>
         </div>
         <div class="group-content">
-          <p style=" display: none;">No files selected yet.</p>
-          <ul>
+          <p>No files selected yet.</p>
+          <ul style="display: none;">
             <li class="files">File1.wav</li>
             <li class="files">File1.wav</li>
             <li class="files">File1.wav</li>
@@ -116,7 +116,35 @@
         </div>
       </div>
 
-      <div class="group" id="select">
+      <div class="group" id="config">
+        <div class="question">
+          <p class="questionText">Config File</p>
+        </div>
+        <div class="group-content">
+          <div class="flex">
+            <select>
+              <option value="Towsey.Acoustics.yml">Towsey.Acoustics</option>
+              <option value="Dong.Felt.yml">Dong.Felt</option>
+              <option value="Dong.RidgeDetection.yml">Dong.RidgeDetection</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="group" id="output">
+        <div class="question">
+          <p class="questionText">Output Directory</p>
+          <div class="fileupload"><a>Select Folder</a></div>
+        </div>
+        <div class="group-content">
+          <p>No folder selected yet.</p>
+          <ul style=" display: none;">
+            <li class="files">Folder</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="group" id="audio2csv">
         <div class="question"><p class="questionText">Audio to CSV</p></div>
         <div class="group-content">
           <table class="flex">
