@@ -34,9 +34,9 @@
               name="analysis"
               type="checkbox"
             />
-            <label for="AED" class="checkbox-custom-label"
-              >Acoustic Event Detection</label
-            >
+            <label for="AED" class="checkbox-custom-label">
+              Acoustic Event Detection
+            </label>
           </li>
           <li>
             <input
@@ -46,9 +46,9 @@
               name="analysis"
               type="checkbox"
             />
-            <label for="Audio2csv" class="checkbox-custom-label"
-              >Audio to CSV</label
-            >
+            <label for="Audio2csv" class="checkbox-custom-label">
+              Audio to CSV
+            </label>
           </li>
           <li>
             <input
@@ -58,9 +58,9 @@
               name="analysis"
               type="checkbox"
             />
-            <label for="Audio2Sonogram" class="checkbox-custom-label"
-              >Audio to Sonogram</label
-            >
+            <label for="Audio2Sonogram" class="checkbox-custom-label">
+              Audio to Sonogram
+            </label>
           </li>
           <li>
             <input
@@ -70,9 +70,9 @@
               name="analysis"
               type="checkbox"
             />
-            <label for="EventRecogniser" class="checkbox-custom-label"
-              >Event Recogniser</label
-            >
+            <label for="EventRecogniser" class="checkbox-custom-label">
+              Event Recogniser
+            </label>
           </li>
           <li>
             <input
@@ -82,9 +82,9 @@
               name="analysis"
               type="checkbox"
             />
-            <label for="IndiciesCsv2Image" class="checkbox-custom-label"
-              >Indicies CSV to Image</label
-            >
+            <label for="IndiciesCsv2Image" class="checkbox-custom-label">
+              Indicies CSV to Image
+            </label>
           </li>
           <li>
             <input
@@ -94,9 +94,9 @@
               name="analysis"
               type="checkbox"
             />
-            <label for="OscillationsGeneric" class="checkbox-custom-label"
-              >Generic Oscillation Search</label
-            >
+            <label for="OscillationsGeneric" class="checkbox-custom-label">
+              Generic Oscillation Search
+            </label>
           </li>
         </div>
       </div>
@@ -109,10 +109,58 @@
         <div class="group-content">
           <p style=" display: none;">No files selected yet.</p>
           <ul>
-          <li class="files">File1.wav</li>
-          <li class="files">File1.wav</li>
-          <li class="files">File1.wav</li>
-        </ul>
+            <li class="files">File1.wav</li>
+            <li class="files">File1.wav</li>
+            <li class="files">File1.wav</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="group" id="select">
+        <div class="question"><p class="questionText">Audio to CSV</p></div>
+        <div class="group-content">
+          <li>
+            <span class="flex-left">
+              <input
+                id="analysis-identifier"
+                value="-a"
+                class="checkbox-custom"
+                name="audio2csv"
+                type="checkbox"
+              />
+              <label for="analysis-identifier" class="checkbox-custom-label">
+                Analysis Identifier
+              </label>
+            </span>
+            <span class="flex-right">
+              <input
+                id="analysis-identifier-input"
+                name="audio2csv"
+                type="text"
+              />
+            </span>
+          </li>
+          <li>
+            <span class="flex-left">
+              <input
+                id="temp-dir"
+                value="-t"
+                class="checkbox-custom"
+                name="audio2csv"
+                type="checkbox"
+              />
+              <label for="temp-dir" class="checkbox-custom-label">
+                Temporary Directory
+              </label>
+            </span>
+            <span class="flex-right">
+              <input
+                id="temp-dir-input"
+                name="audio2csv"
+                type="text"
+              />
+            </span>
+          </li>
         </div>
       </div>
     </div>
