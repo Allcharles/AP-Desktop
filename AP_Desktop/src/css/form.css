@@ -3,8 +3,9 @@
   background-color: whitesmoke;
   border-radius: 10px;
   overflow: hidden;
-  margin: 10px auto 0px auto;
-  padding: 0px 10px;
+  margin: 20px auto 0px auto;
+  padding: 0px 14px;
+  box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
 }
 
 .group-content {
@@ -14,7 +15,7 @@
 
 .question {
   background-color: #003100;
-  margin: 0px -10px;
+  margin: 0px -14px;
   height: 44px;
   overflow: hidden;
 }
@@ -28,18 +29,42 @@
   margin: 0px;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+}
+
 li {
-  margin-left: 40px;
   list-style-type: none;
+}
+
+li.files {
+  list-style-position: inside;
+  border-top: solid 1px lightgrey;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+ul li.files:first-child {
+  padding-top: 0px;
+  border-width: 0px;
+}
+
+ul li.files:last-child {
+  padding-bottom: 0px;
 }
 
 .fileupload {
   color: white;
+  background-color: #002000;
   font-size: 16px;
   display: inline-flex;
   float: right;
   padding: 14px 25px;
   margin: 0px;
-  border-top-right-radius: 10px;
   cursor: pointer;
+}
+
+.fileupload:hover {
+  background-color: #001500;
 }
