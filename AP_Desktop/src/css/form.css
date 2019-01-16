@@ -1,43 +1,45 @@
 .group {
-    max-width: 1200px;
-    background-color: whitesmoke;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 10px auto 0px auto;
-    padding: 0px 10px;
+  max-width: 1200px;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px auto 0px auto;
+  padding: 0px 10px;
 }
 
 .group-content {
-    padding-top: 14px;
-    padding-bottom: 14px;
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 
 .question {
-    background-color: #003100;
-    margin: 0px -10px;
-    height: 44px;
-    overflow: hidden;
+  background-color: #003100;
+  margin: 0px -10px;
+  height: 44px;
+  overflow: hidden;
 }
 
 .questionText {
-    display: inline-flex;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 10px 15px 10px 10px;
-    margin: 0px;
+  display: inline-flex;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 15px 10px 10px;
+  margin: 0px;
 }
 
 li {
-    margin-left: 40px;
-    list-style-type: none;
+  margin-left: 40px;
+  list-style-type: none;
 }
 
 .fileupload {
-    color: white;
-    display:inline-flex;
-    float: right;
-    padding: 14px 25px;
-    margin: 0px;
-    border-top-right-radius: 10px;
+  color: white;
+  font-size: 16px;
+  display: inline-flex;
+  float: right;
+  padding: 14px 25px;
+  margin: 0px;
+  border-top-right-radius: 10px;
+  cursor: pointer;
 }

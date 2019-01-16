@@ -1,54 +1,111 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="./css/container.css">
-    <link rel="stylesheet" type="text/css" href="./css/form.css">
-    <link rel="stylesheet" type="text/css" href="./css/checkbox.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet"> 
+    <link rel="stylesheet" type="text/css" href="./css/container.css" />
+    <link rel="stylesheet" type="text/css" href="./css/form.css" />
+    <link rel="stylesheet" type="text/css" href="./css/checkbox.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
     <meta charset="utf-8" />
     <title>AP Desktop</title>
   </head>
   <body>
     <div id="header">
-      <button id="logo">AP Desktop</button>
-      <button id="page">Analysis</button>
-      <button>Output</button>
-      <button>Utilities</button>
+      <button id="logo">AP Desktop</button> <button id="page">Analysis</button>
+      <button>Output</button> <button>Utilities</button>
     </div>
     <div id="container">
       <div class="group" id="select">
-        <div class="question"><p class="questionText">Select Analysis Types</p></div>
+        <div class="question">
+          <p class="questionText">Select Analysis Types</p>
+        </div>
         <div class="group-content">
           <li>
-            <input id="AED" value="AED" class="checkbox-custom" name="analysis" type="checkbox">
-            <label for="AED" class="checkbox-custom-label">Acoustic Event Detection</label>
+            <input
+              id="AED"
+              value="AED"
+              class="checkbox-custom"
+              name="analysis"
+              type="checkbox"
+            />
+            <label for="AED" class="checkbox-custom-label"
+              >Acoustic Event Detection</label
+            >
           </li>
           <li>
-            <input id="Audio2csv" value="Audio2csv" class="checkbox-custom" name="analysis" type="checkbox">
-            <label for="Audio2csv" class="checkbox-custom-label">Audio to CSV</label>
+            <input
+              id="Audio2csv"
+              value="Audio2csv"
+              class="checkbox-custom"
+              name="analysis"
+              type="checkbox"
+            />
+            <label for="Audio2csv" class="checkbox-custom-label"
+              >Audio to CSV</label
+            >
           </li>
           <li>
-            <input id="Audio2Sonogram" value="Audio2Sonogram" class="checkbox-custom" name="analysis" type="checkbox">
-            <label for="Audio2Sonogram" class="checkbox-custom-label">Audio to Sonogram</label>
+            <input
+              id="Audio2Sonogram"
+              value="Audio2Sonogram"
+              class="checkbox-custom"
+              name="analysis"
+              type="checkbox"
+            />
+            <label for="Audio2Sonogram" class="checkbox-custom-label"
+              >Audio to Sonogram</label
+            >
           </li>
           <li>
-            <input id="EventRecogniser" value="EventRecogniser" class="checkbox-custom" name="analysis" type="checkbox">
-            <label for="EventRecogniser" class="checkbox-custom-label">Event Recogniser</label>
+            <input
+              id="EventRecogniser"
+              value="EventRecogniser"
+              class="checkbox-custom"
+              name="analysis"
+              type="checkbox"
+            />
+            <label for="EventRecogniser" class="checkbox-custom-label"
+              >Event Recogniser</label
+            >
           </li>
           <li>
-            <input id="IndiciesCsv2Image" value="IndiciesCsv2Image" class="checkbox-custom" name="analysis" type="checkbox">
-            <label for="IndiciesCsv2Image" class="checkbox-custom-label">Indicies CSV to Image</label>
+            <input
+              id="IndiciesCsv2Image"
+              value="IndiciesCsv2Image"
+              class="checkbox-custom"
+              name="analysis"
+              type="checkbox"
+            />
+            <label for="IndiciesCsv2Image" class="checkbox-custom-label"
+              >Indicies CSV to Image</label
+            >
           </li>
           <li>
-            <input id="OscillationsGeneric" value="OscillationsGeneric" class="checkbox-custom" name="analysis" type="checkbox">
-            <label for="OscillationsGeneric" class="checkbox-custom-label">Generic Oscillation Search</label>
+            <input
+              id="OscillationsGeneric"
+              value="OscillationsGeneric"
+              class="checkbox-custom"
+              name="analysis"
+              type="checkbox"
+            />
+            <label for="OscillationsGeneric" class="checkbox-custom-label"
+              >Generic Oscillation Search</label
+            >
           </li>
         </div>
       </div>
 
       <div class="group" id="audio">
-        <div class="question"><p class="questionText">Select Audio Files</p><div class="fileupload">Upload</div></div>
+        <div class="question">
+          <p class="questionText">Select Audio Files</p>
+          <div class="fileupload"><a>Select Files</a></div>
+        </div>
         <div class="group-content">
           <p style=" display: none;">No files selected yet.</p>
           <li>File1.wav</li>
@@ -57,8 +114,6 @@
         </div>
       </div>
     </div>
-    <div id="footer">
-      <p>Build By Charles Alleman</p>
-    </div>
+    <div id="footer"><p>Built By Charles Alleman</p></div>
   </body>
 </html>
