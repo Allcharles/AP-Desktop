@@ -14,15 +14,17 @@
       <button>Utilities</button>
     </div>
     <div id="container">
-      <p>Select Analysis Types</p>
-      <ul style="list-style-type: none" class="horizontal">
-        <li>
-          <input type="checkbox" name="analysis" value="Audio2CSV">Audio to CSV
-        </li>
-        <li>
-          <input type="checkbox" name="analysis" value="EventRecogniser">Event Recogniser
-        </li>
-      </ul>
+      <div class="group">
+        <p class="question">Select Analysis Types</p>
+        <ul style="list-style-type: none" class="horizontal">
+          <li><input type="checkbox" name="analysis" value="AED">Acoustic Event Detection</li>
+          <li><input type="checkbox" name="analysis" value="Audio2csv">Audio to CSV</li>
+          <li><input type="checkbox" name="analysis" value="Audio2Sonogram">Audio to Sonogram</li>
+          <li><input type="checkbox" name="analysis" value="EventRecogniser">Event Recogniser</li>
+          <li><input type="checkbox" name="analysis" value="IndiciesCsv2Image">Audio to Sonogram</li>
+          <li><input type="checkbox" name="analysis" value="OscillationsGeneric">Generic Oscillation Search</li>
+        </ul>
+      </div>
     </div>
     <div id="footer">
       <p>Build By Charles Alleman</p>

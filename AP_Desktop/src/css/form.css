@@ -9,3 +9,20 @@ ul.horizontal li {
     float: left;
     width: 200px;
 }
+
+.question {
+    color: white;
+    font-size: 20px;
+    padding: 10px;
+    margin: 0px -10px;
+    margin-bottom: 5px;
+    background-color: grey;
+}
+
+.group {
+    background-color: whitesmoke;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 10px 0px 10px;
+    padding: 0px 10px 10px 10px;
+}
