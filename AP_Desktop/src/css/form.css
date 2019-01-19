@@ -25,13 +25,54 @@
   overflow: hidden;
 }
 
-.questionText {
+.question-fail {
+  background-color: #650000;
+  margin: 0px -14px;
+  height: 44px;
+  overflow: hidden;
+}
+
+.question-text {
   display: inline-flex;
   color: white;
   font-size: 20px;
   font-weight: bold;
   padding: 10px 15px 10px 10px;
   margin: 0px;
+}
+
+.question-button {
+  width: 100px;
+  justify-content: center;
+  color: white;
+  background-color: #002000;
+  font-size: 16px;
+  display: inline-flex;
+  float: right;
+  padding: 14px 25px;
+  margin: 0px;
+  cursor: pointer;
+}
+
+.question-button:hover {
+  background-color: #001500;
+}
+
+.question-button-fail {
+  width: 100px;
+  justify-content: center;
+  color: white;
+  background-color: #4b0000;
+  font-size: 16px;
+  display: inline-flex;
+  float: right;
+  padding: 14px 25px;
+  margin: 0px;
+  cursor: pointer;
+}
+
+.question-button-fail:hover {
+  background-color: #3f0000;
 }
 
 ul {
@@ -58,23 +99,6 @@ ul li.files:first-child {
 
 ul li.files:last-child {
   padding-bottom: 0px;
-}
-
-.fileupload {
-  width: 100px;
-  justify-content: center;
-  color: white;
-  background-color: #002000;
-  font-size: 16px;
-  display: inline-flex;
-  float: right;
-  padding: 14px 25px;
-  margin: 0px;
-  cursor: pointer;
-}
-
-.fileupload:hover {
-  background-color: #001500;
 }
 
 .flex {
