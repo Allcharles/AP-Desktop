@@ -2,49 +2,49 @@ html {
   height: 100%;
 }
 body {
-  margin: 0;
-  height: 100%;
   background-color: #dcdcdc;
+  height: 100%;
+  margin: 0;
 }
 
 #header {
-  width: 100%;
-  height: 53px;
   background-color: #202020;
+  height: 53px;
+  width: 100%;
 }
 
 #header #logo {
-  width: 200px;
-  height: 100%;
-  position: static;
+  background: none;
+  border: 0;
+  box-shadow: none;
   color: white;
+  cursor: default;
   font-family: "Raleway", Arial, Helvetica, sans-serif;
   font-size: 16px;
-  border: 0;
-  background: none;
-  box-shadow: none;
-  cursor: default;
+  height: 100%;
+  position: static;
+  width: 200px;
 }
 
 #header button#page {
-  height: 60px;
-  color: white;
   background-color: #020202;
   border-bottom-left-radius: 7px;
   border-bottom-right-radius: 7px;
+  color: white;
+  height: 60px;
 }
 
 #header button {
-  width: 130px;
-  height: 100%;
+  background: none;
+  border-radius: 0px;
+  border: 0;
+  box-shadow: none;
   color: lightgrey;
+  cursor: pointer;
   font-family: "Raleway", Arial, Helvetica, sans-serif;
   font-size: 14px;
-  border: 0;
-  background: none;
-  box-shadow: none;
-  border-radius: 0px;
-  cursor: pointer;
+  height: 100%;
+  width: 130px;
 }
 
 #header button:hover {

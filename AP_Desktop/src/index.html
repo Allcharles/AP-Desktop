@@ -12,6 +12,7 @@
       href="https://fonts.googleapis.com/css?family=Raleway"
       rel="stylesheet"
     />
+    <script type="text/javascript" src="./js/AnalysisHelper.js"></script>
     <meta charset="utf-8" />
     <title>AP Desktop</title>
   </head>
@@ -33,6 +34,7 @@
               class="checkbox-custom"
               name="analysis"
               type="checkbox"
+              onchange="selectAnalysis(this)"
             />
             <label for="AED" class="checkbox-custom-label">
               Acoustic Event Detection
@@ -40,25 +42,27 @@
           </li>
           <li>
             <input
-              id="Audio2csv"
-              value="Audio2csv"
+              id="audio2csv"
+              value="audio2csv"
               class="checkbox-custom"
               name="analysis"
               type="checkbox"
+              onchange="selectAnalysis(this)"
             />
-            <label for="Audio2csv" class="checkbox-custom-label">
+            <label for="audio2csv" class="checkbox-custom-label">
               Audio to CSV
             </label>
           </li>
           <li>
             <input
-              id="Audio2Sonogram"
-              value="Audio2Sonogram"
+              id="audio2sonogram"
+              value="audio2sonogram"
               class="checkbox-custom"
               name="analysis"
               type="checkbox"
+              onchange="selectAnalysis(this)"
             />
-            <label for="Audio2Sonogram" class="checkbox-custom-label">
+            <label for="audio2sonogram" class="checkbox-custom-label">
               Audio to Sonogram
             </label>
           </li>
@@ -69,6 +73,7 @@
               class="checkbox-custom"
               name="analysis"
               type="checkbox"
+              onchange="selectAnalysis(this)"
             />
             <label for="EventRecogniser" class="checkbox-custom-label">
               Event Recogniser
@@ -81,6 +86,7 @@
               class="checkbox-custom"
               name="analysis"
               type="checkbox"
+              onchange="selectAnalysis(this)"
             />
             <label for="IndiciesCsv2Image" class="checkbox-custom-label">
               Indicies CSV to Image
@@ -93,6 +99,7 @@
               class="checkbox-custom"
               name="analysis"
               type="checkbox"
+              onchange="selectAnalysis(this)"
             />
             <label for="OscillationsGeneric" class="checkbox-custom-label">
               Generic Oscillation Search
@@ -101,269 +108,391 @@
         </div>
       </div>
 
-      <div class="group" id="audio">
-        <div class="question-fail">
-          <p class="question-text">Select Audio Files</p>
-          <div class="question-button-fail"><a>Select Files</a></div>
-        </div>
-        <div class="group-content">
-          <p>No files selected yet.</p>
-          <ul style="display: none;">
-            <li class="files">File1.wav</li>
-            <li class="files">File1.wav</li>
-            <li class="files">File1.wav</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="group" id="config">
-        <div class="question">
-          <p class="question-text">Config File</p>
-        </div>
-        <div class="group-content">
-          <div class="flex">
-            <select>
-              <option value="Towsey.Acoustics.yml">Towsey.Acoustics</option>
-              <option value="Dong.Felt.yml">Dong.Felt</option>
-              <option value="Dong.RidgeDetection.yml">Dong.RidgeDetection</option>
-            </select>
+      <form>
+        <div class="group" id="audio" style="display: none">
+          <div class="question-fail">
+            <p class="question-text">Select Audio Files</p>
+            <div class="question-button-fail"><a>Select Files</a></div>
+          </div>
+          <div class="group-content">
+            <p>No files selected yet.</p>
+            <ul style="display: none;">
+              <li class="files">Example.wav</li>
+              <li class="files">Example.wav</li>
+              <li class="files">Example.wav</li>
+            </ul>
           </div>
         </div>
-      </div>
 
-      <div class="group" id="output">
-        <div class="question">
-          <p class="question-text">Output Directory</p>
-          <div class="question-button"><a>Select Folder</a></div>
+        <div class="group" id="config" style="display: none">
+          <div class="question"><p class="question-text">Config File</p></div>
+          <div class="group-content">
+            <div class="flex">
+              <select>
+                <option value="Towsey.Acoustics.yml">Towsey.Acoustics</option>
+                <option value="Dong.Felt.yml">Dong.Felt</option>
+                <option value="Dong.RidgeDetection.yml"
+                  >Dong.RidgeDetection</option
+                >
+              </select>
+            </div>
+          </div>
         </div>
-        <div class="group-content">
-          <p>No folder selected yet.</p>
-          <ul style=" display: none;">
-            <li class="files">Folder</li>
-          </ul>
-        </div>
-      </div>
 
-      <div class="group" id="audio2csv">
-        <div class="question"><p class="question-text">Audio to CSV</p></div>
-        <div class="group-content">
-          <table class="flex">
-            <tr>
-              <td>
-                <input
-                  id="analysis-identifier"
-                  value="-a"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="analysis-identifier" class="checkbox-custom-label">
-                  Analysis Identifier
-                </label>
-              </td>
-              <td>
-                <input
-                  id="analysis-identifier-input"
-                  name="audio2csv"
-                  type="text"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="temp-dir"
-                  value="-t"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="temp-dir" class="checkbox-custom-label">
-                  Temporary Directory
-                </label>
-              </td>
-              <td>
-                <input
-                  id="analysis-identifier-input"
-                  name="audio2csv"
-                  type="text"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="start-offset"
-                  value="-s"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="start-offset" class="checkbox-custom-label">
-                  Start Offset (s)
-                </label>
-              </td>
-              <td>
-                <input id="start-offset-input" name="audio2csv" type="number" />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="end-offset"
-                  value="-e"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="end-offset" class="checkbox-custom-label">
-                  End Offset (s)
-                </label>
-              </td>
-              <td>
-                <input id="end-offset-input" name="audio2csv" type="number" />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="align-to-minute"
-                  value="--align-to-minute"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="align-to-minute" class="checkbox-custom-label">
-                  Align to Minute
-                </label>
-              </td>
-              <td>
-                <select id="align-to-minute-input">
-                  <option value="" selected></option>
-                  <option value="None">No alignment</option>
-                  <option value="TrimBoth">Remove fractional sections</option>
-                  <option value="TrimNeither">Keep fractional sections</option>
-                  <option value="TrimStart">
-                    Keep last fractional segment
-                  </option>
-                  <option value="TrimEnd">Keep first fractional segment</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="channels"
-                  value="-c"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="channels" class="checkbox-custom-label">
-                  Channels
-                </label>
-              </td>
-              <td>
-                <input
-                  id="channels-input"
-                  name="audio2csv"
-                  type="text"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="mix-down-to-mono"
-                  value="-m"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="mix-down-to-mono" class="checkbox-custom-label">
-                  Mono Channel
-                </label>
-              </td>
-              <td>
-                <input
-                  id="mix-down-to-mono-input"
-                  name="audio2csv"
-                  type="text"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="parallel"
-                  value="-p"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="parallel" class="checkbox-custom-label">
-                  Parallel
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="when-exit-copy-log"
-                  value="--when-exit-copy-log"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="when-exit-copy-log" class="checkbox-custom-label">
-                  Output Log
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="when-exit-copy-config"
-                  value="--when-exit-copy-config"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="when-exit-copy-config" class="checkbox-custom-label">
-                  Output Config
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  id="log-level"
-                  value="-l"
-                  class="checkbox-custom"
-                  name="audio2csv"
-                  type="checkbox"
-                />
-                <label for="log-level" class="checkbox-custom-label">
-                  Log Level
-                </label>
-              </td>
-              <td>
-                <select id="log-level-input">
-                  <option value="" selected></option>
-                  <option value="0">None</option>
-                  <option value="1">Error</option>
-                  <option value="2">Warn</option>
-                  <option value="3">Info</option>
-                  <option value="4">Debug</option>
-                  <option value="5">Trace</option>
-                  <option value="6">Verbose</option>
-                  <option value="7">All</option>
-                </select>
-              </td>
-            </tr>
-          </table>
+        <div class="group" id="output" style="display: none">
+          <div class="question">
+            <p class="question-text">Output Directory</p>
+            <div class="question-button"><a>Select Folder</a></div>
+          </div>
+          <div class="group-content">
+            <p>No folder selected yet.</p>
+            <ul style=" display: none;">
+              <li class="files">Folder</li>
+            </ul>
+          </div>
         </div>
-      </div>
+
+        <div class="group" id="audio2csv" style="display: none">
+          <div class="question"><p class="question-text">Audio to CSV</p></div>
+          <div class="group-content">
+            <table class="flex">
+              <tr>
+                <td>
+                  <input
+                    id="analysis-identifier"
+                    value="-a"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label
+                    for="analysis-identifier"
+                    class="checkbox-custom-label"
+                  >
+                    Analysis Identifier
+                  </label>
+                </td>
+                <td>
+                  <input
+                    id="analysis-identifier-input"
+                    name="audio2csv"
+                    type="text"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="temp-dir"
+                    value="-t"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="temp-dir" class="checkbox-custom-label">
+                    Temporary Directory
+                  </label>
+                </td>
+                <td>
+                  <input
+                    id="analysis-identifier-input"
+                    name="audio2csv"
+                    type="text"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="start-offset"
+                    value="-s"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="start-offset" class="checkbox-custom-label">
+                    Start Offset (s)
+                  </label>
+                </td>
+                <td>
+                  <input
+                    id="start-offset-input"
+                    name="audio2csv"
+                    type="number"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="end-offset"
+                    value="-e"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="end-offset" class="checkbox-custom-label">
+                    End Offset (s)
+                  </label>
+                </td>
+                <td>
+                  <input id="end-offset-input" name="audio2csv" type="number" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="align-to-minute"
+                    value="--align-to-minute"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="align-to-minute" class="checkbox-custom-label">
+                    Align to Minute
+                  </label>
+                </td>
+                <td>
+                  <select id="align-to-minute-input">
+                    <option value="" selected></option>
+                    <option value="None">No alignment</option>
+                    <option value="TrimBoth">Remove fractional sections</option>
+                    <option value="TrimNeither"
+                      >Keep fractional sections</option
+                    >
+                    <option value="TrimStart">
+                      Keep last fractional segment
+                    </option>
+                    <option value="TrimEnd"
+                      >Keep first fractional segment</option
+                    >
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="channels"
+                    value="-c"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="channels" class="checkbox-custom-label">
+                    Channels
+                  </label>
+                </td>
+                <td>
+                  <input id="channels-input" name="audio2csv" type="text" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="mix-down-to-mono"
+                    value="-m"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="mix-down-to-mono" class="checkbox-custom-label">
+                    Mono Channel
+                  </label>
+                </td>
+                <td>
+                  <input
+                    id="mix-down-to-mono-input"
+                    name="audio2csv"
+                    type="text"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="parallel"
+                    value="-p"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="parallel" class="checkbox-custom-label">
+                    Parallel
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="when-exit-copy-log"
+                    value="--when-exit-copy-log"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="when-exit-copy-log" class="checkbox-custom-label">
+                    Output Log
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="when-exit-copy-config"
+                    value="--when-exit-copy-config"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label
+                    for="when-exit-copy-config"
+                    class="checkbox-custom-label"
+                  >
+                    Output Config
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    id="log-level"
+                    value="-l"
+                    class="checkbox-custom"
+                    name="audio2csv"
+                    type="checkbox"
+                  />
+                  <label for="log-level" class="checkbox-custom-label">
+                    Log Level
+                  </label>
+                </td>
+                <td>
+                  <select id="log-level-input">
+                    <option value="" selected></option>
+                    <option value="0">None</option>
+                    <option value="1">Error</option>
+                    <option value="2">Warn</option>
+                    <option value="3">Info</option>
+                    <option value="4">Debug</option>
+                    <option value="5">Trace</option>
+                    <option value="6">Verbose</option>
+                    <option value="7">All</option>
+                  </select>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <button type="submit" style="align-self: center">Submit Query</button>
+      </form>
+
+      <script>
+        const electron = require("electron");
+        const { ipcRenderer } = electron;
+
+        var analysisList = [];
+
+        const form = document.querySelector("form");
+        form.addEventListener("submit", submitForm);
+
+        function submitForm(e) {
+          e.preventDefault();
+          const item = form.querySelectorAll("input[name='analysis']:checked");
+
+          if (item.length !== 0) {
+            success("audio");
+          } else {
+            failure("audio");
+          }
+          console.log(item);
+        }
+
+        /**
+         * Determines what inputs are required to complete the analysis
+         */
+        function selectAnalysis(el) {
+          var inputList = [
+            ["audio", false],
+            ["config", false],
+            ["output", false],
+            ["audio2csv", false]
+          ];
+
+          //Check if item exists
+          if (el.checked) {
+            analysisList.push(el.value);
+          } else {
+            analysisList.splice(analysisList.indexOf(el.value), 1);
+          }
+
+          //Determine list of inputs required
+          analysisList.forEach(analysisType => {
+            switch (analysisType) {
+              case "audio2csv":
+                addItems(inputList, ["audio", "config", "output", "audio2csv"]);
+                break;
+              case "audio2sonogram":
+                addItems(inputList, ["audio", "config", "output", "audio2csv"]);
+                break;
+            }
+          });
+
+          //Enable required inputs
+          inputList.forEach(id => {
+            if (id[1]) {
+              form.querySelector("#" + id[0]).style.display = "inherit";
+            } else {
+              form.querySelector("#" + id[0]).style.display = "none";
+            }
+          });
+        }
+
+        /**
+         * Add items to array if they do not exist
+         */
+        function addItems(inputList, items) {
+          inputList.forEach(element => {
+            items.forEach(item => {
+              if (element[0] === item) {
+                element[1] = true;
+                return;
+              }
+            });
+          });
+        }
+
+        /**
+         * Displays a group element as a failure
+         * @param {string}  id  ID of the group
+         */
+        function failure(id) {
+          document
+            .querySelector("#" + id + " .question")
+            .setAttribute("class", "question-fail");
+
+          var extra = document.querySelector("#" + id + " .question-button");
+          if (extra !== null) {
+            extra.setAttribute("class", "question-button-fail");
+          }
+        }
+
+        /**
+         * Displays a group element as a success
+         * @param {string}  id  ID of the group
+         */
+        function success(id) {
+          document
+            .querySelector("#" + id + " .question-fail")
+            .setAttribute("class", "question");
+
+          var extra = document.querySelector(
+            "#" + id + " .question-button-fail"
+          );
+          if (extra !== null) {
+            extra.setAttribute("class", "question-button");
+          }
+        }
+      </script>
     </div>
   </body>
 </html>
