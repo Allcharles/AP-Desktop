@@ -75,22 +75,27 @@
   background-color: #3f0000;
 }
 
+#submit {
+  height: 54px;
+  margin: 14px auto;
+  width: 125px;
+}
+
 button {
   background-color: transparent;
   border-radius: 5px;
-  border: 2px solid #4caf50;
+  border: 2px solid #005200;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
   color: black;
   cursor: pointer;
-  display: inline-block;
   font-size: 16px;
   padding: 16px 32px;
   text-align: center;
-  text-decoration: none;
   transition-duration: 0.4s;
 }
 
 button:hover {
-  background-color: #4caf50;
+  background-color: #005200;
   color: white;
 }
 
