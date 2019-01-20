@@ -1,3 +1,6 @@
+const electron = require("electron");
+const { ipcRenderer } = electron;
+
 var analysisList = [];
 var audioFiles = [];
 
@@ -16,6 +19,7 @@ function submitForm(e) {
  * Get audio files
  */
 function getAudio() {
+  //Create self deleting function to identify cancel request from file uploading
   document.body.onfocus = function() {
     var files = document.querySelector("#audio .group-content");
     files.lastElementChild.style.display = "none";
@@ -27,6 +31,7 @@ function getAudio() {
     document.body.onfocus = null;
   };
 
+  //Open file selector dialog
   var files = document.querySelector("#audiofiles");
   files.click();
   failure("audio");
@@ -41,20 +46,25 @@ function updateAudio(el) {
   audioFiles = el.files;
 
   if (audioFiles.length > 0) {
+    //Audio files selected
     success("audio");
 
+    //Remove "no files" message and display list of files
     var files = document.querySelector("#audio .group-content");
     files.firstElementChild.style.display = "none";
     files.lastElementChild.style.display = "inherit";
     files.lastElementChild.innerHTML = "";
 
+    //Add files to list
     for (var file = 0; file < audioFiles.length; file++) {
       files.lastElementChild.innerHTML +=
         '<li class="files">' + audioFiles[file].name + "</li>";
     }
   } else {
+    //No audio files selected
     failure("audio");
 
+    //Add "no files" message and remove list of files
     var files = document.querySelector("#audio .group-content");
     files.firstElementChild.style.display = "inherit";
     files.lastElementChild.style.display = "none";
@@ -84,6 +94,7 @@ function checkEnvironment() {
   terminal.stdout.on("data", function(data) {
     var match = "SUCCESS - Valid environment";
 
+    //Check terminal output for successful environment
     if (data.includes(match)) {
       document.querySelector("#select").style.display = "inherit";
       document.querySelector("#environment").style.display = "none";
