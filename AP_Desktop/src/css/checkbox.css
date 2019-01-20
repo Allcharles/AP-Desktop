@@ -39,6 +39,14 @@
   font-size: 8px;
 }
 
+.checkbox-custom:disabled + .checkbox-custom-label:before {
+  background: grey;
+  color: #fff;
+  content: "\f00d";
+  font-family: "FontAwesome";
+  font-size: 8px;
+}
+
 .checkbox-custom:focus + .checkbox-custom-label {
   outline: 1px solid #ddd; /* focus style */
 }

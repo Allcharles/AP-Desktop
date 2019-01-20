@@ -16,99 +16,111 @@
     <meta charset="utf-8" />
     <title>AP Desktop</title>
   </head>
-  <body>
+  <body onload="checkEnvironment()">
     <div id="header">
       <button id="logo">AP Desktop</button> <button id="page">Analysis</button>
       <button>Output</button> <button>Utilities</button>
     </div>
     <div id="container">
-      <div class="group" id="select">
-        <div class="question">
-          <p class="question-text">Select Analysis Types</p>
+      <div class="group" id="environment" style="display: none">
+        <div class="question-fail">
+          <p class="question-text">Environment</p>
         </div>
-        <div class="group-content">
-          <li>
-            <input
-              id="AED"
-              value="AED"
-              class="checkbox-custom"
-              name="analysis"
-              type="checkbox"
-              onchange="selectAnalysis(this)"
-            />
-            <label for="AED" class="checkbox-custom-label">
-              Acoustic Event Detection
-            </label>
-          </li>
-          <li>
-            <input
-              id="audio2csv"
-              value="audio2csv"
-              class="checkbox-custom"
-              name="analysis"
-              type="checkbox"
-              onchange="selectAnalysis(this)"
-            />
-            <label for="audio2csv" class="checkbox-custom-label">
-              Audio to CSV
-            </label>
-          </li>
-          <li>
-            <input
-              id="audio2sonogram"
-              value="audio2sonogram"
-              class="checkbox-custom"
-              name="analysis"
-              type="checkbox"
-              onchange="selectAnalysis(this)"
-            />
-            <label for="audio2sonogram" class="checkbox-custom-label">
-              Audio to Sonogram
-            </label>
-          </li>
-          <li>
-            <input
-              id="EventRecogniser"
-              value="EventRecogniser"
-              class="checkbox-custom"
-              name="analysis"
-              type="checkbox"
-              onchange="selectAnalysis(this)"
-            />
-            <label for="EventRecogniser" class="checkbox-custom-label">
-              Event Recogniser
-            </label>
-          </li>
-          <li>
-            <input
-              id="IndiciesCsv2Image"
-              value="IndiciesCsv2Image"
-              class="checkbox-custom"
-              name="analysis"
-              type="checkbox"
-              onchange="selectAnalysis(this)"
-            />
-            <label for="IndiciesCsv2Image" class="checkbox-custom-label">
-              Indicies CSV to Image
-            </label>
-          </li>
-          <li>
-            <input
-              id="OscillationsGeneric"
-              value="OscillationsGeneric"
-              class="checkbox-custom"
-              name="analysis"
-              type="checkbox"
-              onchange="selectAnalysis(this)"
-            />
-            <label for="OscillationsGeneric" class="checkbox-custom-label">
-              Generic Oscillation Search
-            </label>
-          </li>
-        </div>
+        <div class="group-content"><p>Environment is not setup.</p></div>
       </div>
 
       <form>
+        <div class="group" id="select" style="display: none">
+          <div class="question">
+            <p class="question-text">Select Analysis Types</p>
+          </div>
+          <div class="group-content">
+            <li>
+              <input
+                id="AED"
+                value="AED"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                onchange="selectAnalysis(this)"
+                disabled
+              />
+              <label for="AED" class="checkbox-custom-label">
+                Acoustic Event Detection
+              </label>
+            </li>
+            <li>
+              <input
+                id="audio2csv"
+                value="audio2csv"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                onchange="selectAnalysis(this)"
+              />
+              <label for="audio2csv" class="checkbox-custom-label">
+                Audio to CSV
+              </label>
+            </li>
+            <li>
+              <input
+                id="audio2sonogram"
+                value="audio2sonogram"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                onchange="selectAnalysis(this)"
+                disabled
+              />
+              <label for="audio2sonogram" class="checkbox-custom-label">
+                Audio to Sonogram
+              </label>
+            </li>
+            <li>
+              <input
+                id="EventRecogniser"
+                value="EventRecogniser"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                onchange="selectAnalysis(this)"
+                disabled
+              />
+              <label for="EventRecogniser" class="checkbox-custom-label">
+                Event Recogniser
+              </label>
+            </li>
+            <li>
+              <input
+                id="IndiciesCsv2Image"
+                value="IndiciesCsv2Image"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                onchange="selectAnalysis(this)"
+                disabled
+              />
+              <label for="IndiciesCsv2Image" class="checkbox-custom-label">
+                Indicies CSV to Image
+              </label>
+            </li>
+            <li>
+              <input
+                id="OscillationsGeneric"
+                value="OscillationsGeneric"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                onchange="selectAnalysis(this)"
+                disabled
+              />
+              <label for="OscillationsGeneric" class="checkbox-custom-label">
+                Generic Oscillation Search
+              </label>
+            </li>
+          </div>
+        </div>
+
         <div class="group" id="audio" style="display: none">
           <div class="question-fail">
             <p class="question-text">Select Audio Files</p>
@@ -154,7 +166,7 @@
           </div>
         </div>
 
-        <div class="group" id="audio2csv" style="display: none">
+        <div class="group" id="audio2csv-options" style="display: none">
           <div class="question"><p class="question-text">Audio to CSV</p></div>
           <div class="group-content">
             <table class="flex">
@@ -411,6 +423,30 @@
           console.log(item);
         }
 
+        function checkEnvironment() {
+          var terminal = require("child_process").spawn(
+            "AnalysisPrograms.exe",
+            ["CheckEnvironment"]
+          );
+
+          terminal.on("error", function(err) {
+            console.log("Bad Environment");
+            document.querySelector("#environment").style.display = "inherit";
+          });
+
+          terminal.stdout.on("data", function(data) {
+            var match = "SUCCESS - Valid environment";
+
+            if (data.includes(match)) {
+              document.querySelector("#select").style.display = "inherit";
+              document.querySelector("#environment").style.display = "none";
+            } else {
+              document.querySelector("#select").style.display = "none";
+              document.querySelector("#environment").style.display = "inherit";
+            }
+          });
+        }
+
         /**
          * Determines what inputs are required to complete the analysis
          */
@@ -419,7 +455,7 @@
             ["audio", false],
             ["config", false],
             ["output", false],
-            ["audio2csv", false],
+            ["audio2csv-options", false],
             ["submit", false]
           ];
 
@@ -438,16 +474,7 @@
                   "audio",
                   "config",
                   "output",
-                  "audio2csv",
-                  "submit"
-                ]);
-                break;
-              case "audio2sonogram":
-                addItems(inputList, [
-                  "audio",
-                  "config",
-                  "output",
-                  "audio2csv",
+                  "audio2csv-options",
                   "submit"
                 ]);
                 break;
@@ -462,6 +489,8 @@
               form.querySelector("#" + id[0]).style.display = "none";
             }
           });
+
+          console.log(inputList);
         }
 
         /**
