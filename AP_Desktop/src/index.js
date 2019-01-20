@@ -1,14 +1,13 @@
 import { app, BrowserWindow } from "electron";
-//import listAPCommands from "./js/AP.js";
 
 (function() {
   var childProcess = require("child_process");
   var oldSpawn = childProcess.spawn;
   function mySpawn() {
-      console.log('spawn called');
-      console.log(arguments);
-      var result = oldSpawn.apply(this, arguments);
-      return result;
+    console.log("spawn called");
+    console.log(arguments);
+    var result = oldSpawn.apply(this, arguments);
+    return result;
   }
   childProcess.spawn = mySpawn;
 })();
@@ -36,7 +35,7 @@ const createWindow = () => {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     mainWindow.webContents.openDevTools();
   }
 

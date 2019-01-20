@@ -4,6 +4,7 @@
     <link rel="stylesheet" type="text/css" href="./css/container.css" />
     <link rel="stylesheet" type="text/css" href="./css/form.css" />
     <link rel="stylesheet" type="text/css" href="./css/checkbox.css" />
+    <link rel="stylesheet" type="text/css" href="./css/spinner.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -26,7 +27,10 @@
         <div class="question-fail">
           <p class="question-text">Environment</p>
         </div>
-        <div class="group-content"><p>Environment is not setup.</p></div>
+        <div class="group-content">
+          <p>Environment is not setup.</p>
+          <pre style="white-space: pre-wrap;"></pre>
+        </div>
       </div>
 
       <form>
@@ -124,16 +128,32 @@
         <div class="group" id="audio" style="display: none">
           <div class="question-fail">
             <p class="question-text">Select Audio Files</p>
-            <div class="question-button-fail"><a>Select Files</a></div>
+            <a onclick="getAudio()">
+              <div class="question-button-fail">Select Files</div>
+            </a>
           </div>
           <div class="group-content">
             <p>No files selected yet.</p>
-            <ul style="display: none;">
-              <li class="files">Example.wav</li>
-              <li class="files">Example.wav</li>
-              <li class="files">Example.wav</li>
-            </ul>
+            <!--<div id="audiospinner" class="spinner" style="display: none">
+              <div class="ball"></div>
+              <div class="ball"></div>
+              <div class="ball"></div>
+              <div class="ball"></div>
+              <div class="ball"></div>
+              <div class="ball"></div>
+              <div class="ball"></div>
+            </div>-->
+            <ul style="display: none; overflow: auto; max-height: 372px;"></ul>
           </div>
+
+          <input
+            id="audiofiles"
+            type="file"
+            style="display: none"
+            accept="audio/*"
+            onchange="updateAudio(this)"
+            multiple
+          />
         </div>
 
         <div class="group" id="config" style="display: none">
@@ -156,7 +176,7 @@
         <div class="group" id="output" style="display: none">
           <div class="question-fail">
             <p class="question-text">Output Directory</p>
-            <div class="question-button-fail"><a>Select Folder</a></div>
+            <a><div class="question-button-fail">Select Folder</div></a>
           </div>
           <div class="group-content">
             <p>No folder selected yet.</p>
@@ -406,138 +426,8 @@
         const electron = require("electron");
         const { ipcRenderer } = electron;
 
-        var analysisList = [];
-
         const form = document.querySelector("form");
         form.addEventListener("submit", submitForm);
-
-        function submitForm(e) {
-          e.preventDefault();
-          const item = form.querySelectorAll("input[name='analysis']:checked");
-
-          if (item.length !== 0) {
-            success("audio");
-          } else {
-            failure("audio");
-          }
-          console.log(item);
-        }
-
-        function checkEnvironment() {
-          var terminal = require("child_process").spawn(
-            "AnalysisPrograms.exe",
-            ["CheckEnvironment"]
-          );
-
-          terminal.on("error", function(err) {
-            console.log("Bad Environment");
-            document.querySelector("#environment").style.display = "inherit";
-          });
-
-          terminal.stdout.on("data", function(data) {
-            var match = "SUCCESS - Valid environment";
-
-            if (data.includes(match)) {
-              document.querySelector("#select").style.display = "inherit";
-              document.querySelector("#environment").style.display = "none";
-            } else {
-              document.querySelector("#select").style.display = "none";
-              document.querySelector("#environment").style.display = "inherit";
-            }
-          });
-        }
-
-        /**
-         * Determines what inputs are required to complete the analysis
-         */
-        function selectAnalysis(el) {
-          var inputList = [
-            ["audio", false],
-            ["config", false],
-            ["output", false],
-            ["audio2csv-options", false],
-            ["submit", false]
-          ];
-
-          //Check if item exists
-          if (el.checked) {
-            analysisList.push(el.value);
-          } else {
-            analysisList.splice(analysisList.indexOf(el.value), 1);
-          }
-
-          //Determine list of inputs required
-          analysisList.forEach(analysisType => {
-            switch (analysisType) {
-              case "audio2csv":
-                addItems(inputList, [
-                  "audio",
-                  "config",
-                  "output",
-                  "audio2csv-options",
-                  "submit"
-                ]);
-                break;
-            }
-          });
-
-          //Enable required inputs
-          inputList.forEach(id => {
-            if (id[1]) {
-              form.querySelector("#" + id[0]).style.display = "inherit";
-            } else {
-              form.querySelector("#" + id[0]).style.display = "none";
-            }
-          });
-
-          console.log(inputList);
-        }
-
-        /**
-         * Add items to array if they do not exist
-         */
-        function addItems(inputList, items) {
-          inputList.forEach(element => {
-            items.forEach(item => {
-              if (element[0] === item) {
-                element[1] = true;
-                return;
-              }
-            });
-          });
-        }
-
-        /**
-         * Displays a group element as a failure
-         * @param {string}  id  ID of the group
-         */
-        function failure(id) {
-          document
-            .querySelector("#" + id + " .question")
-            .setAttribute("class", "question-fail");
-
-          var extra = document.querySelector("#" + id + " .question-button");
-          if (extra !== null) {
-            extra.setAttribute("class", "question-button-fail");
-          }
-        }
-
-        /**
-         * Displays a group element as a success
-         * @param {string}  id  ID of the group
-         */
-        function success(id) {
-          document
-            .querySelector("#" + id + " .question-fail")
-            .setAttribute("class", "question");
-
-          var extra = document.querySelector(
-            "#" + id + " .question-button-fail"
-          );
-          if (extra !== null) {
-            extra.setAttribute("class", "question-button");
-          }
-        }
       </script>
     </div>
   </body>
