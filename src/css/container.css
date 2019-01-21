@@ -1,10 +1,15 @@
 html {
   height: 100%;
 }
+
 body {
   background-color: #dcdcdc;
   height: 100%;
   margin: 0;
+}
+
+*:focus {
+  outline: none;
 }
 
 #header {
