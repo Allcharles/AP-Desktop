@@ -4,20 +4,66 @@ const { ipcRenderer } = electron;
 const SUPPORTED_AUDIO_FORMATS = ["wav"];
 const AP = "AnalysisPrograms.exe";
 const DEFAULT_CONFIG = "Towsey.Acoustic.yml";
+const CONFIG_DIRECTORY = "C:\\AP\\ConfigFiles";
 
 var analysisList = [];
 var audioFiles = [];
-var config = "";
+var config = DEFAULT_CONFIG;
 var outputFolder = "";
 
 function submitForm(e) {
   e.preventDefault();
+
+  console.log("analysisList");
+  console.log(analysisList);
+  console.log("audioFiles");
+  console.log(audioFiles);
+  console.log("config");
+  console.log(CONFIG_DIRECTORY + "\\" + config);
+  console.log("outputFolder");
+  console.log(outputFolder);
+
+  analysisList.forEach(type => {
+    switch (type) {
+      case "audio2csv":
+        audio2csvAnalysis();
+        break;
+    }
+  });
+}
+
+function audio2csvAnalysis() {
+  audioFiles.forEach(file => {
+    console.log("Running Audio2CSV Analysis on " + file);
+
+    var terminal = require("child_process").spawn(AP, [
+      "audio2csv",
+      file,
+      CONFIG_DIRECTORY + "\\" + config,
+      outputFolder,
+      "-p"
+    ]);
+
+    terminal.on("error", function(err) {
+      console.log(err);
+    });
+
+    terminal.stdout.on("data", function(data) {
+      console.log("Completed");
+      console.log(data.toString());
+    });
+  });
 }
 
 /**
  * Updates whether the analysis button is disabled or not
  */
 function updateAnalyseButton() {
+  console.debug("Analysis List: " + analysisList.length);
+  console.debug("Audio Files: " + audioFiles.length);
+  console.debug("Config: " + config);
+  console.debug("Output Folder: " + outputFolder);
+
   var button = document.querySelector("#submit button");
   if (
     analysisList.length > 0 &&
@@ -59,6 +105,8 @@ function setOutputFolder() {
         content.lastElementChild.style.display = "inherit";
         content.lastElementChild.innerHTML = outputFolder;
       }
+
+      updateAnalyseButton();
     }
   );
 }
@@ -94,7 +142,6 @@ function getAudio() {
           "none";
 
         audioFiles = [];
-        updateAnalyseButton();
       } else {
         success("audio");
 
@@ -106,8 +153,9 @@ function getAudio() {
         audioFiles = filePaths;
 
         updateAudio();
-        updateAnalyseButton();
       }
+
+      updateAnalyseButton();
     }
   );
 }
@@ -130,9 +178,8 @@ function updateAudio() {
  * Get config files for the drop down list
  */
 function getConfig() {
-  console.log("Getting Config");
   var fs = require("fs");
-  var folder = "C:\\AP\\ConfigFiles";
+  var folder = CONFIG_DIRECTORY;
 
   fs.readdir(folder, function(err, filenames) {
     if (err) return console.log("Err: " + err);
@@ -168,7 +215,7 @@ function getConfig() {
  * @param {Element} el Element object
  */
 function updateConfig(el) {
-  if (!el.options[0].selected) {
+  if (el.selectedIndex !== 1) {
     success("config");
     config = el.querySelector("option:checked").value;
   } else {
