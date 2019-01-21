@@ -3,19 +3,64 @@ const dialog = electron.remote.dialog;
 const { ipcRenderer } = electron;
 const SUPPORTED_AUDIO_FORMATS = ["wav"];
 const AP = "AnalysisPrograms.exe";
+const DEFAULT_CONFIG = "Towsey.Acoustic.yml";
 
 var analysisList = [];
 var audioFiles = [];
+var config = "";
+var outputFolder = "";
 
 function submitForm(e) {
   e.preventDefault();
-  const item = form.querySelectorAll("input[name='analysis']:checked");
+}
 
-  if (item.length !== 0) {
-    success("audio");
+/**
+ * Updates whether the analysis button is disabled or not
+ */
+function updateAnalyseButton() {
+  var button = document.querySelector("#submit button");
+  if (
+    analysisList.length > 0 &&
+    audioFiles.length > 0 &&
+    config !== "" &&
+    outputFolder !== ""
+  ) {
+    button.disabled = false;
   } else {
-    failure("audio");
+    button.disabled = true;
   }
+}
+
+function setOutputFolder() {
+  dialog.showOpenDialog(
+    {
+      properties: ["openDirectory", "createDirectory"],
+      filters: [{ name: "Audio", extensions: SUPPORTED_AUDIO_FORMATS }],
+      title: "Select Output Folder"
+    },
+    function(folder) {
+      var content = document.querySelector("#output .group-content");
+
+      //No folder selected
+      if (folder === undefined) {
+        failure("output");
+        outputFolder = "";
+
+        //Show "no folder" message and hide folder location
+        content.firstElementChild.style.display = "inherit";
+        content.lastElementChild.style.display = "none";
+        content.lastElementChild.innerHTML = "";
+      } else {
+        success("output");
+        outputFolder = folder;
+
+        //Hide "no folder" message and show folder location
+        content.firstElementChild.style.display = "none";
+        content.lastElementChild.style.display = "inherit";
+        content.lastElementChild.innerHTML = outputFolder;
+      }
+    }
+  );
 }
 
 /**
@@ -49,6 +94,7 @@ function getAudio() {
           "none";
 
         audioFiles = [];
+        updateAnalyseButton();
       } else {
         success("audio");
 
@@ -60,6 +106,7 @@ function getAudio() {
         audioFiles = filePaths;
 
         updateAudio();
+        updateAnalyseButton();
       }
     }
   );
@@ -83,8 +130,53 @@ function updateAudio() {
  * Get config files for the drop down list
  */
 function getConfig() {
-  var fs = reqiure("fs");
+  console.log("Getting Config");
+  var fs = require("fs");
   var folder = "C:\\AP\\ConfigFiles";
+
+  fs.readdir(folder, function(err, filenames) {
+    if (err) return console.log("Err: " + err);
+
+    var select = document.querySelector("#config-select");
+    filenames.forEach(filename => {
+      if (filename.substr(filename.length - 4) === ".yml") {
+        if (filename === DEFAULT_CONFIG)
+          select.innerHTML +=
+            "<option selected value='" +
+            filename +
+            "'>" +
+            filename +
+            "</option>";
+        else
+          select.innerHTML +=
+            "<option value='" + filename + "'>" + filename + "</option>";
+      }
+    });
+  });
+
+  /*fs.readFile("C:/AP/ConfigFiles/Towsey.Acoustic.yml", "utf8", function(
+    err,
+    data
+  ) {
+    if (err) return console.log("Err: " + err);
+    else return console.log("Data:\n" + data);
+  });*/
+}
+
+/**
+ * Update the config file to use for the final query
+ * @param {Element} el Element object
+ */
+function updateConfig(el) {
+  if (!el.options[0].selected) {
+    success("config");
+    config = el.querySelector("option:checked").value;
+  } else {
+    failure("config");
+    config = "";
+  }
+
+  updateAnalyseButton();
 }
 
 /**
@@ -116,7 +208,7 @@ function checkEnvironment() {
 
 /**
  * Determines what inputs are required to complete the analysis
- * @param {object} el Element object
+ * @param {Element} el Element object
  */
 function selectAnalysis(el) {
   var inputList = [

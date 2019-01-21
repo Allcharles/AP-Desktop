@@ -143,7 +143,7 @@
               <div class="ball"></div>
               <div class="ball"></div>
             </div>
-            <ul style="display: none; overflow: auto; max-height: 372px;"></ul>
+            <ul class="file-list"></ul>
           </div>
         </div>
 
@@ -152,26 +152,26 @@
             <p class="question-text">Config File</p>
           </div>
           <div class="group-content">
-            <div class="flex">
-              <select>
-                <option value="Towsey.Acoustics.yml">Towsey.Acoustics</option>
-                <option value="Dong.Felt.yml">Dong.Felt</option>
-                <option value="Dong.RidgeDetection.yml"
-                  >Dong.RidgeDetection</option
-                >
-              </select>
-            </div>
+            <select id="config-select" onchange="updateConfig(this)">
+              <script type="text/javascript">
+                getConfig();
+              </script>
+              <option disabled>Select Preset</option>
+              <option value="Custom">Custom Preset</option>
+            </select>
           </div>
         </div>
 
         <div class="group" id="output" style="display: none">
           <div class="question-fail">
-            <p class="question-text">Output Directory</p>
-            <a><div class="question-button-fail">Select Folder</div></a>
+            <p class="question-text">Output Folder</p>
+            <a onclick="setOutputFolder()"
+              ><div class="question-button-fail">Select Folder</div></a
+            >
           </div>
           <div class="group-content">
             <p>No folder selected yet.</p>
-            <ul style=" display: none;">
+            <ul style="display: none;">
               <li class="files">Folder</li>
             </ul>
           </div>
@@ -409,7 +409,7 @@
         </div>
 
         <div id="submit" style="display: none">
-          <button type="submit" class="fail">Analyse</button>
+          <button type="submit" disabled>Analyse</button>
         </div>
       </form>
 
