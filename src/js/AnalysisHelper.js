@@ -1,5 +1,8 @@
 const electron = require("electron");
+const dialog = electron.remote.dialog;
 const { ipcRenderer } = electron;
+const SUPPORTED_AUDIO_FORMATS = ["wav"];
+const AP = "AnalysisPrograms.exe";
 
 var analysisList = [];
 var audioFiles = [];
@@ -19,56 +22,60 @@ function submitForm(e) {
  * Get audio files
  */
 function getAudio() {
-  //Create self deleting function to identify cancel request from file uploading
-  document.body.onfocus = function() {
-    var files = document.querySelector("#audio .group-content");
-    files.lastElementChild.style.display = "none";
-
-    if (audioFiles.length == 0) {
-      files.firstElementChild.style.display = "inherit";
-    }
-
-    document.body.onfocus = null;
-  };
-
-  //Open file selector dialog
-  var files = document.querySelector("#audiofiles");
-  files.click();
-  failure("audio");
+  //Display loading animation
+  document.querySelector("#audio .group-content p").style.display = "none";
   document.querySelector("#audio .group-content ul").style.display = "none";
+  document.querySelector("#audiospinner").style.display = "inherit";
+
+  process.dlopen = () => {
+    throw new Error("Load native module is not safe");
+  };
+  //Open file selector dialog
+  dialog.showOpenDialog(
+    {
+      properties: ["openFile", "multiSelections"],
+      filters: [{ name: "Audio", extensions: SUPPORTED_AUDIO_FORMATS }],
+      title: "Select Audio Files"
+    },
+    function(filePaths) {
+      document.querySelector("#audiospinner").style.display = "none";
+
+      if (filePaths === undefined || filePaths.length == 0) {
+        failure("audio");
+
+        document.querySelector("#audio .group-content p").style.display =
+          "inherit";
+        document.querySelector("#audio .group-content ul").style.display =
+          "none";
+
+        audioFiles = [];
+      } else {
+        success("audio");
+
+        document.querySelector("#audio .group-content p").style.display =
+          "none";
+        document.querySelector("#audio .group-content ul").style.display =
+          "inherit";
+
+        audioFiles = filePaths;
+
+        updateAudio();
+      }
+    }
+  );
 }
 
 /**
- * Update list of audio files
- * @param {object} el Element object
+ *
  */
-function updateAudio(el) {
-  audioFiles = el.files;
+function updateAudio() {
+  //Display list of files
+  var files = document.querySelector("#audio .group-content ul");
+  files.innerHTML = "";
 
-  if (audioFiles.length > 0) {
-    //Audio files selected
-    success("audio");
-
-    //Remove "no files" message and display list of files
-    var files = document.querySelector("#audio .group-content");
-    files.firstElementChild.style.display = "none";
-    files.lastElementChild.style.display = "inherit";
-    files.lastElementChild.innerHTML = "";
-
-    //Add files to list
-    for (var file = 0; file < audioFiles.length; file++) {
-      files.lastElementChild.innerHTML +=
-        '<li class="files">' + audioFiles[file].name + "</li>";
-    }
-  } else {
-    //No audio files selected
-    failure("audio");
-
-    //Add "no files" message and remove list of files
-    var files = document.querySelector("#audio .group-content");
-    files.firstElementChild.style.display = "inherit";
-    files.lastElementChild.style.display = "none";
-    files.lastElementChild.innerHTML = "";
+  //Add files to list
+  for (var file = 0; file < audioFiles.length; file++) {
+    files.innerHTML += '<li class="files">' + audioFiles[file] + "</li>";
   }
 }
 
@@ -76,6 +83,7 @@ function updateAudio(el) {
  * Get config files for the drop down list
  */
 function getConfig() {
+  var fs = reqiure("fs");
   var folder = "C:\\AP\\ConfigFiles";
 }
 
@@ -83,9 +91,7 @@ function getConfig() {
  * Check the computers environment, if the system is not setup this will provide details.
  */
 function checkEnvironment() {
-  var terminal = require("child_process").spawn("AnalysisPrograms.exe", [
-    "CheckEnvironment"
-  ]);
+  var terminal = require("child_process").spawn(AP, ["CheckEnvironment"]);
 
   terminal.on("error", function(err) {
     document.querySelector("#environment").style.display = "inherit";
