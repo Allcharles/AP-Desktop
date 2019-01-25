@@ -35,7 +35,7 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/html/analysis.html`);
+  mainWindow.loadURL(`file://${__dirname}/html/output.html`);
 
   // Open the DevTools.
   if (process.env.NODE_ENV !== "production") {
