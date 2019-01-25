@@ -28,7 +28,6 @@
   -------------------------------------------------------- */
 .cssProgress {
   width: 100%;
-  margin-bottom: 20px;
 }
 .cssProgress .progress1,
 .cssProgress .progress2,
@@ -37,6 +36,7 @@
   overflow: hidden;
   width: 100%;
   font-family: "Roboto", sans-serif;
+  margin-bottom: 2px;
 }
 .cssProgress .cssProgress-bar {
   display: block;
