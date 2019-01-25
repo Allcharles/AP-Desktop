@@ -177,8 +177,13 @@
         </div>
 
         <div class="group" id="audio2csv-options" style="display: none">
-          <div class="question"><p class="question-text">Audio to CSV</p></div>
-          <div class="group-content">
+          <div class="question">
+            <p class="question-text">Audio to CSV</p>
+            <a onclick="audio2csvToggle()"
+              ><div class="question-button">Advanced</div></a
+            >
+          </div>
+          <div class="group-content" style="display: none">
             <table class="flex">
               <tr>
                 <td>
@@ -201,6 +206,7 @@
                     id="analysis-identifier-input"
                     name="audio2csv"
                     type="text"
+                    disabled
                   />
                 </td>
               </tr>
@@ -222,6 +228,7 @@
                     id="analysis-identifier-input"
                     name="audio2csv"
                     type="text"
+                    disabled
                   />
                 </td>
               </tr>
@@ -243,6 +250,7 @@
                     id="start-offset-input"
                     name="audio2csv"
                     type="number"
+                    disabled
                   />
                 </td>
               </tr>
@@ -260,7 +268,12 @@
                   </label>
                 </td>
                 <td>
-                  <input id="end-offset-input" name="audio2csv" type="number" />
+                  <input
+                    id="end-offset-input"
+                    name="audio2csv"
+                    type="number"
+                    disabled
+                  />
                 </td>
               </tr>
               <tr>
@@ -277,7 +290,7 @@
                   </label>
                 </td>
                 <td>
-                  <select id="align-to-minute-input">
+                  <select id="align-to-minute-input" disabled>
                     <option value="" selected></option>
                     <option value="None">No alignment</option>
                     <option value="TrimBoth">Remove fractional sections</option>
@@ -307,7 +320,12 @@
                   </label>
                 </td>
                 <td>
-                  <input id="channels-input" name="audio2csv" type="text" />
+                  <input
+                    id="channels-input"
+                    name="audio2csv"
+                    type="text"
+                    disabled
+                  />
                 </td>
               </tr>
               <tr>
@@ -328,6 +346,7 @@
                     id="mix-down-to-mono-input"
                     name="audio2csv"
                     type="text"
+                    disabled
                   />
                 </td>
               </tr>
@@ -390,7 +409,7 @@
                   </label>
                 </td>
                 <td>
-                  <select id="log-level-input">
+                  <select id="log-level-input" disabled>
                     <option value="" selected></option>
                     <option value="0">None</option>
                     <option value="1">Error</option>

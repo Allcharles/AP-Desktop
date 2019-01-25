@@ -32,6 +32,17 @@ function submitForm(e) {
   });
 }
 
+function audio2csvToggle() {
+  let advancedOptions = document.querySelector("#audio2csv-options")
+    .lastElementChild;
+
+  if (advancedOptions.style.display == "none") {
+    advancedOptions.style.display = "inherit";
+  } else {
+    advancedOptions.style.display = "none";
+  }
+}
+
 function audio2csvAnalysis() {
   audioFiles.forEach(file => {
     console.log("Running Audio2CSV Analysis on " + file);
@@ -81,7 +92,6 @@ function setOutputFolder() {
   dialog.showOpenDialog(
     {
       properties: ["openDirectory", "createDirectory"],
-      filters: [{ name: "Audio", extensions: SUPPORTED_AUDIO_FORMATS }],
       title: "Select Output Folder"
     },
     function(folder) {
