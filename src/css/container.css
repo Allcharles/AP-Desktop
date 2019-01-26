@@ -56,7 +56,7 @@ body {
   color: white;
 }
 
-#container {
+.container {
   font-family: "Raleway", Arial, Helvetica, sans-serif;
   font-size: 14px;
   padding: 0 10px 10px 10px;

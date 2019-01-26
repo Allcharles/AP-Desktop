@@ -239,6 +239,7 @@ function updateConfig(el) {
 /**
  * Check the computers environment, if the system is not setup this will provide details.
  */
+let count = 0;
 function checkEnvironment() {
   var terminal = require("child_process").spawn(AP, ["CheckEnvironment"]);
 
@@ -247,18 +248,22 @@ function checkEnvironment() {
   });
 
   terminal.stdout.on("data", function(data) {
-    var match = "SUCCESS - Valid environment";
+    count++;
+    document.querySelector("#environment .group-content pre").innerHTML +=
+      "\n" + data;
 
-    //Check terminal output for successful environment
-    if (data.includes(match)) {
-      document.querySelector("#select").style.display = "inherit";
-      document.querySelector("#environment").style.display = "none";
-    } else {
-      document.querySelector("#select").style.display = "none";
-      document.querySelector("#environment").style.display = "inherit";
+    //Third message from terminal contains the success message
+    if (count == 3) {
+      var match = "SUCCESS - Valid environment";
 
-      document.querySelector("#environment .group-content pre").innerHTML +=
-        "\n" + data;
+      //Check terminal output for successful environment
+      if (data.includes(match)) {
+        document.querySelector("#select").style.display = "inherit";
+        document.querySelector("#environment").style.display = "none";
+      } else {
+        document.querySelector("#select").style.display = "none";
+        document.querySelector("#environment").style.display = "inherit";
+      }
     }
   });
 }
