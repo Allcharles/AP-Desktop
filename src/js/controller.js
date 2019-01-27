@@ -19,6 +19,21 @@ var analysis = [];
 var fileQueue = [];
 var analysisQueue = [];
 
+/**
+ * This function outputs all terminal commands to the console for review
+ */
+(function() {
+  var childProcess = require("child_process");
+  var oldSpawn = childProcess.spawn;
+  function mySpawn() {
+    console.log("spawn called");
+    console.log(arguments);
+    var result = oldSpawn.apply(this, arguments);
+    return result;
+  }
+  childProcess.spawn = mySpawn;
+})();
+
 function submitForm(e) {
   e.preventDefault();
 
@@ -27,7 +42,7 @@ function submitForm(e) {
 
   //Create loading bars with blank analysis
   audioFiles.forEach(file => {
-    let id = file.replace(/[ |\/|\\]/g, "");
+    let id = generateID(file);
     createLoader(id, file);
   });
 
@@ -41,7 +56,7 @@ function submitForm(e) {
   });
   analysisList = [];
 
-  analysis = [0, 0];
+  analysis = [0, -1];
 
   analyse();
 }
@@ -50,6 +65,18 @@ function analyse() {
   const FILE = 0;
   const ANALYSIS = 1;
 
+  //Set next analysis details
+  if (analysis[ANALYSIS] < analysisQueue.length - 1) {
+    analysis[ANALYSIS]++;
+  } else {
+    if (analysis[FILE] < fileQueue.length - 1) {
+      analysis[FILE]++;
+      analysis[ANALYSIS] = 0;
+    } else {
+      return;
+    }
+  }
+
   //Determine analysis to run
   let file = fileQueue[analysis[FILE]];
   let id = generateID(file);
@@ -57,7 +84,7 @@ function analyse() {
   updateLoader(id, analysisType);
 
   //If the file has not be analysed before, create group to store its data
-  if (document.querySelector("#" + id) === undefined) createGroup();
+  if (document.querySelector("#pb" + id) === undefined) createGroup();
 
   var terminal = require("child_process").spawn(AP, [
     analysisType,
@@ -69,49 +96,40 @@ function analyse() {
 
   terminal.on("error", function(err) {
     console.error(err);
-    finishLoader("#" + generateID(fileQueue[analysis[0]]), false);
+    finishLoader(generateID(fileQueue[analysis[0]]), false);
   });
 
   terminal.on("close", function(code) {
+    finishLoader(generateID(fileQueue[analysis[0]]), true);
     analyse();
-    finishLoader("#" + generateID(fileQueue[analysis[0]]), true);
   });
 
   terminal.stdout.on("data", function(data) {
-    const progressreport = "Completed segment";
-
-    //Check terminal output for successful environment
-    if (data.includes(progressreport)) {
-      const PARALLEL_MATCH_LENGTH = 3; //1 full match and 3 groups
-      const PARALLEL_REGEX = /INFO.+\/(\d+).+ (\d+) /;
-      const SERIAL_REGEX = /INFO.+(\d+)\/(\d+)$/;
-
-      var progress = document.querySelector(
-        "#" + generateID(fileQueue[analysis[0]])
-      );
-      var res = PARALLEL_REGEX.exec(data.toString());
-
-      if (res !== null && res.length == PARALLEL_MATCH_LENGTH) {
-        var percent =
-          parseInt((parseFloat(res[2]) / parseFloat(res[1])) * 100) + "%";
-
-        progress.style.width = percent;
-        progress.firstElementChild.innerHTML = percent;
-
-        console.log(percent);
-      }
-    }
+    updateProgressBar(data);
   });
+}
 
-  //Set next analysis details
-  if (analysis[ANALYSIS] < analysisQueue.length - 1) {
-    analysis[ANALYSIS]++;
-  } else {
-    if (analysis[FILE] < fileQueue.length - 1) {
-      analysis[FILE]++;
-      analysis[ANALYSIS] = 0;
-    } else {
-      return;
+/**
+ * Updates the progress bar with the current percentage
+ * @param {string} data Terminal output
+ */
+function updateProgressBar(data) {
+  const progressreport = "Completed segment";
+  //Check terminal output for successful environment
+  if (data.includes(progressreport)) {
+    const PARALLEL_MATCH_LENGTH = 3; //1 full match and 3 groups
+    const PARALLEL_REGEX = /INFO.+\/(\d+).+ (\d+) /;
+    const SERIAL_REGEX = /INFO.+(\d+)\/(\d+)$/;
+    var progress = document.querySelector(
+      "#pb" + generateID(fileQueue[analysis[0]])
+    );
+    var res = PARALLEL_REGEX.exec(data.toString());
+    if (res !== null && res.length == PARALLEL_MATCH_LENGTH) {
+      var percent =
+        parseInt((parseFloat(res[2]) / parseFloat(res[1])) * 100) + "%";
+      progress.firstElementChild.style.width = percent;
+      progress.firstElementChild.firstElementChild.innerHTML = percent;
+      console.log(percent);
     }
   }
 }
@@ -182,12 +200,12 @@ function updateLoader(id, analysis) {
  * @param {boolean} success True if successful
  */
 function finishLoader(id, success) {
-  document.querySelector("#an" + id).innerHTML = "???";
+  document.querySelector("#an" + id).innerHTML = "finished";
   success
     ? (document.querySelector("#pb" + id).innerHTML =
-        "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 0%;'><span class='cssProgress-label'>0%</span></div>")
+        "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>")
     : (document.querySelector("#pb" + id).innerHTML =
-        "<div class='cssProgress-bar cssProgress-active-right cssProgress-danger' style='width: 0%;'><span class='cssProgress-label'>0%</span></div>");
+        "<div class='cssProgress-bar cssProgress-active-right cssProgress-danger' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>");
 }
 
 function audio2csvToggle() {
