@@ -6,6 +6,7 @@ const AP = "AnalysisPrograms.exe";
 const DEFAULT_CONFIG = "Towsey.Acoustic.yml";
 const CONFIG_DIRECTORY = "C:\\AP\\ConfigFiles";
 
+/** Used in the form to determine inputs */
 var analysisList = [];
 var audioFiles = [];
 var config = DEFAULT_CONFIG;
@@ -13,19 +14,180 @@ var outputFolder = "";
 var audio2csvEnum = Object.freeze({ parallel: "-p" });
 var audio2csvOptions = [audio2csvEnum.parallel];
 
+/** Use in analysis to detemine output */
+var analysis = [];
+var fileQueue = [];
+var analysisQueue = [];
+
 function submitForm(e) {
   e.preventDefault();
 
   document.querySelector("#analysis-tab").style.display = "none";
   document.querySelector("#output-tab").style.display = "inherit";
 
-  analysisList.forEach(type => {
-    switch (type) {
-      case "audio2csv":
-        audio2csvAnalysis();
-        break;
+  //Create loading bars with blank analysis
+  audioFiles.forEach(file => {
+    let id = file.replace(/[ |\/|\\]/g, "");
+    createLoader(id, file);
+  });
+
+  //Transfer arrays
+  audioFiles.forEach(file => {
+    fileQueue.push(file);
+  });
+  audioFiles = [];
+  analysisList.forEach(analysis => {
+    analysisQueue.push(analysis);
+  });
+  analysisList = [];
+
+  analysis = [0, 0];
+
+  analyse();
+}
+
+function analyse() {
+  const FILE = 0;
+  const ANALYSIS = 1;
+
+  //Determine analysis to run
+  let file = fileQueue[analysis[FILE]];
+  let id = generateID(file);
+  let analysisType = analysisQueue[analysis[ANALYSIS]];
+  updateLoader(id, analysisType);
+
+  //If the file has not be analysed before, create group to store its data
+  if (document.querySelector("#" + id) === undefined) createGroup();
+
+  var terminal = require("child_process").spawn(AP, [
+    analysisType,
+    file,
+    config,
+    outputFolder,
+    "-p"
+  ]);
+
+  terminal.on("error", function(err) {
+    console.error(err);
+    finishLoader("#" + generateID(fileQueue[analysis[0]]), false);
+  });
+
+  terminal.on("close", function(code) {
+    analyse();
+    finishLoader("#" + generateID(fileQueue[analysis[0]]), true);
+  });
+
+  terminal.stdout.on("data", function(data) {
+    const progressreport = "Completed segment";
+
+    //Check terminal output for successful environment
+    if (data.includes(progressreport)) {
+      const PARALLEL_MATCH_LENGTH = 3; //1 full match and 3 groups
+      const PARALLEL_REGEX = /INFO.+\/(\d+).+ (\d+) /;
+      const SERIAL_REGEX = /INFO.+(\d+)\/(\d+)$/;
+
+      var progress = document.querySelector(
+        "#" + generateID(fileQueue[analysis[0]])
+      );
+      var res = PARALLEL_REGEX.exec(data.toString());
+
+      if (res !== null && res.length == PARALLEL_MATCH_LENGTH) {
+        var percent =
+          parseInt((parseFloat(res[2]) / parseFloat(res[1])) * 100) + "%";
+
+        progress.style.width = percent;
+        progress.firstElementChild.innerHTML = percent;
+
+        console.log(percent);
+      }
     }
   });
+
+  //Set next analysis details
+  if (analysis[ANALYSIS] < analysisQueue.length - 1) {
+    analysis[ANALYSIS]++;
+  } else {
+    if (analysis[FILE] < fileQueue.length - 1) {
+      analysis[FILE]++;
+      analysis[ANALYSIS] = 0;
+    } else {
+      return;
+    }
+  }
+}
+
+/**
+ * Returns the ID of the file path. This is done by hashing the file path.
+ * @param {string} filePath File path
+ */
+function generateID(filePath) {
+  var hash = 0;
+  if (filePath.length == 0) return hash;
+  for (let i = 0; i < filePath.length; i++) {
+    let char = filePath.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; //Converts output to 32bit integer
+  }
+
+  return hash.toString();
+}
+
+/**
+ * Returns the filename from the file path
+ * @param {string} filePath File path
+ */
+function getFilename(filePath) {
+  return filePath.slice(filePath.lastIndexOf("\\") + 1);
+}
+
+/**
+ * Create the group container for the files detailsa
+ * @param {string} id ID of the file
+ * @param {string} filename File path of the audio file
+ */
+function createGroup(id, filename) {}
+
+/**
+ * Creates the loading details for each of the files
+ * @param {string} id ID of the file
+ * @param {string} filename File path of the audio file
+ */
+function createLoader(id, filename) {
+  document.querySelector("#filename").innerHTML +=
+    "<div class='filename-container'>" +
+    filename.slice(filename.lastIndexOf("\\") + 1) +
+    "</div>";
+  document.querySelector("#filename-analysis").innerHTML +=
+    "<div class='filename-container' id='an" + id + "'>???</div>";
+  document.querySelector("#filename-loader").innerHTML +=
+    "<div class='progress3' id='pb" +
+    id +
+    "'> <div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>";
+}
+
+/**
+ * Changes the progress bar to yellow and adds an analysis detail
+ * @param {string} id ID of the file
+ * @param {string} analysis Analysis type to run
+ */
+function updateLoader(id, analysis) {
+  document.querySelector("#an" + id).innerHTML = analysis;
+  document.querySelector("#pb" + id).innerHTML =
+    "<div class='cssProgress-bar cssProgress-active-right cssProgress-warning' style='width: 0%;'><span class='cssProgress-label'>0%</span></div>";
+}
+
+/**
+ * Changes the progress bar to green and removes the analysis detail
+ * @param {string} id ID of the file
+ * @param {boolean} success True if successful
+ */
+function finishLoader(id, success) {
+  document.querySelector("#an" + id).innerHTML = "???";
+  success
+    ? (document.querySelector("#pb" + id).innerHTML =
+        "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 0%;'><span class='cssProgress-label'>0%</span></div>")
+    : (document.querySelector("#pb" + id).innerHTML =
+        "<div class='cssProgress-bar cssProgress-active-right cssProgress-danger' style='width: 0%;'><span class='cssProgress-label'>0%</span></div>");
 }
 
 function audio2csvToggle() {
@@ -36,102 +198,6 @@ function audio2csvToggle() {
     advancedOptions.style.display = "inherit";
   } else {
     advancedOptions.style.display = "none";
-  }
-}
-
-function audio2csvAnalysis() {
-  const os = require("os");
-  const fileCount = audioFiles.length;
-  var threadPool = [];
-  var count = 0;
-
-  //Limit number of files being processed to the number of cores on a computer
-  for (let i = 0; i < 1; i++) {
-    //os.cpus().length; i++) {
-    if (i < fileCount) {
-      //Create progress bar in output page
-      var filename = audioFiles[i].slice(audioFiles[i].lastIndexOf("\\") + 1);
-      document.querySelector("#filename").innerHTML +=
-        "<div class='filename-container'>" + filename + "</div>";
-      document.querySelector("#filename-loader").innerHTML +=
-        "<div class='progress3' id='" +
-        filename +
-        "'> <div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>";
-
-      //Add file to thread pool
-      threadPool.push([audioFiles[i]]);
-      count++;
-    }
-  }
-
-  audioFiles.forEach(file => {
-    let terminal = new Terminal(file);
-    terminal.runAnalysis(
-      "audio2csv",
-      CONFIG_DIRECTORY + "\\" + config,
-      outputFolder
-    );
-  });
-}
-
-class Terminal {
-  /**
-   * Runs the analysis in a terminal
-   * @param {string} file Audio file path
-   * @param {string} analysisType Analysis Type (audio2csv)
-   * @param {string} configFile Config file path
-   * @param {string} outputFolder Output folder path
-   * @param {Array} additionalProperties Any additional options
-   */
-  runAnalysis(
-    file,
-    analysisType,
-    configFile,
-    outputFolder,
-    additionalProperties
-  ) {
-    console.log("Running analysis on: " + this.file);
-    var terminal = require("child_process").spawn(AP, [
-      analysisType,
-      this.file,
-      configFile,
-      outputFolder,
-      "-p"
-    ]);
-
-    terminal.on("error", function(err) {
-      console.error(this.file);
-      console.error(err);
-    });
-
-    terminal.on("close", function(code) {
-      console.log(this.file + ": Closed with Code (" + code + ")");
-    });
-
-    terminal.stdout.on("data", function(data) {
-      console.log(this.file);
-      const progressreport = "Completed segment";
-
-      //Check terminal output for successful environment
-      if (data.includes(progressreport)) {
-        const PARALLEL_MATCH_LENGTH = 3; //1 full match and 3 groups
-        const PARALLEL_REGEX = /INFO.+\/(\d+).+ (\d+) /;
-        const SERIAL_REGEX = /INFO.+(\d+)\/(\d+)$/;
-
-        var progress = document.querySelector("#filename-loader div div");
-        var res = PARALLEL_REGEX.exec(data.toString());
-
-        if (res !== null && res.length == PARALLEL_MATCH_LENGTH) {
-          var percent =
-            parseInt((parseFloat(res[2]) / parseFloat(res[1])) * 100) + "%";
-
-          progress.style.width = percent;
-          progress.firstElementChild.innerHTML = percent;
-
-          console.log(percent);
-        }
-      }
-    });
   }
 }
 
