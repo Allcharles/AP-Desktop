@@ -55,7 +55,7 @@ function audio2csvAnalysis() {
         "<div class='filename-container'>" + filename + "</div>";
       document.querySelector("#filename-loader").innerHTML +=
         "<div class='progress3' id='" +
-        i +
+        filename +
         "'> <div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>";
 
       //Add file to thread pool
@@ -65,19 +65,51 @@ function audio2csvAnalysis() {
   }
 
   audioFiles.forEach(file => {
-    var terminal = require("child_process").spawn(AP, [
+    let terminal = new Terminal(file);
+    terminal.runAnalysis(
       "audio2csv",
-      file,
       CONFIG_DIRECTORY + "\\" + config,
+      outputFolder
+    );
+  });
+}
+
+class Terminal {
+  /**
+   * Runs the analysis in a terminal
+   * @param {string} file Audio file path
+   * @param {string} analysisType Analysis Type (audio2csv)
+   * @param {string} configFile Config file path
+   * @param {string} outputFolder Output folder path
+   * @param {Array} additionalProperties Any additional options
+   */
+  runAnalysis(
+    file,
+    analysisType,
+    configFile,
+    outputFolder,
+    additionalProperties
+  ) {
+    console.log("Running analysis on: " + this.file);
+    var terminal = require("child_process").spawn(AP, [
+      analysisType,
+      this.file,
+      configFile,
       outputFolder,
-      audio2csvEnum.parallel
+      "-p"
     ]);
 
     terminal.on("error", function(err) {
-      console.log(err);
+      console.error(this.file);
+      console.error(err);
+    });
+
+    terminal.on("close", function(code) {
+      console.log(this.file + ": Closed with Code (" + code + ")");
     });
 
     terminal.stdout.on("data", function(data) {
+      console.log(this.file);
       const progressreport = "Completed segment";
 
       //Check terminal output for successful environment
@@ -100,7 +132,7 @@ function audio2csvAnalysis() {
         }
       }
     });
-  });
+  }
 }
 
 /**
