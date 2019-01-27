@@ -4,6 +4,13 @@ div.filename-container {
   padding-top: 4px;
 }
 
+div.filename-analysis {
+  height: 20px;
+  margin-bottom: 2px;
+  padding-top: 4px;
+  align-items: center;
+}
+
 table.output {
   width: 100%;
 }

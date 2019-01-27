@@ -26,8 +26,8 @@ var analysisQueue = [];
   var childProcess = require("child_process");
   var oldSpawn = childProcess.spawn;
   function mySpawn() {
-    console.log("spawn called");
-    console.log(arguments);
+    console.debug("spawn called");
+    console.debug(arguments);
     var result = oldSpawn.apply(this, arguments);
     return result;
   }
@@ -84,7 +84,8 @@ function analyse() {
   updateLoader(id, analysisType);
 
   //If the file has not be analysed before, create group to store its data
-  if (document.querySelector("#pb" + id) === undefined) createGroup();
+  console.log(document.querySelector("#gr" + id));
+  if (document.querySelector("#gr" + id) === null) createGroup(id, file);
 
   var terminal = require("child_process").spawn(AP, [
     analysisType,
@@ -106,7 +107,20 @@ function analyse() {
 
   terminal.stdout.on("data", function(data) {
     updateProgressBar(data);
+    updateTerminalOutput(data);
   });
+}
+
+/**
+ * Updates files terminal output section
+ * @param {string} data Terminal output
+ */
+function updateTerminalOutput(data) {
+  var terminalOutput = document.querySelector(
+    "#gr" + generateID(fileQueue[analysis[0]]) + " pre"
+  );
+
+  terminalOutput.innerHTML += data;
 }
 
 /**
@@ -163,7 +177,16 @@ function getFilename(filePath) {
  * @param {string} id ID of the file
  * @param {string} filename File path of the audio file
  */
-function createGroup(id, filename) {}
+function createGroup(id, filename) {
+  document.querySelector("#output-tab").innerHTML +=
+    '<div class="group" id="gr' +
+    id +
+    '"><div class="question"><p class="question-text">' +
+    getFilename(filename) +
+    '</p></div><div class="group-content"><table class="output"><tr><td><div><h1>' +
+    getFilename(filename) +
+    "</h1><pre></pre></div></td></tr></table>";
+}
 
 /**
  * Creates the loading details for each of the files
@@ -176,7 +199,7 @@ function createLoader(id, filename) {
     filename.slice(filename.lastIndexOf("\\") + 1) +
     "</div>";
   document.querySelector("#filename-analysis").innerHTML +=
-    "<div class='filename-container' id='an" + id + "'>???</div>";
+    "<div class='filename-analysis' id='an" + id + "'>???</div>";
   document.querySelector("#filename-loader").innerHTML +=
     "<div class='progress3' id='pb" +
     id +
