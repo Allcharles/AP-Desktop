@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../css/container.css" />
+    <link rel="stylesheet" type="text/css" href="../css/form.css" />
+    <link rel="stylesheet" type="text/css" href="../css/checkbox.css" />
+    <link rel="stylesheet" type="text/css" href="../css/spinner.css" />
+    <link rel="stylesheet" type="text/css" href="../css/progress.css" />
+    <link rel="stylesheet" type="text/css" href="../css/progressBar.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <script type="text/javascript" src="../js/controller.js"></script>
+    <meta charset="utf-8" />
+    <title>AP Desktop</title>
+  </head>
+  <body>
+    <div id="header">
+      <button id="logo">AP Desktop</button>
+      <a href="analysis.html"><button>Analysis</button></a>
+      <a href="output.html"><button id="page">Output</button></a>
+      <a href="utilities.html"><button>Utilities</button></a>
+    </div>
+
+    <div class="container" id="output-tab">
+      <div class="group" id="environment">
+        <div class="question"><p class="question-text">Progress</p></div>
+        <div class="group-content">
+          <table style="width: 100%">
+            <tr>
+              <td id="filename" style="width: 1%; min-width: 150px;"></td>
+              <td
+                id="filename-analysis"
+                style="width: 1%; min-width: 150px;"
+              ></td>
+              <td style="width: 99%">
+                <div class="cssProgress" id="filename-loader"></div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="group" id="File.txt">
+        <div class="question"><p class="question-text">File.txt</p></div>
+        <div class="group-content">
+          <h1>.ClipHiAmpl</h1>
+          <div class="header-content">
+            <img
+              src="D:\Desktop\VRES\Harry Hines Frog Dataset\QUT_Hines_Kroombit\Output\Towsey.Acoustic\20161213T003000Z__ACI-ENT-EVN.SpectralRibbon.png"
+              alt=".ClipHiAmpl image"
+              width="100%"
+              style="max-height: 600px"
+            />
+          </div>
+          <h1>Terminal Output</h1>
+
+          <table class="output">
+            <tr>
+              <td>
+                <div><pre></pre></div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
