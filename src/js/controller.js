@@ -208,21 +208,35 @@ function updateGroup(id, filepath) {
   fs.readdir(folder, function(err, filenames) {
     if (err) return console.log("Err: " + err);
 
-    var select = document.querySelector("#pic" + id);
+    var group = document.querySelector("#pic" + id);
 
     filenames.forEach(filename => {
       if (filename.substr(filename.length - 4) === ".png") {
         var match = filepath.substr(0, filepath.length - 4) + "__";
-        console.log("Match: " + match);
-        console.log(
-          "File: " +
-            filename.substr(filename.lastIndexOf("\\") + 1, match.length)
-        );
         if (
           filename.substr(filename.lastIndexOf("\\") + 1, match.length) ===
           match
         ) {
           console.log(filename);
+
+          group.innerHTML =
+            '<h1 id="ttl' +
+            generateID(filename) +
+            '" onclick="toggleImage(this);">' +
+            filename.substr(
+              filename.lastIndexOf("\\") + 1 + match.length,
+              filename.length - 4
+            ) +
+            '</h1><div class="header-content" id="div' +
+            generateID(filename) +
+            '" style="display: none"><div class="scrollimage"><img src="' +
+            folder +
+            "\\" +
+            filename +
+            '" alt="' +
+            filename +
+            ' image" /></div></div>' +
+            group.innerHTML;
         }
       }
     });
