@@ -164,9 +164,6 @@ body {
 }
 
 .header-content img {
-  max-height: 600px;
-  min-height: 100px;
-  min-width: 100%;
 }
 
 .header-content-padded {
