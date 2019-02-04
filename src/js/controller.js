@@ -59,6 +59,9 @@ function submitForm(e) {
 
   analysis = [0, -1];
 
+  document.querySelector("#page").id = "analysis";
+  document.querySelector("#output").id = "page";
+
   analyse();
 }
 
@@ -90,7 +93,7 @@ function analyse() {
   var terminal = require("child_process").spawn(AP, [
     analysisType,
     file,
-    config,
+    CONFIG_DIRECTORY + "\\" + config,
     outputFolder,
     "-p"
   ]);
@@ -102,6 +105,7 @@ function analyse() {
 
   terminal.on("close", function(code) {
     finishLoader(generateID(fileQueue[analysis[0]]), true);
+    updateGroup(generateID(fileQueue[analysis[0]]), fileQueue[analysis[0]]);
     analyse();
   });
 
@@ -172,19 +176,57 @@ function getFilename(filePath) {
 }
 
 /**
- * Create the group container for the files detailsa
+ * Create the group container for the files details
  * @param {string} id ID of the file
- * @param {string} filename File path of the audio file
+ * @param {string} filepath File path of the audio file
  */
-function createGroup(id, filename) {
+function createGroup(id, filepath) {
   document.querySelector("#output-tab").innerHTML +=
     '<div class="group" id="gr' +
     id +
     '"><div class="question"><p class="question-text">' +
-    getFilename(filename) +
-    '</p></div><div class="group-content"><table class="output"><tr><td><div><h1>' +
-    getFilename(filename) +
-    "</h1><pre></pre></div></td></tr></table>";
+    getFilename(filepath) +
+    '</p></div><div class="group-content" id="pic' +
+    id +
+    '"><h1 id="ttl' +
+    id +
+    '" onclick="toggleTerminal(this);">Terminal Output</h1><div class="header-content-padded" style="margin-bottom: -28px;"><div class="output" style="display: none" id="div' +
+    id +
+    '"><pre></pre></div></div></div>';
+}
+
+/**
+ * Updates the group container to include all attached images
+ * @param {string} id ID of the file
+ * @param {string} filepath  File path of the audio file
+ */
+function updateGroup(id, filepath) {
+  var fs = require("fs");
+  var folder = outputFolder[0] + "\\" + config.substr(0, config.length - 4);
+  filepath = getFilename(filepath);
+
+  fs.readdir(folder, function(err, filenames) {
+    if (err) return console.log("Err: " + err);
+
+    var select = document.querySelector("#pic" + id);
+
+    filenames.forEach(filename => {
+      if (filename.substr(filename.length - 4) === ".png") {
+        var match = filepath.substr(0, filepath.length - 4) + "__";
+        console.log("Match: " + match);
+        console.log(
+          "File: " +
+            filename.substr(filename.lastIndexOf("\\") + 1, match.length)
+        );
+        if (
+          filename.substr(filename.lastIndexOf("\\") + 1, match.length) ===
+          match
+        ) {
+          console.log(filename);
+        }
+      }
+    });
+  });
 }
 
 /**
