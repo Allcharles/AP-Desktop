@@ -16,6 +16,7 @@
       rel="stylesheet"
     />
     <script type="text/javascript" src="../js/controller.js"></script>
+    <script type="text/javascript" src="../js/toggleImage.js"></script>
     <meta charset="utf-8" />
     <title>AP Desktop</title>
   </head>
@@ -49,24 +50,39 @@
       <div class="group" id="File.txt">
         <div class="question"><p class="question-text">File.txt</p></div>
         <div class="group-content">
-          <h1>.ClipHiAmpl</h1>
-          <div class="header-content">
-            <img
-              src="D:\Desktop\VRES\Harry Hines Frog Dataset\QUT_Hines_Kroombit\Output\Towsey.Acoustic\20161213T003000Z__ACI-ENT-EVN.SpectralRibbon.png"
-              alt=".ClipHiAmpl image"
-              width="100%"
-              style="max-height: 600px"
-            />
+          <h1 id="ttl2114496007" onclick="toggleImage(this);">
+            .ClipHiAmpl
+          </h1>
+          <div class="header-content" id="div2114496007" style="display: none">
+            <div class="scrollimage">
+              <img
+                src="D:\Desktop\VRES\Harry Hines Frog Dataset\QUT_Hines_Kroombit\Output\Towsey.Acoustic\20161213T003000Z__ACI-ENT-EVN.SpectralRibbon.png"
+                alt=".ClipHiAmpl image"
+              />
+            </div>
           </div>
-          <h1>Terminal Output</h1>
 
-          <table class="output">
-            <tr>
-              <td>
-                <div><pre></pre></div>
-              </td>
-            </tr>
-          </table>
+          <h1 id="ttl3556498" onclick="toggleImage(this);">
+            .ClipHiAmpl
+          </h1>
+          <div class="header-content" id="div3556498" style="display: none">
+            <div class="scrollimage">
+              <img
+                src="D:\Desktop\VRES\Harry Hines Frog Dataset\QUT_Hines_Kroombit\Output\Towsey.Acoustic\20161213T003000Z__ACI-ENT-EVN.SpectralRibbon.png"
+                alt=".ClipHiAmpl image"
+              />
+            </div>
+          </div>
+
+          <h1 id="ttl881975226" onclick="toggleImage(this);">
+            Terminal Output
+          </h1>
+
+          <div class="header-content-padded">
+            <div class="output" style="display: inherit" id="div881975226">
+              <pre>testesteststestestestestestestestestest</pre>
+            </div>
+          </div>
         </div>
       </div>
     </div>

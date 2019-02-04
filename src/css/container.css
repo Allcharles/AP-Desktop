@@ -147,7 +147,6 @@ body {
   margin: 0px;
   padding: 10px 15px 10px 10px;
   margin-left: -14px;
-  margin-bottom: 14px;
 }
 
 .group-content > h1:first-of-type {
@@ -159,5 +158,17 @@ body {
 }
 
 .header-content {
-  margin-bottom: 11px;
+  margin-bottom: -3px;
+  margin-left: -14px;
+  margin-right: -14px;
+}
+
+.header-content img {
+  max-height: 600px;
+  min-height: 100px;
+  min-width: 100%;
+}
+
+.header-content-padded {
+  margin-top: 14px;
 }
