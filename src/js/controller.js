@@ -22,6 +22,7 @@ var analysisQueue = [];
 /**
  * This function outputs all terminal commands to the console for review
  */
+/*
 (function() {
   var childProcess = require("child_process");
   var oldSpawn = childProcess.spawn;
@@ -32,7 +33,7 @@ var analysisQueue = [];
     return result;
   }
   childProcess.spawn = mySpawn;
-})();
+})();*/
 
 function submitForm(e) {
   e.preventDefault();
@@ -84,7 +85,6 @@ function analyse() {
   updateLoader(id, analysisType);
 
   //If the file has not be analysed before, create group to store its data
-  console.log(document.querySelector("#gr" + id));
   if (document.querySelector("#gr" + id) === null) createGroup(id, file);
 
   var terminal = require("child_process").spawn(AP, [
@@ -143,7 +143,6 @@ function updateProgressBar(data) {
         parseInt((parseFloat(res[2]) / parseFloat(res[1])) * 100) + "%";
       progress.firstElementChild.style.width = percent;
       progress.firstElementChild.firstElementChild.innerHTML = percent;
-      console.log(percent);
     }
   }
 }
@@ -246,11 +245,6 @@ function audio2csvToggle() {
  * Updates whether the analysis button is disabled or not
  */
 function updateAnalyseButton() {
-  console.debug("Analysis List: " + analysisList.length);
-  console.debug("Audio Files: " + audioFiles.length);
-  console.debug("Config: " + config);
-  console.debug("Output Folder: " + outputFolder);
-
   var button = document.querySelector("#submit button");
   if (
     analysisList.length > 0 &&

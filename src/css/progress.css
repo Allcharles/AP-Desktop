@@ -32,8 +32,8 @@ table.output td {
   margin: 0;
   overflow-y: scroll;
   padding: 10px;
-  padding-right: 22px;
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .output pre::-webkit-scrollbar {
