@@ -22,6 +22,7 @@ var analysisQueue = [];
 /**
  * This function outputs all terminal commands to the console for review
  */
+/*
 (function() {
   var childProcess = require("child_process");
   var oldSpawn = childProcess.spawn;
@@ -32,7 +33,7 @@ var analysisQueue = [];
     return result;
   }
   childProcess.spawn = mySpawn;
-})();
+})();*/
 
 function submitForm(e) {
   e.preventDefault();
@@ -57,6 +58,9 @@ function submitForm(e) {
   analysisList = [];
 
   analysis = [0, -1];
+
+  document.querySelector("#page").id = "analysis";
+  document.querySelector("#output").id = "page";
 
   analyse();
 }
@@ -84,13 +88,12 @@ function analyse() {
   updateLoader(id, analysisType);
 
   //If the file has not be analysed before, create group to store its data
-  console.log(document.querySelector("#gr" + id));
   if (document.querySelector("#gr" + id) === null) createGroup(id, file);
 
   var terminal = require("child_process").spawn(AP, [
     analysisType,
     file,
-    config,
+    CONFIG_DIRECTORY + "\\" + config,
     outputFolder,
     "-p"
   ]);
@@ -102,6 +105,7 @@ function analyse() {
 
   terminal.on("close", function(code) {
     finishLoader(generateID(fileQueue[analysis[0]]), true);
+    updateGroup(generateID(fileQueue[analysis[0]]), fileQueue[analysis[0]]);
     analyse();
   });
 
@@ -143,7 +147,6 @@ function updateProgressBar(data) {
         parseInt((parseFloat(res[2]) / parseFloat(res[1])) * 100) + "%";
       progress.firstElementChild.style.width = percent;
       progress.firstElementChild.firstElementChild.innerHTML = percent;
-      console.log(percent);
     }
   }
 }
@@ -173,19 +176,71 @@ function getFilename(filePath) {
 }
 
 /**
- * Create the group container for the files detailsa
+ * Create the group container for the files details
  * @param {string} id ID of the file
- * @param {string} filename File path of the audio file
+ * @param {string} filepath File path of the audio file
  */
-function createGroup(id, filename) {
+function createGroup(id, filepath) {
   document.querySelector("#output-tab").innerHTML +=
     '<div class="group" id="gr' +
     id +
     '"><div class="question"><p class="question-text">' +
-    getFilename(filename) +
-    '</p></div><div class="group-content"><table class="output"><tr><td><div><h1>' +
-    getFilename(filename) +
-    "</h1><pre></pre></div></td></tr></table>";
+    getFilename(filepath) +
+    '</p></div><div class="group-content" id="pic' +
+    id +
+    '"><h1 id="ttl' +
+    id +
+    '" onclick="toggleTerminal(this);">Terminal Output</h1><div class="header-content-padded" style="margin-bottom: -28px;"><div class="output" style="display: none" id="div' +
+    id +
+    '"><pre></pre></div></div></div>';
+}
+
+/**
+ * Updates the group container to include all attached images
+ * @param {string} id ID of the file
+ * @param {string} filepath  File path of the audio file
+ */
+function updateGroup(id, filepath) {
+  var fs = require("fs");
+  var folder = outputFolder[0] + "\\" + config.substr(0, config.length - 4);
+  filepath = getFilename(filepath);
+
+  fs.readdir(folder, function(err, filenames) {
+    if (err) return console.log("Err: " + err);
+
+    var group = document.querySelector("#pic" + id);
+
+    filenames.forEach(filename => {
+      if (filename.substr(filename.length - 4) === ".png") {
+        var match = filepath.substr(0, filepath.length - 4) + "__";
+        if (
+          filename.substr(filename.lastIndexOf("\\") + 1, match.length) ===
+          match
+        ) {
+          console.log(filename);
+
+          group.innerHTML =
+            '<h1 id="ttl' +
+            generateID(filename) +
+            '" onclick="toggleImage(this);">' +
+            filename.substr(
+              filename.lastIndexOf("\\") + 1 + match.length,
+              filename.length - 4
+            ) +
+            '</h1><div class="header-content" id="div' +
+            generateID(filename) +
+            '" style="display: none"><div class="scrollimage"><img src="' +
+            folder +
+            "\\" +
+            filename +
+            '" alt="' +
+            filename +
+            ' image" /></div></div>' +
+            group.innerHTML;
+        }
+      }
+    });
+  });
 }
 
 /**
@@ -246,11 +301,6 @@ function audio2csvToggle() {
  * Updates whether the analysis button is disabled or not
  */
 function updateAnalyseButton() {
-  console.debug("Analysis List: " + analysisList.length);
-  console.debug("Audio Files: " + audioFiles.length);
-  console.debug("Config: " + config);
-  console.debug("Output Folder: " + outputFolder);
-
   var button = document.querySelector("#submit button");
   if (
     analysisList.length > 0 &&

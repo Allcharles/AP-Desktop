@@ -61,3 +61,108 @@ body {
   font-size: 14px;
   padding: 0 10px 10px 10px;
 }
+
+.group {
+  background-color: whitesmoke;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 20px auto 0px auto;
+  max-width: 1200px;
+  overflow: hidden;
+  padding: 0px 14px;
+}
+
+.group-content {
+  padding-bottom: 14px;
+  padding-top: 14px;
+}
+
+.group-content p {
+  margin: 0;
+  padding: 0;
+}
+
+.question {
+  background-color: #003100;
+  height: 44px;
+  margin: 0px -14px;
+  overflow: hidden;
+}
+
+.question-fail {
+  background-color: #650000;
+  height: 44px;
+  margin: 0px -14px;
+  overflow: hidden;
+}
+
+.question-text {
+  color: white;
+  display: inline-flex;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0px;
+  padding: 10px 15px 10px 10px;
+}
+
+.question-button {
+  background-color: #002000;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  float: right;
+  font-size: 16px;
+  justify-content: center;
+  margin: 0px;
+  padding: 14px 25px;
+  width: 100px;
+}
+
+.question-button:hover {
+  background-color: #001500;
+}
+
+.question-button-fail {
+  background-color: #4b0000;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  float: right;
+  font-size: 16px;
+  justify-content: center;
+  margin: 0px;
+  padding: 14px 25px;
+  width: 100px;
+}
+
+.question-button-fail:hover {
+  background-color: #3f0000;
+}
+
+.group-content > h1 {
+  background: #00543d;
+  width: 101%;
+  font-size: 18px;
+  color: white;
+  margin: 0px;
+  padding: 10px 15px 10px 10px;
+  margin-left: -14px;
+}
+
+.group-content > h1:first-of-type {
+  margin-top: -14px;
+}
+
+.group-content > h1:hover {
+  background: #004936;
+}
+
+.header-content {
+  margin-bottom: -3px;
+  margin-left: -14px;
+  margin-right: -14px;
+}
+
+.header-content-padded {
+  margin-top: 14px;
+}

@@ -11,42 +11,35 @@ div.filename-analysis {
   align-items: center;
 }
 
-table.output {
-  width: 100%;
+table.output td {
+  width: 500px;
 }
 
-table.output td {
+.output {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.2);
-  padding: 5px;
-  width: 50%;
-}
-
-table.output div {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
+  box-shadow: inset 1px 2px 3px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   height: 100%;
   overflow: hidden;
-  padding: 5px 5px;
-  width: 100%;
+  padding: 5px;
 }
 
-table.output h1 {
-  font-size: 16px;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  text-align: center;
-  width: 100%;
-}
-
-table.output pre {
-  box-sizing: content-box;
+.output pre {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
   height: 300px;
   margin: 0;
   overflow-y: scroll;
-  padding-right: 22px; /* 5px padding plus removal of scroll bar */
+  padding: 10px;
   white-space: pre-wrap;
-  width: 100%;
+  word-wrap: break-word;
+}
+
+.output pre::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+.scrollimage {
+  overflow-x: scroll;
 }
