@@ -16,7 +16,8 @@ const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    minWidth: 650
     //webPreferences: {
     //  nodeIntegrationInWorker: true //Enable multithreading
     //}
@@ -24,11 +25,6 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/html/utilities.html`);
-
-  // Open the DevTools.
-  if (process.env.NODE_ENV !== "production") {
-    mainWindow.webContents.openDevTools();
-  }
 
   // Emitted when the window is closed.
   mainWindow.on("closed", () => {
