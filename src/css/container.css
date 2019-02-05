@@ -157,6 +157,32 @@ body {
   background: #004936;
 }
 
+.h1-no-hover:hover {
+  background: #00543d !important;
+}
+
+.group-content h1 a {
+  background-color: #014633;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  float: right;
+  font-size: 16px;
+  justify-content: center;
+  margin: 0px;
+  margin-top: -10px;
+  padding: 11px 25px;
+  width: 100px;
+}
+
+.group-content h1 a:first-child {
+  margin-right: -8px;
+}
+
+.group-content h1 a:hover {
+  background-color: #003f2d;
+}
+
 .header-content {
   margin-bottom: -3px;
   margin-left: -14px;

@@ -217,8 +217,6 @@ function updateGroup(id, filepath) {
           filename.substr(filename.lastIndexOf("\\") + 1, match.length) ===
           match
         ) {
-          console.log(filename);
-
           group.innerHTML =
             '<h1 id="ttl' +
             generateID(filename) +

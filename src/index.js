@@ -23,7 +23,7 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/html/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/html/utilities.html`);
 
   // Open the DevTools.
   if (process.env.NODE_ENV !== "production") {
