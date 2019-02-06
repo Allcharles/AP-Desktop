@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../css/spinner.css" />
     <link rel="stylesheet" type="text/css" href="../css/progress.css" />
     <link rel="stylesheet" type="text/css" href="../css/progressBar.css" />
+    <link rel="stylesheet" type="text/css" href="../css/switch.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -108,69 +109,19 @@
           </div>
 
           <div id="submit" style="display: inherit">
-            <button type="submit" onclick="">Submit</button>
+            <button type="submit" onclick="myFunction()">Submit</button>
           </div>
+          <script>
+            function myFunction() {
+              const remote = require("electron").remote;
+              const BrowserWindow = remote.BrowserWindow;
+
+              var win = new BrowserWindow({ width: 539, height: 420 });
+              win.loadURL(`file://${__dirname}/eventDetector.html`);
+            }
+          </script>
         </div>
       </div>
-
-      <form>
-        <div style="background: coral; width: 500px">
-          <h1 style="margin: 0; padding: 0; text-align: center">Sound</h1>
-          <div style="margin: 0 auto; width: 300px; height: 54px;">
-            <audio controls>
-              <source
-                src="D:\Desktop\VRES\Harry Hines Frog Dataset\QUT_Hines_Kroombit\F_014S01_20100803_130000.wav"
-                type="audio/wav"
-              />
-            </audio>
-          </div>
-          <h1 style="margin: 0; padding: 0; text-align: center">Spectrogram</h1>
-          <div
-            style="position:relative; height: 32px; margin-left: auto; margin-right: auto; width: 100px"
-          >
-            <img
-              style="position: absolute; clip: rect(0, 100px, 200px, 0)"
-              src="D:\Desktop\VRES\Harry Hines Frog Dataset\QUT_Hines_Kroombit\Output\Towsey.Acoustic\20161213T003000Z__ACI-ENT-EVN.SpectralRibbon.png"
-              alt=".ClipHiAmpl image"
-            />
-          </div>
-
-          <table class="flex">
-            <tr>
-              <td>
-                <p class="checkbox-custom-label">
-                  Animal
-                </p>
-              </td>
-              <td>
-                <input
-                  id="animal-input"
-                  name="event-recogniser"
-                  type="text"
-                  required
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p class="checkbox-custom-label">
-                  Comment
-                </p>
-              </td>
-              <td>
-                <textarea
-                  id="comment-input"
-                  name="event-recogniser"
-                  style="max-width: 100%; width: 100%; box-sizing: border-box; resize: vertical"
-                  rows="4"
-                  placeholder="Comment"
-                  required
-                ></textarea>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </form>
     </div>
   </body>
 </html>
