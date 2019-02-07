@@ -88,6 +88,8 @@ function analyse() {
 
   //Determine analysis to run
   let file = fileQueue[analysis[FILE]];
+  let filename = file.substr(file.lastIndexOf("\\"));
+  filename.substr(0, filename.length - 4);
   let id = generateID(file);
   let analysisType = analysisQueue[analysis[ANALYSIS]];
   updateLoader(id, analysisType);
@@ -99,7 +101,7 @@ function analyse() {
     analysisType,
     file,
     configFiles[config].filePath,
-    outputFolder,
+    outputFolder + "\\" + filename,
     "-p"
   ]);
 
