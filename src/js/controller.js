@@ -111,8 +111,13 @@ function analyse() {
   });
 
   terminal.on("close", function(code) {
-    finishLoader(generateID(fileQueue[analysis[0]]), true);
-    updateGroup(generateID(fileQueue[analysis[0]]), fileQueue[analysis[0]]);
+    console.log(code);
+    finishLoader(generateID(fileQueue[analysis[0]]), code === 0);
+    updateGroup(
+      generateID(fileQueue[analysis[0]]),
+      fileQueue[analysis[0]],
+      code === 0
+    );
     analyse();
   });
 
@@ -207,7 +212,15 @@ function createGroup(id, filepath) {
  * @param {string} id ID of the file
  * @param {string} filepath  File path of the audio file
  */
-function updateGroup(id, filepath) {
+function updateGroup(id, filepath, success) {
+  if (!success) {
+    var group = document.querySelector("#pic" + id).parentElement
+      .firstElementChild;
+    group.className = "question-fail";
+
+    return;
+  }
+
   var fs = require("fs");
   filepath = getFilename(filepath);
   var folder =
