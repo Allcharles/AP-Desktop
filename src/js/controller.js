@@ -465,40 +465,64 @@ function sortConfig() {
  * Get config files for the drop down list. This searches the CONFIG_DIRECTORY recursively until all .yml files are found.
  * @param {string} folder Folder Path. Defaults to CONFIG_DIRECTORY.
  */
-function getConfig(folder = CONFIG_DIRECTORY) {
-  fs.readdir(folder, function(err, fileArray) {
-    if (err) return console.log("Err: " + err);
-    fileArray.forEach(filename => {
-      const fullPath = `${folder}/${filename}`;
-
-      fs.stat(fullPath, function(err, fileData) {
-        var select = document.querySelector("#config-select");
-
-        if (fileData.isFile()) {
-          if (filename.substr(filename.length - 4) === ".yml") {
-            const file = {};
-            file.id = configFiles.length;
-            file.filePath = fullPath; //Full file path
-            file.fileName = filename.substr(0, filename.length - 4); //File name minus '.yml'
-            configFiles.push(file);
-
-            //Create option for config files
-            var option = "<option ";
-            option += file.fileName === DEFAULT_CONFIG ? "selected " : "";
-            option += "value='" + file.id + "'>" + file.fileName + "</option>";
-            select.innerHTML += option;
-
-            //Update default config file
-            config = file.fileName === DEFAULT_CONFIG ? file.id : config;
-
-            sortConfig();
+function getConfig() {
+  //Parallel Recursive Search (https://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search)
+  var fs = require("fs");
+  var path = require("path");
+  var walk = function(dir, done) {
+    var results = [];
+    fs.readdir(dir, function(err, list) {
+      if (err) return done(err);
+      var pending = list.length;
+      if (!pending) return done(null, results);
+      list.forEach(function(file) {
+        file = path.resolve(dir, file);
+        fs.stat(file, function(err, stat) {
+          if (stat && stat.isDirectory()) {
+            walk(file, function(err, res) {
+              results = results.concat(res);
+              if (!--pending) done(null, results);
+            });
+          } else {
+            results.push(file);
+            if (!--pending) done(null, results);
           }
-        } else {
-          //This is a folder, search rescursively
-          getConfig(fullPath);
-        }
+        });
       });
     });
+  };
+
+  walk(CONFIG_DIRECTORY, function(err, results) {
+    if (err) throw err;
+
+    var select = document.querySelector("#config-select");
+    results.forEach(filepath => {
+      //Check file is .yml
+      if (filepath.substr(filepath.length - 4) === ".yml") {
+        var filename = filepath.substr(filepath.lastIndexOf("\\") + 1);
+        filename = filename.substr(0, filename.length - 4);
+
+        var file = {};
+        file.id = eventList.length;
+        file.filePath = filepath; //Full file path
+        file.fileName = filename; //File name minus file extension
+        file.extension = filepath.substr(filepath.length - 4);
+
+        configFiles.push(file);
+
+        //Create option for config files
+        var option = "<option ";
+        option += file.fileName === DEFAULT_CONFIG ? "selected " : "";
+        option += "value='" + file.id + "'>" + file.fileName + "</option>";
+        select.innerHTML += option;
+
+        //Update default config file
+        config = file.fileName === DEFAULT_CONFIG ? file.id : config;
+      }
+    });
+
+    console.log(configFiles);
+    sortConfig();
   });
 }
 

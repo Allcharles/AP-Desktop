@@ -86,7 +86,7 @@ function findFilesRecursive(folderList, match, contains = "") {
         file.id = eventList.length;
         file.filePath = filepath; //Full file path
         file.fileName = filename; //File name minus file extension
-        file.extension = filepath.substr(filepath.length - 4);
+        file.extension = filepath.substr(filepath.length - match.length);
         eventList.push(file);
 
         console.log(file);
