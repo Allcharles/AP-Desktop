@@ -1,15 +1,20 @@
 const electron = require("electron");
 const dialog = electron.remote.dialog;
-const { ipcRenderer } = electron;
 const SUPPORTED_AUDIO_FORMATS = ["wav"];
 const AP = "AnalysisPrograms.exe";
-const DEFAULT_CONFIG = "Towsey.Acoustic.yml";
+const DEFAULT_CONFIG = "Towsey.Acoustic";
 const CONFIG_DIRECTORY = "C:\\AP\\ConfigFiles";
+const fs = require("fs");
+
+function testing() {
+  console.log("Testing");
+}
 
 /** Used in the form to determine inputs */
 var analysisList = [];
 var audioFiles = [];
-var config = DEFAULT_CONFIG;
+var configFiles = [];
+var config = 0;
 var outputFolder = "";
 var audio2csvEnum = Object.freeze({ parallel: "-p" });
 var audio2csvOptions = [audio2csvEnum.parallel];
@@ -93,7 +98,7 @@ function analyse() {
   var terminal = require("child_process").spawn(AP, [
     analysisType,
     file,
-    CONFIG_DIRECTORY + "\\" + config,
+    configFiles[config].filePath,
     outputFolder,
     "-p"
   ]);
@@ -202,7 +207,7 @@ function createGroup(id, filepath) {
  */
 function updateGroup(id, filepath) {
   var fs = require("fs");
-  var folder = outputFolder[0] + "\\" + config.substr(0, config.length - 4);
+  var folder = outputFolder[0] + "\\" + configFiles[config].fileName;
   filepath = getFilename(filepath);
 
   fs.readdir(folder, function(err, filenames) {
@@ -303,7 +308,7 @@ function updateAnalyseButton() {
   if (
     analysisList.length > 0 &&
     audioFiles.length > 0 &&
-    config !== "" &&
+    configFiles[config].fileName !== "" &&
     outputFolder !== ""
   ) {
     button.disabled = false;
@@ -409,39 +414,72 @@ function updateAudio() {
 }
 
 /**
- * Get config files for the drop down list
+ * Sort the config selection into alphabetical order
  */
-function getConfig() {
-  var fs = require("fs");
-  var folder = CONFIG_DIRECTORY;
+function sortConfig() {
+  //Get options from select table and create an array
+  var options = document.querySelectorAll("#config-select option");
 
-  fs.readdir(folder, function(err, filenames) {
-    if (err) return console.log("Err: " + err);
-
-    var select = document.querySelector("#config-select");
-    filenames.forEach(filename => {
-      if (filename.substr(filename.length - 4) === ".yml") {
-        if (filename === DEFAULT_CONFIG)
-          select.innerHTML +=
-            "<option selected value='" +
-            filename +
-            "'>" +
-            filename +
-            "</option>";
-        else
-          select.innerHTML +=
-            "<option value='" + filename + "'>" + filename + "</option>";
-      }
-    });
+  var arr = [];
+  options.forEach(option => {
+    arr.push({ t: option.innerHTML, v: option.value });
   });
 
-  /*fs.readFile("C:/AP/ConfigFiles/Towsey.Acoustic.yml", "utf8", function(
-    err,
-    data
-  ) {
+  //Sort list alphabetically ignoring case
+  arr.sort(function(o1, o2) {
+    var t1 = o1.t.toLowerCase(),
+      t2 = o2.t.toLowerCase();
+
+    return t1 > t2 ? 1 : t1 < t2 ? -1 : 0;
+  });
+
+  //Update options
+  for (var i = 0; i < options.length; i++) {
+    options[i].value = arr[i].v;
+    options[i].innerHTML = arr[i].t;
+    options[i].selected = arr[i].t === DEFAULT_CONFIG ? true : false;
+  }
+}
+
+/**
+ * Get config files for the drop down list. This searches the CONFIG_DIRECTORY recursively until all .yml files are found.
+ * @param {string} folder Folder Path. Defaults to CONFIG_DIRECTORY.
+ */
+function getConfig(folder = CONFIG_DIRECTORY) {
+  fs.readdir(folder, function(err, fileArray) {
     if (err) return console.log("Err: " + err);
-    else return console.log("Data:\n" + data);
-  });*/
+    fileArray.forEach(filename => {
+      const fullPath = `${folder}/${filename}`;
+
+      fs.stat(fullPath, function(err, fileData) {
+        var select = document.querySelector("#config-select");
+
+        if (fileData.isFile()) {
+          if (filename.substr(filename.length - 4) === ".yml") {
+            const file = {};
+            file.id = configFiles.length;
+            file.filePath = fullPath; //Full file path
+            file.fileName = filename.substr(0, filename.length - 4); //File name minus '.yml'
+            configFiles.push(file);
+
+            //Create option for config files
+            var option = "<option ";
+            option += file.fileName === DEFAULT_CONFIG ? "selected " : "";
+            option += "value='" + file.id + "'>" + file.fileName + "</option>";
+            select.innerHTML += option;
+
+            //Update default config file
+            config = file.fileName === DEFAULT_CONFIG ? file.id : config;
+
+            sortConfig();
+          }
+        } else {
+          //This is a folder, search rescursively
+          getConfig(fullPath);
+        }
+      });
+    });
+  });
 }
 
 /**
@@ -449,14 +487,16 @@ function getConfig() {
  * @param {Element} el Element object
  */
 function updateConfig(el) {
-  if (el.selectedIndex !== 1) {
+  var option = Number(el.querySelector("option:checked").value);
+  console.log(option);
+
+  if (option !== -1) {
     success("config");
-    config = el.querySelector("option:checked").value;
   } else {
     failure("config");
-    config = "";
   }
 
+  config = option;
   updateAnalyseButton();
 }
 
