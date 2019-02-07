@@ -80,8 +80,11 @@ function findFilesRecursive(folderList, match, contains = "") {
       if (err) throw err;
 
       results.forEach(filepath => {
-        var filename = filepath.substr(filepath.lastIndexOf("\\") + 1);
-        filename = filename.substr(0, filename.length - match.length);
+        var fullFilename = filepath.substr(filepath.lastIndexOf("\\") + 1);
+        var filename = fullFilename.substr(
+          0,
+          fullFilename.lastIndexOf("_") - 1
+        );
 
         var file = {};
         file.id = eventList.length;
@@ -89,7 +92,7 @@ function findFilesRecursive(folderList, match, contains = "") {
         file.fileName = filename; //File name minus file extension
         file.extension = filepath.substr(filepath.length - match.length);
 
-        if (file.extension === match && file.fileName.includes(contains)) {
+        if (file.extension === match && fullFilename.includes(contains)) {
           eventList.push(file);
 
           document.getElementById("EventDetectionForm").innerHTML +=
@@ -97,7 +100,7 @@ function findFilesRecursive(folderList, match, contains = "") {
             generateID(file.filePath) +
             '" value="' +
             file.id +
-            '" class="checkbox-custom" name="eventDetection" type="checkbox" onchange="" /><label for="util' +
+            '" class="checkbox-custom" name="eventDetection" type="checkbox" checked onchange="" /><label for="util' +
             generateID(file.filePath) +
             '" class="checkbox-custom-label">' +
             file.fileName +
@@ -106,48 +109,26 @@ function findFilesRecursive(folderList, match, contains = "") {
       });
     });
   });
+}
 
-  /*
-  for (var i = 0; i < folderList.length; i++) {
-    var folder = folderList[i];
-    console.log(folder);
-    fs.readdir(folder, function(err, fileArray) {
-      if (err) return console.log("Err: " + err);
-      fileArray.forEach(filename => {
-        var fullPath = `${folder}/${filename}`;
-
-        fs.stat(fullPath, function(err, fileData) {
-          if (err) return console.log("Err: " + err);
-
-          if (fileData.isFile()) {
-            if (
-              filename.substr(filename.length - 4) === match &&
-              filename.includes(contains)
-            ) {
-              var file = {};
-              file.id = eventList.length;
-              file.filePath = fullPath; //Full file path
-              file.fileName = filename.substr(0, filename.length - 4); //File name minus file extension
-              file.extension = match;
-              eventList.push(file);
-
-              document.getElementById("EventDetectionForm").innerHTML +=
-                '<li><input id="util' +
-                generateID(file.filePath) +
-                '" value="' +
-                file.id +
-                '" class="checkbox-custom" name="eventDetection" type="checkbox" onchange="" /><label for="util' +
-                generateID(file.filePath) +
-                '" class="checkbox-custom-label">' +
-                file.fileName +
-                "</label></li>";
-            }
-          } else {
-            //This is a folder, search rescursively
-            findFilesRecursive([fullPath], match, contains);
-          }
-        });
-      });
+/**
+ * Checks all inputs in the event detection helper
+ */
+function checkAll() {
+  document
+    .querySelectorAll("#EventDetectionForm input")
+    .forEach(function(node) {
+      node.checked = true;
     });
-  }*/
+}
+
+/**
+ * Unchecks all inputs in the event detection helper
+ */
+function uncheckAll() {
+  document
+    .querySelectorAll("#EventDetectionForm input")
+    .forEach(function(node) {
+      node.checked = false;
+    });
 }

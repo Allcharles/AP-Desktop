@@ -522,7 +522,6 @@ function getConfig() {
       }
     });
 
-    console.log(configFiles);
     sortConfig();
   });
 }
