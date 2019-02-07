@@ -191,9 +191,9 @@ function createGroup(id, filepath) {
   document.querySelector("#output-tab").innerHTML +=
     '<div class="group" id="gr' +
     id +
-    '"><div class="question"><p class="question-text">' +
+    '"><div class="question" onclick="toggleHeader(this);"><p class="question-text">' +
     getFilename(filepath) +
-    '</p></div><div class="group-content" id="pic' +
+    '</p></div><div class="group-content" style="display: none"id="pic' +
     id +
     '"><h1 id="ttl' +
     id +

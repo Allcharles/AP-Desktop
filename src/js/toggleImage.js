@@ -1,6 +1,6 @@
 /**
  * Toggles visibility to the output image
- * @param el [Object] Title element
+ * @param el [object] Title element
  */
 function toggleImage(el) {
   var img = document.querySelector("#div" + el.id.substr(3));
@@ -12,7 +12,7 @@ function toggleImage(el) {
 
 /**
  * Toggles visibility to the terminal output. This also removes the whitespace from the bottom of the group object.
- * @param el [Object] Title element
+ * @param el [object] Title element
  */
 function toggleTerminal(el) {
   var terminal = document.querySelector("#div" + el.id.substr(3));
@@ -25,4 +25,16 @@ function toggleTerminal(el) {
     terminal.style.display = "none";
     parent.style.marginBottom = "-28px";
   }
+}
+
+/**
+ * Toggles visibility for the files group content div
+ * @param [object] el Header element
+ */
+function toggleHeader(el) {
+  var body = el.parentElement.lastElementChild;
+
+  body.style.display === "none"
+    ? (body.style.display = "inherit")
+    : (body.style.display = "none");
 }
