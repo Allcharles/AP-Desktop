@@ -27,7 +27,7 @@ var analysisQueue = [];
 /**
  * This function outputs all terminal commands to the console for review
  */
-/*
+
 (function() {
   var childProcess = require("child_process");
   var oldSpawn = childProcess.spawn;
@@ -38,7 +38,7 @@ var analysisQueue = [];
     return result;
   }
   childProcess.spawn = mySpawn;
-})();*/
+})();
 
 function submitForm(e) {
   e.preventDefault();
@@ -88,8 +88,8 @@ function analyse() {
 
   //Determine analysis to run
   let file = fileQueue[analysis[FILE]];
-  let filename = file.substr(file.lastIndexOf("\\"));
-  filename.substr(0, filename.length - 4);
+  let filename = file.substr(file.lastIndexOf("\\") + 1);
+  filename = filename.substr(0, filename.length - 4);
   let id = generateID(file);
   let analysisType = analysisQueue[analysis[ANALYSIS]];
   updateLoader(id, analysisType);
@@ -209,8 +209,13 @@ function createGroup(id, filepath) {
  */
 function updateGroup(id, filepath) {
   var fs = require("fs");
-  var folder = outputFolder[0] + "\\" + configFiles[config].fileName;
   filepath = getFilename(filepath);
+  var folder =
+    outputFolder[0] +
+    "\\" +
+    filepath.substr(0, filepath.length - 4) +
+    "\\" +
+    configFiles[config].fileName;
 
   fs.readdir(folder, function(err, filenames) {
     if (err) return console.log("Err: " + err);
@@ -490,7 +495,6 @@ function getConfig(folder = CONFIG_DIRECTORY) {
  */
 function updateConfig(el) {
   var option = Number(el.querySelector("option:checked").value);
-  console.log(option);
 
   if (option !== -1) {
     success("config");

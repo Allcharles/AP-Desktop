@@ -16,6 +16,7 @@
       rel="stylesheet"
     />
     <script type="text/javascript" src="../js/controller.js"></script>
+    <script type="text/javascript" src="../js/navigation.js"></script>
     <script type="text/javascript" src="../js/toggleImage.js"></script>
     <meta charset="utf-8" />
     <title>AP Desktop</title>
@@ -23,9 +24,9 @@
   <body onload="checkEnvironment()">
     <div id="header">
       <button id="logo">AP Desktop</button>
-      <a href="analysis.html"><button id="page">Analysis</button></a>
-      <a href="output.html"><button id="output">Output</button></a>
-      <a href="utilities.html"><button>Utilities</button></a>
+      <button id="page" onclick="changePage(this);">Analysis</button>
+      <button id="output">Output</button>
+      <button id="utilities" onclick="changePage(this);">Utilities</button>
     </div>
 
     <!--Container for the analysis page-->
@@ -458,6 +459,94 @@
               </td>
             </tr>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" id="utilities-tab" style="display: none">
+      <div class="group" id="Options">
+        <div class="question"><p class="question-text">Options</p></div>
+        <div class="group-content">
+          <li>
+            <input
+              id="EventUtility"
+              value="EventUtility"
+              class="checkbox-custom"
+              name="analysis"
+              type="radio"
+              onchange=""
+            />
+            <label for="EventUtility" class="checkbox-custom-label">
+              Event Detection Helper
+            </label>
+          </li>
+        </div>
+      </div>
+
+      <div class="group" id="Event Detection Helper">
+        <div class="question">
+          <p class="question-text">Event Detection Helper</p>
+          <a onclick="">
+            <div class="question-button">Select Folder</div>
+          </a>
+        </div>
+        <div class="group-content" style="display: inherit">
+          <h1 class="h1-no-hover">
+            Select Events
+            <a>Select All</a>
+            <a>Select None</a>
+          </h1>
+
+          <div class="header-content-padded">
+            <li>
+              <input
+                id="Event1"
+                value="Event1"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                checked
+                onchange=""
+              />
+              <label for="Event1" class="checkbox-custom-label">
+                Event1
+              </label>
+            </li>
+            <li>
+              <input
+                id="Event2"
+                value="Event2"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                checked
+                onchange=""
+              />
+              <label for="Event2" class="checkbox-custom-label">
+                Event2
+              </label>
+            </li>
+            <li>
+              <input
+                id="Event3"
+                value="Event3"
+                class="checkbox-custom"
+                name="analysis"
+                type="checkbox"
+                checked
+                onchange=""
+              />
+              <label for="Event3" class="checkbox-custom-label">
+                Event3
+              </label>
+            </li>
+          </div>
+
+          <div id="submit" style="display: inherit">
+            <button type="submit" onclick="eventRecogniserUtility()">
+              Submit
+            </button>
+          </div>
         </div>
       </div>
     </div>
