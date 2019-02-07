@@ -492,6 +492,7 @@ function getConfig() {
     });
   };
 
+  //Get Config Files
   walk(CONFIG_DIRECTORY, function(err, results) {
     if (err) throw err;
 
@@ -503,7 +504,7 @@ function getConfig() {
         filename = filename.substr(0, filename.length - 4);
 
         var file = {};
-        file.id = eventList.length;
+        file.id = configFiles.length;
         file.filePath = filepath; //Full file path
         file.fileName = filename; //File name minus file extension
         file.extension = filepath.substr(filepath.length - 4);

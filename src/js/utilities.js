@@ -74,6 +74,7 @@ function findFilesRecursive(folderList, match, contains = "") {
     });
   };
 
+  //Get .csv files
   folderList.forEach(dir => {
     walk(dir, function(err, results) {
       if (err) throw err;
@@ -87,20 +88,21 @@ function findFilesRecursive(folderList, match, contains = "") {
         file.filePath = filepath; //Full file path
         file.fileName = filename; //File name minus file extension
         file.extension = filepath.substr(filepath.length - match.length);
-        eventList.push(file);
 
-        console.log(file);
+        if (file.extension === match && file.fileName.includes(contains)) {
+          eventList.push(file);
 
-        document.getElementById("EventDetectionForm").innerHTML +=
-          '<li><input id="util' +
-          generateID(file.filePath) +
-          '" value="' +
-          file.id +
-          '" class="checkbox-custom" name="eventDetection" type="checkbox" onchange="" /><label for="util' +
-          generateID(file.filePath) +
-          '" class="checkbox-custom-label">' +
-          file.fileName +
-          "</label></li>";
+          document.getElementById("EventDetectionForm").innerHTML +=
+            '<li><input id="util' +
+            generateID(file.filePath) +
+            '" value="' +
+            file.id +
+            '" class="checkbox-custom" name="eventDetection" type="checkbox" onchange="" /><label for="util' +
+            generateID(file.filePath) +
+            '" class="checkbox-custom-label">' +
+            file.fileName +
+            "</label></li>";
+        }
       });
     });
   });
