@@ -612,20 +612,23 @@
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="2" style="align-content: flex-end">
-                      <div
-                        class="submit"
-                        style="display: inherit; width: 100%;"
-                      >
-                        <button type="submit" style="float: right;">
-                          Submit
-                        </button>
-                        <script>
-                          const form = document.querySelector(
-                            "#EventDetectorAnswerForm"
-                          );
-                          form.addEventListener("submit", eventUtilitySubmit);
-                        </script>
+                    <td colspan="2">
+                      <!--Div is required to center submit button-->
+                      <div>
+                        <div
+                          class="submit"
+                          style="display: inherit; margin-top: 0; margin-bottom: 0;"
+                        >
+                          <button type="submit" style="display: inline">
+                            Submit
+                          </button>
+                          <script>
+                            const form = document.querySelector(
+                              "#EventDetectorAnswerForm"
+                            );
+                            form.addEventListener("submit", eventUtilitySubmit);
+                          </script>
+                        </div>
                       </div>
                     </td>
                   </tr>
