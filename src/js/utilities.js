@@ -171,35 +171,48 @@ function eventDetectionUtilityNext(el) {
     //Grab selection and find related files
     const EVENT_START = 0;
     const EVENT_DURATION = 2;
+    const SPECIES = 8;
     const FILENAME_CELL = 14;
     var csv = eventSelection.pop().filePath;
+    var path = csv.substr(0, csv.lastIndexOf("\\") + 1);
 
-    fs.readFile(csv, (err, data) => {
-      if (err) throw err;
+    //Read csv file
+    var data = fs.readFileSync(csv, "utf8");
+    var rows = data.toString().split("\n");
 
-      var rows = data.toString().split("\n");
+    //Skip the header row and
+    for (let i = 1; i < rows.length; i++) {
+      var cell = rows[i].split(",");
+      var filename = cell[FILENAME_CELL];
 
-      //Skip the header row and
-      for (let i = 1; i < rows.length; i++) {
-        var cell = rows[i].split(",");
-        var filename = cell[FILENAME_CELL];
+      //This removes the last line which can be sometimes left empty
+      if (filename === undefined) continue;
 
-        if (filename === undefined) continue;
+      //Push important details to list
+      eventEvents.push({
+        image: path + filename + "__Image.png",
+        sound: path + filename + ".wav",
+        species: cell[SPECIES],
+        start: parseFloat(cell[EVENT_START]),
+        duration: parseFloat(cell[EVENT_DURATION])
+      });
+    }
 
-        eventEvents.push({
-          image: filename + "__Image.png",
-          sound: filename + ".wav",
-          start: parseFloat(cell[EVENT_START]),
-          duration: parseFloat(cell[EVENT_DURATION])
-        });
-      }
-
-      console.log("Updating List of Events");
-      console.log(eventEvents);
-    });
+    console.log("Updating List of Events");
+    console.log(eventEvents);
   }
 
+  //Get event details
+  var eventDetails = eventEvents.pop();
+  console.log("Event: ");
+  console.log(eventDetails);
+
+  //Update form with details
   var form = document.getElementById("EventDetectorAnswerForm");
+  form.querySelector("#EventDetectorSound source").src = eventDetails.sound;
+  form.querySelector("#EventDetectorSound").load();
+  form.querySelector("#EventDetectorSpectrogram").src = eventDetails.image;
+  form.querySelector("#EventDetectorAnimal").value = eventDetails.species;
 }
 
 /**

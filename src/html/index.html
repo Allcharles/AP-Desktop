@@ -549,23 +549,18 @@
               <div>
                 <h1 style="margin: 0; padding: 0; text-align: center">Sound</h1>
                 <div style="margin: 0 auto; width: 300px; height: 54px;">
-                  <audio controls>
-                    <source
-                      src="D:\Desktop\VRES\Harry Hines Frog Dataset\QUT_Hines_Kroombit\F_014S01_20100803_130000.wav"
-                      type="audio/wav"
-                    />
+                  <audio controls="controls" id="EventDetectorSound">
+                    <source type="audio/wav" />
                   </audio>
                 </div>
                 <h1 style="margin: 0; padding: 0; text-align: center">
                   Spectrogram
                 </h1>
-                <div
-                  style="position:relative; height: 32px; margin-left: auto; margin-right: auto; width: 100px; overflow: hidden;"
-                >
+                <div class="scrollimage">
+                  <!-- clip: rect(0, 100px, 200px, 0);-->
                   <img
-                    style="position: absolute; clip: rect(0, 100px, 200px, 0);"
-                    src="D:\Desktop\VRES\Harry Hines Frog Dataset\QUT_Hines_Kroombit\Output\Towsey.Acoustic\20161213T003000Z__ACI-ENT-EVN.SpectralRibbon.png"
-                    alt=".ClipHiAmpl image"
+                    id="EventDetectorSpectrogram"
+                    alt="Spectrogram image, if you are seeing this update options SaveIntermediateWavFiles and SaveSonogramImages to 'WhenEventsDetected' in config."
                   />
                 </div>
 
@@ -591,7 +586,7 @@
                     </td>
                     <td>
                       <input
-                        id="animal-input"
+                        id="EventDetectorAnimal"
                         name="event-recogniser"
                         type="text"
                         disabled
