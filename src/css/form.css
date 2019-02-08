@@ -74,6 +74,10 @@ ul li.files:last-child {
   padding: 0;
 }
 
+.width-first-col tr:first-child td {
+  min-width: 75px;
+}
+
 .flex td:first-child {
   white-space: nowrap;
   width: 1%;
