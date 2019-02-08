@@ -1,5 +1,6 @@
 var eventList = [];
 var eventSelection = [];
+var eventEvents = [];
 
 /**
  * Lets the user select what files to analyse
@@ -159,17 +160,46 @@ function createEventDetectionUtility(el) {
  */
 function eventDetectionUtilityNext(el) {
   el.preventDefault();
+  var fs = require("fs");
 
   //If no selection left, allow user to select more
   if (eventSelection.length === 0) {
     document.getElementById("EventDetectorForm").style.display = "inherit";
     document.getElementById("EventDetectorAnswerForm").style.display = "none";
+    return;
+  } else if (eventEvents.length === 0) {
+    //Grab selection and find related files
+    const EVENT_START = 0;
+    const EVENT_DURATION = 2;
+    const FILENAME_CELL = 14;
+    var csv = eventSelection.pop().filePath;
+
+    fs.readFile(csv, (err, data) => {
+      if (err) throw err;
+
+      var rows = data.toString().split("\n");
+
+      //Skip the header row and
+      for (let i = 1; i < rows.length; i++) {
+        var cell = rows[i].split(",");
+        var filename = cell[FILENAME_CELL];
+
+        if (filename === undefined) continue;
+
+        eventEvents.push({
+          image: filename + "__Image.png",
+          sound: filename + ".wav",
+          start: parseFloat(cell[EVENT_START]),
+          duration: parseFloat(cell[EVENT_DURATION])
+        });
+      }
+
+      console.log("Updating List of Events");
+      console.log(eventEvents);
+    });
   }
 
-  //Grab selection and find related files
-  var csv = eventSelection.pop().filePath;
-  var imageFiles = [];
-  var soundFiles = [];
+  var form = document.getElementById("EventDetectorAnswerForm");
 }
 
 /**
