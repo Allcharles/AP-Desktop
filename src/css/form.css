@@ -74,8 +74,8 @@ ul li.files:last-child {
   padding: 0;
 }
 
-.width-first-col tr:first-child td {
-  min-width: 75px;
+.padding-right-p p {
+  padding-right: 14px;
 }
 
 .flex td:first-child {

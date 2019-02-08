@@ -518,15 +518,15 @@
             id="eventitems"
             style="display: none;"
           >
-            <form id="EventDetectorForm" style="display: none">
+            <form id="EventDetectorForm" style="display: inherit">
               <div id="EventDetectionInputs"></div>
               <div
                 class="submit"
                 id="EventDetectionSubmit"
-                style="display: inherit"
+                style="display: inherit; width: 162px;"
               >
                 <button type="submit">
-                  Submit
+                  Verify Events
                 </button>
 
                 <script>
@@ -541,7 +541,7 @@
                 </script>
               </div>
             </form>
-            <form id="EventDetectorAnswerForm" style="display: inherit">
+            <form id="EventDetectorAnswerForm" style="display: none">
               <div>
                 <h1 style="margin: 0; padding: 0; text-align: center">Sound</h1>
                 <div style="margin: 0 auto; width: 300px; height: 54px;">
@@ -565,7 +565,7 @@
                   />
                 </div>
 
-                <table class="flex width-first-col">
+                <table class="flex padding-right-p">
                   <tr>
                     <td>
                       <p class="checkbox-custom-label">
@@ -620,7 +620,7 @@
                           style="display: inherit; margin-top: 0; margin-bottom: 0;"
                         >
                           <button type="submit" style="display: inline">
-                            Submit
+                            Next
                           </button>
                           <script>
                             const form = document.querySelector(
