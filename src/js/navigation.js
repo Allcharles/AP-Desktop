@@ -1,16 +1,4 @@
 /**
- * Creates event recogniser form
- */
-function eventRecogniserUtility() {
-  var ipcRenderer = require("electron").ipcRenderer;
-  const remote = require("electron").remote;
-  const BrowserWindow = remote.BrowserWindow;
-
-  var win = new BrowserWindow({ width: 539, height: 420 });
-  win.loadURL(`file://${__dirname}/eventDetector.html`);
-}
-
-/**
  * Changes the navigation tab
  * @param [object] el HTML element
  */

@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../css/spinner.css" />
     <link rel="stylesheet" type="text/css" href="../css/progress.css" />
     <link rel="stylesheet" type="text/css" href="../css/progressBar.css" />
+    <link rel="stylesheet" type="text/css" href="../css/switch.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -42,7 +43,7 @@
         </div>
       </div>
 
-      <form>
+      <form id="AnalysisForm">
         <div class="group" id="select" style="display: none">
           <div class="question">
             <p class="question-text">Select Analysis Types</p>
@@ -167,7 +168,7 @@
           </div>
         </div>
 
-        <div class="group" id="output" style="display: none">
+        <div class="group" id="outputFolder" style="display: none">
           <div class="question-fail">
             <p class="question-text">Output Folder</p>
             <a onclick="setOutputFolder()"
@@ -432,14 +433,15 @@
           </div>
         </div>
 
-        <div id="submit" style="display: none">
+        <div id="submit" class="submit" style="display: none">
           <button type="submit" disabled>Analyse</button>
         </div>
       </form>
 
       <script>
-        const form = document.querySelector("form");
-        form.addEventListener("submit", submitForm);
+        //Captures submit button
+        const analysisForm = document.querySelector("#AnalysisForm");
+        analysisForm.addEventListener("submit", analysisForm);
       </script>
     </div>
 
@@ -466,6 +468,7 @@
       </div>
     </div>
 
+    <!--Container for the utilities page-->
     <div class="container" id="utilities-tab" style="display: none">
       <div class="group" id="Options">
         <div class="question"><p class="question-text">Options</p></div>
@@ -489,14 +492,18 @@
       <div class="group" id="EventDetectionHelper">
         <div class="question">
           <p class="question-text">Event Detection Helper</p>
-          <a onclick="">
-            <div class="question-button" onclick="eventSelectFolder()">
+          <a id="EventDetectionHelperSelect" onclick="eventSelectFolder()">
+            <div class="question-button">
               Select Folder
             </div>
           </a>
         </div>
         <div class="group-content" style="display: inherit">
-          <h1 class="h1-no-hover" style="margin-bottom: -14px;">
+          <h1
+            id="EventDetectionHelperButtons"
+            class="h1-no-hover"
+            style="margin-bottom: -14px;"
+          >
             Select Events
             <a onclick="checkAll();">Select All</a>
             <a onclick="uncheckAll();">Select None</a>
@@ -515,12 +522,119 @@
             id="eventitems"
             style="display: none;"
           >
-            <form>
-              <div id="EventDetectionForm"></div>
-              <div id="submit" style="display: inherit">
-                <button type="submit" onclick="eventRecogniserUtility()">
-                  Submit
+            <form id="EventDetectorForm" style="display: inherit">
+              <div id="EventDetectionInputs"></div>
+              <div
+                class="submit"
+                id="EventDetectionSubmit"
+                style="display: inherit; width: 162px;"
+              >
+                <button type="submit">
+                  Verify Events
                 </button>
+
+                <script>
+                  //Captures submit button
+                  const eventDetectorForm = document.querySelector(
+                    "#EventDetectorForm"
+                  );
+                  eventDetectorForm.addEventListener(
+                    "submit",
+                    createEventDetectionUtility
+                  );
+                </script>
+              </div>
+            </form>
+            <form id="EventDetectorAnswerForm" style="display: none">
+              <div>
+                <h1 style="margin: 0; padding: 0; text-align: center">Sound</h1>
+                <div style="margin: 0 auto; width: 300px; height: 54px;">
+                  <audio controls id="EventDetectorSound">
+                    <source type="audio/wav" />
+                  </audio>
+                </div>
+                <h1 style="margin: 0; padding: 0; text-align: center">
+                  Spectrogram
+                </h1>
+                <div class="scrollimage">
+                  <!-- clip: rect(0, 100px, 200px, 0);-->
+                  <img
+                    id="EventDetectorSpectrogram"
+                    alt="Spectrogram image, if you are seeing this update options SaveIntermediateWavFiles and SaveSonogramImages to 'WhenEventsDetected' in config."
+                  />
+                </div>
+
+                <table class="flex padding-right-p">
+                  <tr>
+                    <td>
+                      <p class="checkbox-custom-label">
+                        Event
+                      </p>
+                    </td>
+                    <td>
+                      <label class="switch">
+                        <input type="checkbox" onchange="toggleEvent(this);" />
+                        <span class="slider"></span>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p class="checkbox-custom-label">
+                        Animal
+                      </p>
+                    </td>
+                    <td>
+                      <input
+                        id="EventDetectorAnimal"
+                        name="event-recogniser"
+                        type="text"
+                        disabled
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p class="checkbox-custom-label">
+                        Comment
+                      </p>
+                    </td>
+                    <td>
+                      <textarea
+                        id="EventDetectorComment"
+                        name="event-recogniser"
+                        style="max-width: 100%; width: 100%; box-sizing: border-box; resize: vertical"
+                        rows="4"
+                        placeholder="Comment"
+                        disabled
+                      ></textarea>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <!--Div is required to center submit button-->
+                      <div>
+                        <div
+                          class="submit"
+                          style="display: inherit; margin-top: 0; margin-bottom: 0;"
+                        >
+                          <button type="submit" style="display: inline">
+                            Next
+                          </button>
+                          <script>
+                            const form = document.querySelector(
+                              "#EventDetectorAnswerForm"
+                            );
+                            form.addEventListener(
+                              "submit",
+                              eventDetectionUtilityNext
+                            );
+                          </script>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </div>
             </form>
           </div>

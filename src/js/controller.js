@@ -6,10 +6,6 @@ const DEFAULT_CONFIG = "Towsey.Acoustic";
 const CONFIG_DIRECTORY = "C:\\AP\\ConfigFiles";
 const fs = require("fs");
 
-function testing() {
-  console.log("Testing");
-}
-
 /** Used in the form to determine inputs */
 var analysisList = [];
 var audioFiles = [];
@@ -344,11 +340,11 @@ function setOutputFolder() {
       title: "Select Output Folder"
     },
     function(folder) {
-      var content = document.querySelector("#output .group-content");
+      var content = document.querySelector("#outputFolder .group-content");
 
       //No folder selected
       if (folder === undefined) {
-        failure("output");
+        failure("outputFolder");
         outputFolder = "";
 
         //Show "no folder" message and hide folder location
@@ -356,7 +352,7 @@ function setOutputFolder() {
         content.lastElementChild.style.display = "none";
         content.lastElementChild.innerHTML = "";
       } else {
-        success("output");
+        success("outputFolder");
         outputFolder = folder;
 
         //Hide "no folder" message and show folder location
@@ -583,7 +579,7 @@ function selectAnalysis(el) {
   var inputList = [
     ["audio", false],
     ["config", false],
-    ["output", false],
+    ["outputFolder", false],
     ["audio2csv-options", false],
     ["submit", false]
   ];
@@ -602,7 +598,7 @@ function selectAnalysis(el) {
         addItems(inputList, [
           "audio",
           "config",
-          "output",
+          "outputFolder",
           "audio2csv-options",
           "submit"
         ]);
@@ -613,9 +609,9 @@ function selectAnalysis(el) {
   //Enable required inputs
   inputList.forEach(id => {
     if (id[1]) {
-      form.querySelector("#" + id[0]).style.display = "inherit";
+      document.querySelector("#" + id[0]).style.display = "inherit";
     } else {
-      form.querySelector("#" + id[0]).style.display = "none";
+      document.querySelector("#" + id[0]).style.display = "none";
     }
   });
 }
