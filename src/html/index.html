@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <form>
+      <form id="AnalysisForm">
         <div class="group" id="select" style="display: none">
           <div class="question">
             <p class="question-text">Select Analysis Types</p>
@@ -167,7 +167,7 @@
           </div>
         </div>
 
-        <div class="group" id="output" style="display: none">
+        <div class="group" id="outputFolder" style="display: none">
           <div class="question-fail">
             <p class="question-text">Output Folder</p>
             <a onclick="setOutputFolder()"
@@ -438,8 +438,9 @@
       </form>
 
       <script>
-        const form = document.querySelector("form");
-        form.addEventListener("submit", submitForm);
+        //Captures submit button
+        const analysisForm = document.querySelector("#AnalysisForm");
+        analysisForm.addEventListener("submit", analysisForm);
       </script>
     </div>
 
@@ -466,6 +467,7 @@
       </div>
     </div>
 
+    <!--Container for the utilities page-->
     <div class="container" id="utilities-tab" style="display: none">
       <div class="group" id="Options">
         <div class="question"><p class="question-text">Options</p></div>
@@ -515,12 +517,23 @@
             id="eventitems"
             style="display: none;"
           >
-            <form>
-              <div id="EventDetectionForm"></div>
+            <form id="EventDetectorForm">
+              <div id="EventDetectionInputs"></div>
               <div id="submit" style="display: inherit">
-                <button type="submit" onclick="eventRecogniserUtility()">
+                <button type="submit">
                   Submit
                 </button>
+
+                <script>
+                  //Captures submit button
+                  const eventDetectorForm = document.querySelector(
+                    "#EventDetectorForm"
+                  );
+                  eventDetectorForm.addEventListener(
+                    "submit",
+                    eventDetectionUtility
+                  );
+                </script>
               </div>
             </form>
           </div>

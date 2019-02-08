@@ -95,7 +95,7 @@ function findFilesRecursive(folderList, match, contains = "") {
         if (file.extension === match && fullFilename.includes(contains)) {
           eventList.push(file);
 
-          document.getElementById("EventDetectionForm").innerHTML +=
+          document.getElementById("EventDetectionInputs").innerHTML +=
             '<li><input id="util' +
             generateID(file.filePath) +
             '" value="' +
@@ -112,11 +112,25 @@ function findFilesRecursive(folderList, match, contains = "") {
 }
 
 /**
+ * Creates the event detector utility.
+ * @param [object] el HTML element
+ */
+function eventDetectionUtility(el) {
+  el.preventDefault();
+
+  const remote = require("electron").remote;
+  const BrowserWindow = remote.BrowserWindow;
+
+  var win = new BrowserWindow({ width: 539, height: 420 });
+  win.loadURL(`file://${__dirname}/eventDetector.html`);
+}
+
+/**
  * Checks all inputs in the event detection helper
  */
 function checkAll() {
   document
-    .querySelectorAll("#EventDetectionForm input")
+    .querySelectorAll("#EventDetectionInputs input")
     .forEach(function(node) {
       node.checked = true;
     });
@@ -127,7 +141,7 @@ function checkAll() {
  */
 function uncheckAll() {
   document
-    .querySelectorAll("#EventDetectionForm input")
+    .querySelectorAll("#EventDetectionInputs input")
     .forEach(function(node) {
       node.checked = false;
     });
