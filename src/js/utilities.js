@@ -163,7 +163,7 @@ function eventDetectionUtilityNext(el) {
   var fs = require("fs");
 
   //If no selection left, allow user to select more
-  if (eventSelection.length === 0) {
+  if (eventSelection.length === 0 && eventEvents.length === 0) {
     document.getElementById("EventDetectorForm").style.display = "inherit";
     document.getElementById("EventDetectorAnswerForm").style.display = "none";
     return;
