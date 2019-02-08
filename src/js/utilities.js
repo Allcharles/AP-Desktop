@@ -20,19 +20,29 @@ function eventSelectFolder() {
       title: "Select Event Folder"
     },
     function(folder) {
+      //Clear EventList and spinner
+      eventList = [];
+      document.querySelector("#eventspinner").style.display = "none";
+
+      //If no folder is selected
       if (folder === undefined) {
-        document.querySelector("#eventspinner").style.display = "none";
+        console.log("No Folder");
+
+        //Hide event items
         document.querySelector("#eventitems").style.display = "none";
         document.querySelector(
           "#EventDetectionHelper .h1-no-hover"
         ).style.marginBottom = "-14px";
+
+        //End function
+        return;
       }
 
-      eventList = [];
-      document.getElementById("EventDetectionForm").innerHTML = "";
+      //Update EventDetectionInputs
+      document.getElementById("EventDetectionInputs").innerHTML = "";
       findFilesRecursive(folder, ".csv", ".Events");
 
-      document.querySelector("#eventspinner").style.display = "none";
+      //Display event items
       document.querySelector("#eventitems").style.display = "inherit";
       document.querySelector(
         "#EventDetectionHelper .h1-no-hover"
@@ -117,6 +127,8 @@ function findFilesRecursive(folderList, match, contains = "") {
  */
 function eventDetectionUtility(el) {
   el.preventDefault();
+
+  global.test = { value: "test" };
 
   const remote = require("electron").remote;
   const BrowserWindow = remote.BrowserWindow;

@@ -1,14 +1,14 @@
-#submit {
+.submit {
   height: 54px;
   margin: 14px auto;
   width: 125px;
 }
 
-#submit button:disabled {
+.submit button:disabled {
   border: 2px solid #650000;
 }
 
-#submit button:disabled:hover {
+.submit button:disabled:hover {
   background-color: #650000;
 }
 
