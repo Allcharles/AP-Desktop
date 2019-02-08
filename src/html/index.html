@@ -549,7 +549,7 @@
               <div>
                 <h1 style="margin: 0; padding: 0; text-align: center">Sound</h1>
                 <div style="margin: 0 auto; width: 300px; height: 54px;">
-                  <audio controls="controls" id="EventDetectorSound">
+                  <audio controls id="EventDetectorSound">
                     <source type="audio/wav" />
                   </audio>
                 </div>
@@ -573,7 +573,7 @@
                     </td>
                     <td>
                       <label class="switch">
-                        <input type="checkbox" />
+                        <input type="checkbox" onchange="toggleEvent(this);" />
                         <span class="slider"></span>
                       </label>
                     </td>
@@ -601,7 +601,7 @@
                     </td>
                     <td>
                       <textarea
-                        id="comment-input"
+                        id="EventDetectorComment"
                         name="event-recogniser"
                         style="max-width: 100%; width: 100%; box-sizing: border-box; resize: vertical"
                         rows="4"

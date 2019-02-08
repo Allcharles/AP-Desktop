@@ -216,6 +216,19 @@ function eventDetectionUtilityNext(el) {
 }
 
 /**
+ * Enables or disables the ability for the individual to enter in information about the animal and leave comments.
+ */
+function toggleEvent(el) {
+  if (el.checked) {
+    document.getElementById("EventDetectorAnimal").disabled = false;
+    document.getElementById("EventDetectorComment").disabled = false;
+  } else {
+    document.getElementById("EventDetectorAnimal").disabled = true;
+    document.getElementById("EventDetectorComment").disabled = true;
+  }
+}
+
+/**
  * Checks all inputs in the event detection helper
  */
 function checkAll() {
