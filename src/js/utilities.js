@@ -1,6 +1,5 @@
 var eventList = [];
-
-function eventUtilitySubmit(el) {}
+var eventSelection = [];
 
 /**
  * Lets the user select what files to analyse
@@ -101,6 +100,11 @@ function findFilesRecursive(folderList, match, contains = "") {
             document.querySelector(
               "#EventDetectionHelper .h1-no-hover"
             ).style.marginBottom = "0px";
+
+            document.getElementById("EventDetectorForm").style.display =
+              "inherit";
+            document.getElementById("EventDetectorAnswerForm").style.display =
+              "none";
           }
 
           eventList.push(file);
@@ -125,8 +129,47 @@ function findFilesRecursive(folderList, match, contains = "") {
  * Creates the event detector utility.
  * @param [object] el HTML element
  */
-function eventDetectionUtility(el) {
+function createEventDetectionUtility(el) {
   el.preventDefault();
+
+  //Verify inputs
+  var input = document.getElementById("EventDetectorForm");
+  var selection = input.querySelectorAll("input:checked");
+
+  //If no items selected, return
+  if (selection.length === 0) {
+    return;
+  }
+
+  //Update selection list with new selections
+  eventSelection = [];
+  for (var i = 0; i < selection.length; i++) {
+    eventSelection.push(eventList[Number(selection[i].value)]);
+  }
+
+  //Update forms and disable buttons
+  input.style.display = "none";
+  document.getElementById("EventDetectorAnswerForm").style.display = "inherit";
+  eventDetectionUtilityNext(el);
+}
+
+/**
+ * Updates event detector form.
+ * @param [object] el HTML element
+ */
+function eventDetectionUtilityNext(el) {
+  el.preventDefault();
+
+  //If no selection left, allow user to select more
+  if (eventSelection.length === 0) {
+    document.getElementById("EventDetectorForm").style.display = "inherit";
+    document.getElementById("EventDetectorAnswerForm").style.display = "none";
+  }
+
+  //Grab selection and find related files
+  var csv = eventSelection.pop().filePath;
+  var imageFiles = [];
+  var soundFiles = [];
 }
 
 /**

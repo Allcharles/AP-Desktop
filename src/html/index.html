@@ -492,14 +492,18 @@
       <div class="group" id="EventDetectionHelper">
         <div class="question">
           <p class="question-text">Event Detection Helper</p>
-          <a onclick="">
-            <div class="question-button" onclick="eventSelectFolder()">
+          <a id="EventDetectionHelperSelect" onclick="eventSelectFolder()">
+            <div class="question-button">
               Select Folder
             </div>
           </a>
         </div>
         <div class="group-content" style="display: inherit">
-          <h1 class="h1-no-hover" style="margin-bottom: -14px;">
+          <h1
+            id="EventDetectionHelperButtons"
+            class="h1-no-hover"
+            style="margin-bottom: -14px;"
+          >
             Select Events
             <a onclick="checkAll();">Select All</a>
             <a onclick="uncheckAll();">Select None</a>
@@ -536,7 +540,7 @@
                   );
                   eventDetectorForm.addEventListener(
                     "submit",
-                    eventDetectionUtility
+                    createEventDetectionUtility
                   );
                 </script>
               </div>
@@ -626,7 +630,10 @@
                             const form = document.querySelector(
                               "#EventDetectorAnswerForm"
                             );
-                            form.addEventListener("submit", eventUtilitySubmit);
+                            form.addEventListener(
+                              "submit",
+                              eventDetectionUtilityNext
+                            );
                           </script>
                         </div>
                       </div>
