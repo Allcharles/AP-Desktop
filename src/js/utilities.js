@@ -1,5 +1,7 @@
 var eventList = [];
 
+function eventUtilitySubmit(el) {}
+
 /**
  * Lets the user select what files to analyse
  */
@@ -24,29 +26,18 @@ function eventSelectFolder() {
       eventList = [];
       document.querySelector("#eventspinner").style.display = "none";
 
-      //If no folder is selected
-      if (folder === undefined) {
-        console.log("No Folder");
-
-        //Hide event items
-        document.querySelector("#eventitems").style.display = "none";
-        document.querySelector(
-          "#EventDetectionHelper .h1-no-hover"
-        ).style.marginBottom = "-14px";
-
-        //End function
-        return;
-      }
-
-      //Update EventDetectionInputs
-      document.getElementById("EventDetectionInputs").innerHTML = "";
-      findFilesRecursive(folder, ".csv", ".Events");
-
-      //Display event items
-      document.querySelector("#eventitems").style.display = "inherit";
+      //Hide event items
+      document.querySelector("#eventitems").style.display = "none";
       document.querySelector(
         "#EventDetectionHelper .h1-no-hover"
-      ).style.marginBottom = "0px";
+      ).style.marginBottom = "-14px";
+
+      //If no folder is selected
+      if (folder !== undefined) {
+        //Update EventDetectionInputs
+        document.getElementById("EventDetectionInputs").innerHTML = "";
+        findFilesRecursive(folder, ".csv", ".Events");
+      }
     }
   );
 }
@@ -103,6 +94,15 @@ function findFilesRecursive(folderList, match, contains = "") {
         file.extension = filepath.substr(filepath.length - match.length);
 
         if (file.extension === match && fullFilename.includes(contains)) {
+          //First element found
+          if (eventList.length === 0) {
+            //Display event items
+            document.querySelector("#eventitems").style.display = "inherit";
+            document.querySelector(
+              "#EventDetectionHelper .h1-no-hover"
+            ).style.marginBottom = "0px";
+          }
+
           eventList.push(file);
 
           document.getElementById("EventDetectionInputs").innerHTML +=
@@ -127,14 +127,6 @@ function findFilesRecursive(folderList, match, contains = "") {
  */
 function eventDetectionUtility(el) {
   el.preventDefault();
-
-  global.test = { value: "test" };
-
-  const remote = require("electron").remote;
-  const BrowserWindow = remote.BrowserWindow;
-
-  var win = new BrowserWindow({ width: 539, height: 420 });
-  win.loadURL(`file://${__dirname}/eventDetector.html`);
 }
 
 /**
