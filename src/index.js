@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipc } from "electron";
+import { app, BrowserWindow } from "electron";
 
 //listAPCommands();
 
