@@ -6,6 +6,13 @@ var eventSelection = [];
 var eventEvents = [];
 /** List of events processed by the user for a single file. This is reset after each file */
 var finishedEvents = [];
+/** Current event being processed */
+var eventCurrent = [];
+
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.replace(new RegExp(search, "g"), replacement);
+};
 
 /**
  * Lets the user select what files to analyse
@@ -166,6 +173,7 @@ function createEventDetectionUtility(el) {
 function eventDetectionUtilityNext(el) {
   el.preventDefault();
   var fs = require("fs");
+  var readInputs = true;
 
   //If no selection left, allow user to select more
   if (eventSelection.length === 0 && eventEvents.length === 0) {
@@ -175,6 +183,7 @@ function eventDetectionUtilityNext(el) {
     document.getElementById("EventDetectorAnswerForm").style.display = "none";
     return;
   } else if (eventEvents.length === 0) {
+    readInputs = false;
     updateEventCSV();
 
     //Grab selection and find related files
@@ -192,10 +201,13 @@ function eventDetectionUtilityNext(el) {
     //Skip the header row and
     for (let i = 1; i < rows.length; i++) {
       var cell = rows[i].split(",");
-      var filename = cell[FILENAME_CELL];
 
       //This removes the last line which can be sometimes left empty
-      if (filename === undefined) continue;
+      if (cell[FILENAME_CELL] === undefined) continue;
+
+      //Get name of event
+      var filename = cell[FILENAME_CELL].replaceAll('"', "");
+      console.log("Filename: " + filename);
 
       //Determine what minute of the audio file has been saved
       var audioName = csv.substr(
@@ -209,33 +221,69 @@ function eventDetectionUtilityNext(el) {
       //Push important details to list
       var event = {
         csv: csv,
-        duration: parseFloat(cell[EVENT_DURATION]),
+        duration: parseFloat(cell[EVENT_DURATION].replaceAll('"', "")),
         image: path + filename + "__Image.png",
         path: path,
         position: i,
         sound: path + filename + ".wav",
-        species: cell[SPECIES],
-        start: parseFloat(cell[EVENT_START]) - Number(minutes[0]) * 60 //What position in the recording does the sound begin
+        species: cell[SPECIES].replaceAll('"', ""),
+        start:
+          parseFloat(cell[EVENT_START].replaceAll('"', "")) -
+          Number(minutes[0]) * 60 //What position in the recording does the sound begin
       };
       eventEvents.push(event);
-      finishedEvents.push(event);
-    }
 
-    console.debug("Updating List of Events");
-    console.debug(eventEvents);
+      console.log("Updating List of Events");
+      console.log(eventEvents);
+    }
   }
 
+  //Read inputs unless already read or previous eventCurrent has not been set
+  if (readInputs && eventCurrent !== undefined) readEventInput();
+
   //Get event details
-  var eventDetails = eventEvents.pop();
-  console.debug("Event: ");
-  console.debug(eventDetails);
+  eventCurrent = eventEvents.pop();
+  console.log("Event: ");
+  console.log(eventCurrent);
 
   //Update form with details
   var form = document.getElementById("EventDetectorAnswerForm");
-  form.querySelector("#EventDetectorSound source").src = eventDetails.sound;
+  form.querySelector("#EventDetectorSound source").src = eventCurrent.sound;
   form.querySelector("#EventDetectorSound").load();
-  form.querySelector("#EventDetectorSpectrogram").src = eventDetails.image;
-  form.querySelector("#EventDetectorAnimal").value = eventDetails.species;
+  form.querySelector("#EventDetectorSpectrogram").src = eventCurrent.image;
+  form.querySelector("#EventDetectorAnimal").value = eventCurrent.species;
+}
+
+/**
+ * Updates finishedEvents list with user inputs
+ */
+function readEventInput() {
+  //Add the event to the system
+  if (eventCurrent !== undefined) {
+    //Save event details
+    finishedEvents.push(eventCurrent);
+
+    //Grab the form values the user has entered
+    var length = finishedEvents.length - 1;
+    var userInput = document.getElementById("EventDetectorAnswerForm");
+    var eventSwitch = userInput.querySelector("#EventDetectorSwitch");
+    finishedEvents[length].EventDetected = eventSwitch.checked;
+
+    //If output is checked, use entered values. Otherwise set to defaults.
+    if (eventSwitch.checked) {
+      finishedEvents[length].SpeciesName = userInput.querySelector(
+        "#EventDetectorAnimal"
+      ).value;
+      finishedEvents[length].Comments = userInput.querySelector(
+        "#EventDetectorComment"
+      ).value;
+    } else {
+      finishedEvents[length].SpeciesName = finishedEvents[length].species;
+      finishedEvents[length].Comments = "";
+    }
+
+    console.log(finishedEvents[length]);
+  }
 }
 
 /**
@@ -244,6 +292,7 @@ function eventDetectionUtilityNext(el) {
 function updateEventCSV() {
   if (finishedEvents.length === 0) return;
   console.log(finishedEvents);
+  readEventInput();
 
   var csv = require("csv-parser");
   var fs = require("fs");
@@ -258,9 +307,9 @@ function updateEventCSV() {
       console.log(err);
     })
     .on("data", function(row) {
-      row.EventDetected = true;
-      row.SpeciesName = "Phascolarctos_cinereus";
-      row.Comments = "Test Comment";
+      row.EventDetected = finishedEvents[dataArray.length].EventDetected;
+      row.SpeciesName = finishedEvents[dataArray.length].SpeciesName;
+      row.Comments = finishedEvents[dataArray.length].Comments;
 
       dataArray.push(row);
     })
