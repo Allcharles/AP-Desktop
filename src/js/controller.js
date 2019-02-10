@@ -337,7 +337,7 @@ function audio2csvToggle() {
  * Updates whether the analysis button is disabled or not
  */
 function updateAnalyseButton() {
-  var button = document.querySelector("#submit button");
+  var button = document.querySelector("#AnalysisSubmit button");
   if (
     analysisList.length > 0 &&
     audioFiles.length > 0 &&
@@ -608,7 +608,7 @@ function selectAnalysis(el) {
     ["config", false],
     ["outputFolder", false],
     ["audio2csv-options", false],
-    ["submit", false]
+    ["AnalysisSubmit", false]
   ];
 
   //Check if item exists
@@ -627,7 +627,7 @@ function selectAnalysis(el) {
           "config",
           "outputFolder",
           "audio2csv-options",
-          "submit"
+          "AnalysisSubmit"
         ]);
         break;
     }
