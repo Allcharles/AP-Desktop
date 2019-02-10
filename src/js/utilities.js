@@ -1,6 +1,11 @@
+/** List of event csv files  */
 var eventList = [];
+/** List of selected csv files (used by html form) */
 var eventSelection = [];
+/** List of events to be processed by the user*/
 var eventEvents = [];
+/** List of events processed by the user for a single file. This is reset after each file */
+var finishedEvents = [];
 
 /**
  * Lets the user select what files to analyse
@@ -164,10 +169,14 @@ function eventDetectionUtilityNext(el) {
 
   //If no selection left, allow user to select more
   if (eventSelection.length === 0 && eventEvents.length === 0) {
+    updateEventCSV();
+
     document.getElementById("EventDetectorForm").style.display = "inherit";
     document.getElementById("EventDetectorAnswerForm").style.display = "none";
     return;
   } else if (eventEvents.length === 0) {
+    updateEventCSV();
+
     //Grab selection and find related files
     const EVENT_START = 0;
     const EVENT_DURATION = 2;
@@ -198,7 +207,7 @@ function eventDetectionUtilityNext(el) {
         .split("-"); //KSH11_20171105_041618_10-11min => [10, 11]
 
       //Push important details to list
-      eventEvents.push({
+      var event = {
         csv: csv,
         duration: parseFloat(cell[EVENT_DURATION]),
         image: path + filename + "__Image.png",
@@ -207,17 +216,19 @@ function eventDetectionUtilityNext(el) {
         sound: path + filename + ".wav",
         species: cell[SPECIES],
         start: parseFloat(cell[EVENT_START]) - Number(minutes[0]) * 60 //What position in the recording does the sound begin
-      });
+      };
+      eventEvents.push(event);
+      finishedEvents.push(event);
     }
 
-    console.log("Updating List of Events");
-    console.log(eventEvents);
+    console.debug("Updating List of Events");
+    console.debug(eventEvents);
   }
 
   //Get event details
   var eventDetails = eventEvents.pop();
-  console.log("Event: ");
-  console.log(eventDetails);
+  console.debug("Event: ");
+  console.debug(eventDetails);
 
   //Update form with details
   var form = document.getElementById("EventDetectorAnswerForm");
@@ -225,6 +236,40 @@ function eventDetectionUtilityNext(el) {
   form.querySelector("#EventDetectorSound").load();
   form.querySelector("#EventDetectorSpectrogram").src = eventDetails.image;
   form.querySelector("#EventDetectorAnimal").value = eventDetails.species;
+}
+
+/**
+ * Update CSV file with the users inputs
+ */
+function updateEventCSV() {
+  if (finishedEvents.length === 0) return;
+  console.log(finishedEvents);
+
+  var csv = require("csv-parser");
+  var fs = require("fs");
+  var json2csv = require("json2csv").parse;
+  var dataArray = [];
+
+  //Overwrite csv with new data
+  console.log("Editing: " + finishedEvents[0].csv);
+  fs.createReadStream(finishedEvents[0].csv)
+    .pipe(csv())
+    .on("error", function(err) {
+      console.log(err);
+    })
+    .on("data", function(row) {
+      row.EventDetected = true;
+      row.SpeciesName = "Phascolarctos_cinereus";
+      row.Comments = "Test Comment";
+
+      dataArray.push(row);
+    })
+    .on("end", function() {
+      var result = json2csv(dataArray, Object.keys(dataArray[0]));
+      console.log(result);
+      fs.writeFileSync(finishedEvents[0].csv, result);
+      finishedEvents = [];
+    });
 }
 
 /**

@@ -28,9 +28,10 @@ var fileQueue = [];
 var analysisQueue = [];
 
 /**
- * This function outputs all terminal commands to the console for review
+ * This function outputs all terminal commands to the console for review.
+ * Enable for debugging information.
  */
-
+/*
 (function() {
   var oldSpawn = require("child_process").spawn;
   function mySpawn() {
@@ -40,7 +41,7 @@ var analysisQueue = [];
     return result;
   }
   require("child_process").spawn = mySpawn;
-})();
+})();*/
 
 function submitForm(e) {
   e.preventDefault();
@@ -577,7 +578,6 @@ function checkEnvironment() {
   });
 
   terminalOutput.stdout.on("data", function(data) {
-    console.log(data.toString());
     count++;
     document.querySelector("#environment .group-content pre").innerHTML +=
       "\n" + data;
