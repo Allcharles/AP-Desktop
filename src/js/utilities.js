@@ -237,21 +237,43 @@ function eventDetectionUtilityNext(el) {
 
   //Update form with details
   var form = document.getElementById("EventDetectorAnswerForm");
-  form.querySelector("#EventDetectorSound source").src = eventCurrent.sound;
-  form.querySelector("#EventDetectorSound").load();
   form.querySelector("#EventDetectorSwitch").checked = false;
   form.querySelector("#EventDetectorAnimal").value = eventCurrent.species;
   form.querySelector("#EventDetectorAnimal").disabled = true;
   form.querySelector("#EventDetectorComment").value = "";
   form.querySelector("#EventDetectorComment").disabled = true;
-  showSpectrogram(form);
+  updateSpectrogram(form);
+  updateAudio(form);
+}
+
+function updateAudio(form) {
+  form.querySelector("#EventDetectorSound").innerHTML =
+    '<audio controls id="EventDetectorSound"><source type="audio/wav" src="' +
+    eventCurrent.sound +
+    '"/></audio>';
+
+  form.querySelector("#EventDetectorSound audio").load();
+  form
+    .querySelector("#EventDetectorSound audio")
+    .addEventListener("canplaythrough", function() {
+      var start = parseInt(eventCurrent.start);
+      var finish = parseInt(eventCurrent.start + eventCurrent.duration + 1);
+
+      //Set the minimum time to eventCurrent.start
+      if (this.currentTime < start) {
+        this.currentTime = start;
+      } else if (this.currentTime > finish) {
+        //Set the maximum time to the end of the event + 1 second
+        this.currentTime = finish;
+      }
+    });
 }
 
 /**
  * Clips the spectrogram image to only display the required content.
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
-function showSpectrogram(form) {
+function updateSpectrogram(form) {
   var image = form.querySelector("#EventDetectorSpectrogram");
   const PIXELS_PER_SECOND = 166.4;
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;
