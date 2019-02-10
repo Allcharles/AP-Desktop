@@ -155,7 +155,7 @@ function createEventDetectionUtility(el) {
 }
 
 /**
- * Updates event detector form.
+ * Updates event detector form with the next event.
  * @param [object] el HTML element
  */
 function eventDetectionUtilityNext(el) {
@@ -188,13 +188,25 @@ function eventDetectionUtilityNext(el) {
       //This removes the last line which can be sometimes left empty
       if (filename === undefined) continue;
 
+      //Determine what minute of the audio file has been saved
+      var audioName = csv.substr(
+        path.length,
+        csv.lastIndexOf("_") - path.length - 1
+      ); //KSH11_20171105_041618__Towsey.KoalaMale.Events.csv => KSH11_20171105_041618
+      var minutes = filename
+        .substr(audioName.length + 1, filename.length - audioName.length - 4)
+        .split("-"); //KSH11_20171105_041618_10-11min => [10, 11]
+
       //Push important details to list
       eventEvents.push({
+        csv: csv,
+        duration: parseFloat(cell[EVENT_DURATION]),
         image: path + filename + "__Image.png",
+        path: path,
+        position: i,
         sound: path + filename + ".wav",
         species: cell[SPECIES],
-        start: parseFloat(cell[EVENT_START]),
-        duration: parseFloat(cell[EVENT_DURATION])
+        start: parseFloat(cell[EVENT_START]) - Number(minutes[0]) * 60 //What position in the recording does the sound begin
       });
     }
 
