@@ -275,7 +275,7 @@ function updateAudio(form) {
  */
 function updateSpectrogram(form) {
   var image = form.querySelector("#EventDetectorSpectrogram");
-  const PIXELS_PER_SECOND = 166.4;
+  const PIXELS_PER_SECOND = 166.4; //TODO This was calculated using 282kbps wav files. May require changes in the future
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;
   const durationPixel = eventCurrent.duration * PIXELS_PER_SECOND;
   const endPixel = startPixel + durationPixel;
