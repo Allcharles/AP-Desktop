@@ -191,6 +191,7 @@ function eventDetectionUtilityNext(el) {
     const EVENT_DURATION = 2;
     const SPECIES = 8;
     const FILENAME_CELL = 14;
+    const MINUTE = 17;
     var csv = eventSelection.pop().filePath;
     var path = csv.substr(0, csv.lastIndexOf("\\") + 1);
 
@@ -207,16 +208,6 @@ function eventDetectionUtilityNext(el) {
 
       //Get name of event
       var filename = cell[FILENAME_CELL].replaceAll('"', "");
-      console.log("Filename: " + filename);
-
-      //Determine what minute of the audio file has been saved
-      var audioName = csv.substr(
-        path.length,
-        csv.lastIndexOf("_") - path.length - 1
-      ); //KSH11_20171105_041618__Towsey.KoalaMale.Events.csv => KSH11_20171105_041618
-      var minutes = filename
-        .substr(audioName.length + 1, filename.length - audioName.length - 4)
-        .split("-"); //KSH11_20171105_041618_10-11min => [10, 11]
 
       //Push important details to list
       var event = {
@@ -229,12 +220,11 @@ function eventDetectionUtilityNext(el) {
         species: cell[SPECIES].replaceAll('"', ""),
         start:
           parseFloat(cell[EVENT_START].replaceAll('"', "")) -
-          Number(minutes[0]) * 60 //What position in the recording does the sound begin
+          Number(cell[MINUTE].replaceAll('"', "")) * 60 //What position in the recording does the sound begin
       };
       eventEvents.push(event);
 
-      console.log("Updating List of Events");
-      console.log(eventEvents);
+      console.log("Updated List of Events");
     }
   }
 
@@ -243,15 +233,18 @@ function eventDetectionUtilityNext(el) {
 
   //Get event details
   eventCurrent = eventEvents.pop();
-  console.log("Event: ");
-  console.log(eventCurrent);
+  console.log("Event: " + eventCurrent.csv);
 
   //Update form with details
   var form = document.getElementById("EventDetectorAnswerForm");
   form.querySelector("#EventDetectorSound source").src = eventCurrent.sound;
   form.querySelector("#EventDetectorSound").load();
   form.querySelector("#EventDetectorSpectrogram").src = eventCurrent.image;
+  form.querySelector("#EventDetectorSwitch").checked = false;
   form.querySelector("#EventDetectorAnimal").value = eventCurrent.species;
+  form.querySelector("#EventDetectorAnimal").disabled = true;
+  form.querySelector("#EventDetectorComment").value = "";
+  form.querySelector("#EventDetectorComment").disabled = true;
 }
 
 /**
@@ -260,6 +253,8 @@ function eventDetectionUtilityNext(el) {
 function readEventInput() {
   //Add the event to the system
   if (eventCurrent !== undefined) {
+    console.log("Writting Output to CSV");
+
     //Save event details
     finishedEvents.push(eventCurrent);
 
@@ -291,7 +286,6 @@ function readEventInput() {
  */
 function updateEventCSV() {
   if (finishedEvents.length === 0) return;
-  console.log(finishedEvents);
   readEventInput();
 
   var csv = require("csv-parser");
@@ -300,7 +294,6 @@ function updateEventCSV() {
   var dataArray = [];
 
   //Overwrite csv with new data
-  console.log("Editing: " + finishedEvents[0].csv);
   fs.createReadStream(finishedEvents[0].csv)
     .pipe(csv())
     .on("error", function(err) {
@@ -315,7 +308,6 @@ function updateEventCSV() {
     })
     .on("end", function() {
       var result = json2csv(dataArray, Object.keys(dataArray[0]));
-      console.log(result);
       fs.writeFileSync(finishedEvents[0].csv, result);
       finishedEvents = [];
     });
