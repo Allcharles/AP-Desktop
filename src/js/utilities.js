@@ -192,7 +192,7 @@ function eventDetectionUtilityNext(el) {
     const SPECIES = 8;
     const FILENAME_CELL = 14;
     const MINUTE = 17;
-    var csv = eventSelection.pop().filePath;
+    var csv = eventSelection.shift().filePath;
     var path = csv.substr(0, csv.lastIndexOf("\\") + 1);
 
     //Read csv file
@@ -232,19 +232,37 @@ function eventDetectionUtilityNext(el) {
   if (readInputs && eventCurrent !== undefined) readEventInput();
 
   //Get event details
-  eventCurrent = eventEvents.pop();
+  eventCurrent = eventEvents.shift();
   console.log("Event: " + eventCurrent.csv);
 
   //Update form with details
   var form = document.getElementById("EventDetectorAnswerForm");
   form.querySelector("#EventDetectorSound source").src = eventCurrent.sound;
   form.querySelector("#EventDetectorSound").load();
-  form.querySelector("#EventDetectorSpectrogram").src = eventCurrent.image;
   form.querySelector("#EventDetectorSwitch").checked = false;
   form.querySelector("#EventDetectorAnimal").value = eventCurrent.species;
   form.querySelector("#EventDetectorAnimal").disabled = true;
   form.querySelector("#EventDetectorComment").value = "";
   form.querySelector("#EventDetectorComment").disabled = true;
+  showSpectrogram(form);
+}
+
+/**
+ * Clips the spectrogram image to only display the required content.
+ * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
+ */
+function showSpectrogram(form) {
+  var image = form.querySelector("#EventDetectorSpectrogram");
+  const PIXELS_PER_SECOND = 166.4;
+  const startPixel = eventCurrent.start * PIXELS_PER_SECOND;
+  const durationPixel = eventCurrent.duration * PIXELS_PER_SECOND;
+  const endPixel = startPixel + durationPixel;
+
+  image.src = eventCurrent.image;
+  //image.parentElement.style.width = durationPixel + "px";
+  image.parentElement.style.marginLeft = "-" + startPixel + "px";
+
+  console.log(image.parentElement.style);
 }
 
 /**
