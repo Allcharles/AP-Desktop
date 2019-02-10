@@ -1,6 +1,18 @@
+/** List of event csv files  */
 var eventList = [];
+/** List of selected csv files (used by html form) */
 var eventSelection = [];
+/** List of events to be processed by the user*/
 var eventEvents = [];
+/** List of events processed by the user for a single file. This is reset after each file */
+var finishedEvents = [];
+/** Current event being processed */
+var eventCurrent = [];
+
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.replace(new RegExp(search, "g"), replacement);
+};
 
 /**
  * Lets the user select what files to analyse
@@ -155,24 +167,31 @@ function createEventDetectionUtility(el) {
 }
 
 /**
- * Updates event detector form.
+ * Updates event detector form with the next event.
  * @param [object] el HTML element
  */
 function eventDetectionUtilityNext(el) {
   el.preventDefault();
   var fs = require("fs");
+  var readInputs = true;
 
   //If no selection left, allow user to select more
   if (eventSelection.length === 0 && eventEvents.length === 0) {
+    updateEventCSV();
+
     document.getElementById("EventDetectorForm").style.display = "inherit";
     document.getElementById("EventDetectorAnswerForm").style.display = "none";
     return;
   } else if (eventEvents.length === 0) {
+    readInputs = false;
+    updateEventCSV();
+
     //Grab selection and find related files
     const EVENT_START = 0;
     const EVENT_DURATION = 2;
     const SPECIES = 8;
     const FILENAME_CELL = 14;
+    const MINUTE = 17;
     var csv = eventSelection.pop().filePath;
     var path = csv.substr(0, csv.lastIndexOf("\\") + 1);
 
@@ -183,36 +202,115 @@ function eventDetectionUtilityNext(el) {
     //Skip the header row and
     for (let i = 1; i < rows.length; i++) {
       var cell = rows[i].split(",");
-      var filename = cell[FILENAME_CELL];
 
       //This removes the last line which can be sometimes left empty
-      if (filename === undefined) continue;
+      if (cell[FILENAME_CELL] === undefined) continue;
+
+      //Get name of event
+      var filename = cell[FILENAME_CELL].replaceAll('"', "");
 
       //Push important details to list
-      eventEvents.push({
+      var event = {
+        csv: csv,
+        duration: parseFloat(cell[EVENT_DURATION].replaceAll('"', "")),
         image: path + filename + "__Image.png",
+        path: path,
+        position: i,
         sound: path + filename + ".wav",
-        species: cell[SPECIES],
-        start: parseFloat(cell[EVENT_START]),
-        duration: parseFloat(cell[EVENT_DURATION])
-      });
-    }
+        species: cell[SPECIES].replaceAll('"', ""),
+        start:
+          parseFloat(cell[EVENT_START].replaceAll('"', "")) -
+          Number(cell[MINUTE].replaceAll('"', "")) * 60 //What position in the recording does the sound begin
+      };
+      eventEvents.push(event);
 
-    console.log("Updating List of Events");
-    console.log(eventEvents);
+      console.log("Updated List of Events");
+    }
   }
 
+  //Read inputs unless already read or previous eventCurrent has not been set
+  if (readInputs && eventCurrent !== undefined) readEventInput();
+
   //Get event details
-  var eventDetails = eventEvents.pop();
-  console.log("Event: ");
-  console.log(eventDetails);
+  eventCurrent = eventEvents.pop();
+  console.log("Event: " + eventCurrent.csv);
 
   //Update form with details
   var form = document.getElementById("EventDetectorAnswerForm");
-  form.querySelector("#EventDetectorSound source").src = eventDetails.sound;
+  form.querySelector("#EventDetectorSound source").src = eventCurrent.sound;
   form.querySelector("#EventDetectorSound").load();
-  form.querySelector("#EventDetectorSpectrogram").src = eventDetails.image;
-  form.querySelector("#EventDetectorAnimal").value = eventDetails.species;
+  form.querySelector("#EventDetectorSpectrogram").src = eventCurrent.image;
+  form.querySelector("#EventDetectorSwitch").checked = false;
+  form.querySelector("#EventDetectorAnimal").value = eventCurrent.species;
+  form.querySelector("#EventDetectorAnimal").disabled = true;
+  form.querySelector("#EventDetectorComment").value = "";
+  form.querySelector("#EventDetectorComment").disabled = true;
+}
+
+/**
+ * Updates finishedEvents list with user inputs
+ */
+function readEventInput() {
+  //Add the event to the system
+  if (eventCurrent !== undefined) {
+    console.log("Writting Output to CSV");
+
+    //Save event details
+    finishedEvents.push(eventCurrent);
+
+    //Grab the form values the user has entered
+    var length = finishedEvents.length - 1;
+    var userInput = document.getElementById("EventDetectorAnswerForm");
+    var eventSwitch = userInput.querySelector("#EventDetectorSwitch");
+    finishedEvents[length].EventDetected = eventSwitch.checked;
+
+    //If output is checked, use entered values. Otherwise set to defaults.
+    if (eventSwitch.checked) {
+      finishedEvents[length].SpeciesName = userInput.querySelector(
+        "#EventDetectorAnimal"
+      ).value;
+      finishedEvents[length].Comments = userInput.querySelector(
+        "#EventDetectorComment"
+      ).value;
+    } else {
+      finishedEvents[length].SpeciesName = finishedEvents[length].species;
+      finishedEvents[length].Comments = "";
+    }
+
+    console.log(finishedEvents[length]);
+  }
+}
+
+/**
+ * Update CSV file with the users inputs
+ */
+function updateEventCSV() {
+  if (finishedEvents.length === 0) return;
+  readEventInput();
+
+  var csv = require("csv-parser");
+  var fs = require("fs");
+  var json2csv = require("json2csv").parse;
+  var dataArray = [];
+
+  //Overwrite csv with new data
+  fs.createReadStream(finishedEvents[0].csv)
+    .pipe(csv())
+    .on("error", function(err) {
+      console.log(err);
+    })
+    .on("data", function(row) {
+      row.EventDetected = finishedEvents[dataArray.length].EventDetected;
+      row.SpeciesName = finishedEvents[dataArray.length].SpeciesName;
+      row.Comments = finishedEvents[dataArray.length].Comments;
+
+      dataArray.push(row);
+    })
+    .on("end", function() {
+      var result = json2csv(dataArray, Object.keys(dataArray[0]));
+      fs.writeFileSync(finishedEvents[0].csv, result);
+      finishedEvents = [];
+    });
 }
 
 /**

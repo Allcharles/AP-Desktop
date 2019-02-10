@@ -1,9 +1,16 @@
 const electron = require("electron");
+const { app } = electron.remote;
 const dialog = electron.remote.dialog;
 const SUPPORTED_AUDIO_FORMATS = ["wav"];
-const AP = "AnalysisPrograms.exe";
+const IS_WINDOWS = process.platform === "win32";
+const AP_LOCATION = IS_WINDOWS
+  ? "C:/AP"
+  : app.getPath("documents") + "/VRES/AP";
+const AP = IS_WINDOWS
+  ? "AnalysisPrograms.exe"
+  : AP_LOCATION + "/AnalysisPrograms.exe"; //Linux command is hard coded for my computer.
 const DEFAULT_CONFIG = "Towsey.Acoustic";
-const CONFIG_DIRECTORY = "C:\\AP\\ConfigFiles";
+const CONFIG_DIRECTORY = AP_LOCATION + "/ConfigFiles";
 const fs = require("fs");
 
 /** Used in the form to determine inputs */
@@ -21,20 +28,20 @@ var fileQueue = [];
 var analysisQueue = [];
 
 /**
- * This function outputs all terminal commands to the console for review
+ * This function outputs all terminal commands to the console for review.
+ * Enable for debugging information.
  */
-
+/*
 (function() {
-  var childProcess = require("child_process");
-  var oldSpawn = childProcess.spawn;
+  var oldSpawn = require("child_process").spawn;
   function mySpawn() {
     console.debug("spawn called");
     console.debug(arguments);
     var result = oldSpawn.apply(this, arguments);
     return result;
   }
-  childProcess.spawn = mySpawn;
-})();
+  require("child_process").spawn = mySpawn;
+})();*/
 
 function submitForm(e) {
   e.preventDefault();
@@ -93,20 +100,32 @@ function analyse() {
   //If the file has not be analysed before, create group to store its data
   if (document.querySelector("#gr" + id) === null) createGroup(id, file);
 
-  var terminal = require("child_process").spawn(AP, [
-    analysisType,
-    file,
-    configFiles[config].filePath,
-    outputFolder + "\\" + filename,
-    "-p"
-  ]);
+  var terminalOutput;
+  if (IS_WINDOWS) {
+    terminalOutput = require("child_process").spawn(AP, [
+      analysisType,
+      file,
+      configFiles[config].filePath,
+      outputFolder + "\\" + filename,
+      "-p"
+    ]);
+  } else {
+    terminalOutput = require("child_process").spawn("mono", [
+      AP,
+      analysisType,
+      file,
+      configFiles[config].filePath,
+      outputFolder + "\\" + filename,
+      "-p"
+    ]);
+  }
 
-  terminal.on("error", function(err) {
+  terminalOutput.on("error", function(err) {
     console.error(err);
     finishLoader(generateID(fileQueue[analysis[0]]), false);
   });
 
-  terminal.on("close", function(code) {
+  terminalOutput.on("close", function(code) {
     console.log(code);
     finishLoader(generateID(fileQueue[analysis[0]]), code === 0);
     updateGroup(
@@ -117,7 +136,7 @@ function analyse() {
     analyse();
   });
 
-  terminal.stdout.on("data", function(data) {
+  terminalOutput.stdout.on("data", function(data) {
     updateProgressBar(data);
     updateTerminalOutput(data);
   });
@@ -217,7 +236,6 @@ function updateGroup(id, filepath, success) {
     return;
   }
 
-  var fs = require("fs");
   filepath = getFilename(filepath);
   var folder =
     outputFolder[0] +
@@ -320,7 +338,7 @@ function audio2csvToggle() {
  * Updates whether the analysis button is disabled or not
  */
 function updateAnalyseButton() {
-  var button = document.querySelector("#submit button");
+  var button = document.querySelector("#AnalysisSubmit button");
   if (
     analysisList.length > 0 &&
     audioFiles.length > 0 &&
@@ -463,7 +481,6 @@ function sortConfig() {
  */
 function getConfig() {
   //Parallel Recursive Search (https://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search)
-  var fs = require("fs");
   var path = require("path");
   var walk = function(dir, done) {
     var results = [];
@@ -544,13 +561,23 @@ function updateConfig(el) {
  */
 let count = 0;
 function checkEnvironment() {
-  var terminal = require("child_process").spawn(AP, ["CheckEnvironment"]);
+  var terminalOutput;
 
-  terminal.on("error", function(err) {
+  if (IS_WINDOWS) {
+    terminalOutput = require("child_process").spawn(AP, ["CheckEnvironment"]);
+  } else {
+    terminalOutput = require("child_process").spawn("mono", [
+      AP,
+      "CheckEnvironment"
+    ]);
+  }
+
+  terminalOutput.on("error", function(err) {
+    console.log(err);
     document.querySelector("#environment").style.display = "inherit";
   });
 
-  terminal.stdout.on("data", function(data) {
+  terminalOutput.stdout.on("data", function(data) {
     count++;
     document.querySelector("#environment .group-content pre").innerHTML +=
       "\n" + data;
@@ -581,7 +608,7 @@ function selectAnalysis(el) {
     ["config", false],
     ["outputFolder", false],
     ["audio2csv-options", false],
-    ["submit", false]
+    ["AnalysisSubmit", false]
   ];
 
   //Check if item exists
@@ -600,7 +627,7 @@ function selectAnalysis(el) {
           "config",
           "outputFolder",
           "audio2csv-options",
-          "submit"
+          "AnalysisSubmit"
         ]);
         break;
     }

@@ -433,7 +433,7 @@
           </div>
         </div>
 
-        <div id="submit" class="submit" style="display: none">
+        <div id="AnalysisSubmit" class="submit" style="display: none">
           <button type="submit" disabled>Analyse</button>
         </div>
       </form>
@@ -441,7 +441,7 @@
       <script>
         //Captures submit button
         const analysisForm = document.querySelector("#AnalysisForm");
-        analysisForm.addEventListener("submit", analysisForm);
+        analysisForm.addEventListener("submit", submitForm);
       </script>
     </div>
 
@@ -573,7 +573,11 @@
                     </td>
                     <td>
                       <label class="switch">
-                        <input type="checkbox" onchange="toggleEvent(this);" />
+                        <input
+                          id="EventDetectorSwitch"
+                          type="checkbox"
+                          onchange="toggleEvent(this);"
+                        />
                         <span class="slider"></span>
                       </label>
                     </td>

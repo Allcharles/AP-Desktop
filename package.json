@@ -47,9 +47,11 @@
     }
   },
   "dependencies": {
+    "csv-parser": "^2.1.0",
     "electron": "^4.0.1",
     "electron-compile": "^6.4.4",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "json2csv": "^4.3.3"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
