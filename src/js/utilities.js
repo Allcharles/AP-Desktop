@@ -284,12 +284,21 @@ function updateEventAudio(form) {
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
 function updateEventSpectrogram(form) {
-  var image = form.querySelector("#EventDetectorSpectrogram");
+  const fs = require("fs");
   const PIXELS_PER_SECOND = 166.4; //TODO This was calculated using 282kbps wav files. May require changes in the future
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;
 
-  image.src = eventCurrent.image;
-  image.style.marginLeft = "-" + startPixel + "px";
+  var image = form.querySelector("#EventDetectorSpectrogram");
+
+  try {
+    fs.accessSync(eventCurrent.image);
+
+    //Add image and manipulate to cut image
+    image.src = eventCurrent.image;
+    image.style.marginLeft = "-" + startPixel + "px";
+  } catch (e) {
+    //Do nothing
+  }
 }
 
 /**
