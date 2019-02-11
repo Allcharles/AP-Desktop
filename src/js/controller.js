@@ -73,48 +73,11 @@ function buildAnalysisForm() {
  * Builds the output template code. In future this should load from a seperate html file for readability.
  */
 function buildOutputTemplate() {
-  /*
-    <div class="group" id="environment">
-      <div class="question"><p class="question-text">Progress</p></div>
-        <div class="group-content">
-        <div style="max-height: 367px; overflow-y: auto;">
-        <table style="width: 100%;">
-          <tr>
-                <td id="filename" style="width: 1%; min-width: 150px;"></td>
-            <td
-            id="filename-analysis"
-            style="width: 1%; min-width: 150px;"
-            ></td>
-            <td style="width: 99%">
-            <div class="cssProgress" id="filename-loader"></div>
-            </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-   */
-
-  document.querySelector("#output-tab").innerHTML =
-    '<div class="group" id="environment">' +
-    '<div class="question">' +
-    '<p class="question-text">Progress</p>' +
-    "</div>" +
-    '<div class="group-content">' +
-    '<div style="max-height: 367px; overflow-y: auto;">' +
-    '<table style="width: 100%;">' +
-    "<tr>" +
-    '<td id="filename" style="width: 1%; min-width: 150px;" />' +
-    '<td id="filename-analysis" style="width: 1%; min-width: 150px;" />' +
-    '<td style="width: 99%">' +
-    '<div class="cssProgress" id="filename-loader" />' +
-    "</td>" +
-    "</tr>" +
-    "</table>" +
-    "</div>" +
-    "</div>" +
-    "</div>";
+  var template =
+    __dirname.substr(0, __dirname.lastIndexOf("\\") + 1) +
+    "html\\outputTemplate.html";
+  var div = fs.readFileSync(template, "utf8");
+  document.getElementById("output-tab").innerHTML = div;
 }
 
 /**
