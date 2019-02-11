@@ -44,9 +44,31 @@ var analysisQueue = [];
   require("child_process").spawn = mySpawn;
 })();*/
 
+/**
+ * Builds the output template code. In future this should load from a seperate html file for readability.
+ */
 function buildOutputTemplate() {
-  /**
-   *
+  /*
+    <div class="group" id="environment">
+      <div class="question"><p class="question-text">Progress</p></div>
+        <div class="group-content">
+        <div style="max-height: 367px; overflow-y: auto;">
+        <table style="width: 100%;">
+          <tr>
+                <td id="filename" style="width: 1%; min-width: 150px;"></td>
+            <td
+            id="filename-analysis"
+            style="width: 1%; min-width: 150px;"
+            ></td>
+            <td style="width: 99%">
+            <div class="cssProgress" id="filename-loader"></div>
+            </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
    */
 
   document.querySelector("#output-tab").innerHTML =
