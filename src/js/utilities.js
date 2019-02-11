@@ -190,8 +190,8 @@ function eventDetectionUtilityNext(el) {
     const EVENT_START = 0;
     const EVENT_DURATION = 2;
     const SPECIES = 8;
+    const OFFSET = 12;
     const FILENAME_CELL = 14;
-    const MINUTE = 17;
     var csv = eventSelection.shift().filePath;
     var path = csv.substr(0, csv.lastIndexOf("\\") + 1);
 
@@ -220,7 +220,7 @@ function eventDetectionUtilityNext(el) {
         species: cell[SPECIES].replaceAll('"', ""),
         start:
           parseFloat(cell[EVENT_START].replaceAll('"', "")) -
-          Number(cell[MINUTE].replaceAll('"', "")) * 60 //What position in the recording does the sound begin
+          Number(cell[OFFSET].replaceAll('"', "")) //What position in the recording does the sound begin
       };
       eventEvents.push(event);
 
