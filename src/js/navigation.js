@@ -20,5 +20,9 @@ function changePage(el) {
     document.querySelector("#analysis-tab").style.display = "inherit";
     document.querySelector("#output-tab").style.display = "none";
     document.querySelector("#utilities-tab").style.display = "none";
+  } else if (el.innerHTML === "Output") {
+    document.querySelector("#analysis-tab").style.display = "none";
+    document.querySelector("#output-tab").style.display = "inherit";
+    document.querySelector("#utilities-tab").style.display = "none";
   }
 }

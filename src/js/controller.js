@@ -44,11 +44,46 @@ var analysisQueue = [];
   require("child_process").spawn = mySpawn;
 })();*/
 
+function buildOutputTemplate() {
+  /**
+   *
+   */
+
+  document.querySelector("#output-tab").innerHTML =
+    '<div class="group" id="environment">' +
+    '<div class="question">' +
+    '<p class="question-text">Progress</p>' +
+    "</div>" +
+    '<div class="group-content">' +
+    '<div style="max-height: 367px; overflow-y: auto;">' +
+    '<table style="width: 100%;">' +
+    "<tr>" +
+    '<td id="filename" style="width: 1%; min-width: 150px;" />' +
+    '<td id="filename-analysis" style="width: 1%; min-width: 150px;" />' +
+    '<td style="width: 99%">' +
+    '<div class="cssProgress" id="filename-loader" />' +
+    "</td>" +
+    "</tr>" +
+    "</table>" +
+    "</div>" +
+    "</div>" +
+    "</div>";
+}
+
 function submitForm(e) {
   e.preventDefault();
 
+  //Reset output variables
+  analysis = [];
+  fileQueue = [];
+  analysisQueue = [];
+
+  //Update HTML
+  buildOutputTemplate();
   document.querySelector("#analysis-tab").style.display = "none";
   document.querySelector("#output-tab").style.display = "inherit";
+  document.querySelector("#page").id = "analysis";
+  document.querySelector("#output").id = "page";
 
   //Create loading bars with blank analysis
   audioFiles.forEach(file => {
@@ -67,9 +102,6 @@ function submitForm(e) {
   analysisList = [];
 
   analysis = [0, -1];
-
-  document.querySelector("#page").id = "analysis";
-  document.querySelector("#output").id = "page";
 
   analyse();
 }

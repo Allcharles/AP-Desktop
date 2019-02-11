@@ -27,7 +27,7 @@
     <div id="header">
       <button id="logo">AP Desktop</button>
       <button id="page" onclick="changePage(this);">Analysis</button>
-      <button id="output">Output</button>
+      <button id="output" onclick="changePage(this);">Output</button>
       <button id="utilities" onclick="changePage(this);">Utilities</button>
     </div>
 
@@ -454,25 +454,9 @@
 
     <!--Container for the output page-->
     <div class="container" id="output-tab" style="display: none">
-      <div class="group" id="environment">
-        <div class="question"><p class="question-text">Progress</p></div>
-        <div class="group-content">
-          <div style="max-height: 367px; overflow-y: auto;">
-            <table style="width: 100%;">
-              <tr>
-                <td id="filename" style="width: 1%; min-width: 150px;"></td>
-                <td
-                  id="filename-analysis"
-                  style="width: 1%; min-width: 150px;"
-                ></td>
-                <td style="width: 99%">
-                  <div class="cssProgress" id="filename-loader"></div>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
+      <script>
+        buildOutputTemplate();
+      </script>
     </div>
 
     <!--Container for the utilities page-->
