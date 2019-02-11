@@ -41,5 +41,5 @@ table.output td {
 }
 
 .scrollimage {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
