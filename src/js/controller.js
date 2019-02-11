@@ -48,7 +48,7 @@ var analysisInProgress = false;
 })();*/
 
 /**
- * Rebuild analysis form
+ * Rebuild analysis form from template
  */
 function buildAnalysisForm() {
   const fs = require("fs");
@@ -62,7 +62,7 @@ function buildAnalysisForm() {
   //Set submit button onclick function
   document
     .querySelector("#AnalysisForm")
-    .addEventListener("submit", submitForm);
+    .addEventListener("submit", submitAnalysis);
 
   //Update config and outputFolder
   setConfig();
@@ -70,7 +70,7 @@ function buildAnalysisForm() {
 }
 
 /**
- * Builds the output template code. In future this should load from a seperate html file for readability.
+ * Builds the output template code
  */
 function buildOutputTemplate() {
   var template =
@@ -84,7 +84,7 @@ function buildOutputTemplate() {
  * Analyse button press. Resets output page, updates navigation, and creates analysis details.
  * @param {HTMLObject} e Submit Button
  */
-function submitForm(e) {
+function submitAnalysis(e) {
   e.preventDefault();
 
   if (analysisInProgress) {
