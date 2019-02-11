@@ -127,7 +127,6 @@ function analyse() {
   });
 
   terminalOutput.on("close", function(code) {
-    console.log(code);
     finishLoader(generateID(fileQueue[analysis[0]]), code === 0);
     updateGroup(
       generateID(fileQueue[analysis[0]]),
@@ -239,7 +238,7 @@ function updateGroup(id, filepath, success) {
 
   filepath = getFilename(filepath);
   var folder =
-    outputFolder[0] +
+    outputFolder +
     "\\" +
     filepath.substr(0, filepath.length - 4) +
     "\\" +
@@ -383,7 +382,7 @@ function setOutputFolder() {
         outputFolder = DEFAULT_OUTPUT_FOLDER;
       } else {
         success("outputFolder");
-        outputFolder = folder;
+        outputFolder = folder[0];
       }
 
       content.lastElementChild.firstElementChild.innerHTML = outputFolder;
