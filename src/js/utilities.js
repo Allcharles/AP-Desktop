@@ -242,11 +242,15 @@ function eventDetectionUtilityNext(el) {
   form.querySelector("#EventDetectorAnimal").disabled = true;
   form.querySelector("#EventDetectorComment").value = "";
   form.querySelector("#EventDetectorComment").disabled = true;
-  updateSpectrogram(form);
-  updateAudio(form);
+  updateEventSpectrogram(form);
+  updateEventAudio(form);
 }
 
-function updateAudio(form) {
+/**
+ * Skips audio to start of event.
+ * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
+ */
+function updateEventAudio(form) {
   form.querySelector("#EventDetectorSound").innerHTML =
     '<audio controls id="EventDetectorSound"><source type="audio/wav" src="' +
     eventCurrent.sound +
@@ -262,9 +266,6 @@ function updateAudio(form) {
       //Set the minimum time to eventCurrent.start
       if (this.currentTime < start) {
         this.currentTime = start;
-      } else if (this.currentTime > finish) {
-        //Set the maximum time to the end of the event + 1 second
-        this.currentTime = finish;
       }
     });
 }
@@ -273,7 +274,7 @@ function updateAudio(form) {
  * Clips the spectrogram image to only display the required content.
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
-function updateSpectrogram(form) {
+function updateEventSpectrogram(form) {
   var image = form.querySelector("#EventDetectorSpectrogram");
   const PIXELS_PER_SECOND = 166.4; //TODO This was calculated using 282kbps wav files. May require changes in the future
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;
