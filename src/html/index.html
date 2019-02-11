@@ -174,16 +174,18 @@
         </div>
 
         <div class="group" id="outputFolder" style="display: none">
-          <div class="question-fail">
+          <div class="question">
             <p class="question-text">Output Folder</p>
             <a onclick="setOutputFolder()"
-              ><div class="question-button-fail">Select Folder</div></a
+              ><div class="question-button">Select Folder</div></a
             >
           </div>
           <div class="group-content">
-            <p>No folder selected yet.</p>
-            <ul style="display: none;">
-              <li class="files">Folder</li>
+            <ul>
+              <li class="files"></li>
+              <script>
+                loadOutputFolder();
+              </script>
             </ul>
           </div>
         </div>

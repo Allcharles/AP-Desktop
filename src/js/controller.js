@@ -11,6 +11,7 @@ const AP = IS_WINDOWS
   : AP_LOCATION + "/AnalysisPrograms.exe"; //Linux command is hard coded for my computer.
 const DEFAULT_CONFIG = "Towsey.Acoustic";
 const CONFIG_DIRECTORY = AP_LOCATION + "/ConfigFiles";
+const DEFAULT_OUTPUT_FOLDER = app.getPath("documents") + "\\AP Desktop";
 const fs = require("fs");
 
 /** Used in the form to determine inputs */
@@ -18,7 +19,7 @@ var analysisList = [];
 var audioFiles = [];
 var configFiles = [];
 var config = 0;
-var outputFolder = "";
+var outputFolder = DEFAULT_OUTPUT_FOLDER;
 var audio2csvEnum = Object.freeze({ parallel: "-p" });
 var audio2csvOptions = [audio2csvEnum.parallel];
 
@@ -342,8 +343,7 @@ function updateAnalyseButton() {
   if (
     analysisList.length > 0 &&
     audioFiles.length > 0 &&
-    configFiles[config].fileName !== "" &&
-    outputFolder !== ""
+    configFiles[config].fileName !== ""
   ) {
     button.disabled = false;
   } else {
@@ -351,6 +351,23 @@ function updateAnalyseButton() {
   }
 }
 
+/**
+ * Basic loader to display output folder in form on load.
+ */
+function loadOutputFolder() {
+  //Update html
+  document.querySelector("#outputFolder li").innerHTML = outputFolder;
+
+  //Create folder incase it does not exist
+  var fs = require("fs");
+  fs.mkdir(outputFolder, { recursive: true }, err => {
+    if (err) console.log("Output folder already exists.");
+  });
+}
+
+/**
+ * Asks the user to select a folder. This updates the outputFolder global variable.
+ */
 function setOutputFolder() {
   dialog.showOpenDialog(
     {
@@ -363,22 +380,13 @@ function setOutputFolder() {
       //No folder selected
       if (folder === undefined) {
         failure("outputFolder");
-        outputFolder = "";
-
-        //Show "no folder" message and hide folder location
-        content.firstElementChild.style.display = "inherit";
-        content.lastElementChild.style.display = "none";
-        content.lastElementChild.innerHTML = "";
+        outputFolder = DEFAULT_OUTPUT_FOLDER;
       } else {
         success("outputFolder");
         outputFolder = folder;
-
-        //Hide "no folder" message and show folder location
-        content.firstElementChild.style.display = "none";
-        content.lastElementChild.style.display = "inherit";
-        content.lastElementChild.innerHTML = outputFolder;
       }
 
+      content.lastElementChild.firstElementChild.innerHTML = outputFolder;
       updateAnalyseButton();
     }
   );
