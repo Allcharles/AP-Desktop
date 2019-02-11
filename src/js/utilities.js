@@ -256,18 +256,27 @@ function updateEventAudio(form) {
     eventCurrent.sound +
     '"/></audio>';
 
-  form.querySelector("#EventDetectorSound audio").load();
-  form
-    .querySelector("#EventDetectorSound audio")
-    .addEventListener("canplaythrough", function() {
-      var start = parseInt(eventCurrent.start);
-      var finish = parseInt(eventCurrent.start + eventCurrent.duration + 1);
+  var audio = form.querySelector("#EventDetectorSound audio");
 
-      //Set the minimum time to eventCurrent.start
-      if (this.currentTime < start) {
-        this.currentTime = start;
-      }
-    });
+  audio.load();
+  //Set minimum time to eventCurrent.start
+  audio.addEventListener("canplaythrough", function() {
+    var start = parseInt(eventCurrent.start);
+
+    //Set the minimum time to eventCurrent.start
+    if (this.currentTime < start) {
+      this.currentTime = start;
+    }
+  });
+  //Reset audio when hitting end of sound file
+  audio.addEventListener("ended", function() {
+    var start = parseInt(eventCurrent.start);
+    var finish = parseInt(eventCurrent.start + eventCurrent.duration + 1);
+
+    if (this.currentTime > finish) {
+      this.currentTime = start;
+    }
+  });
 }
 
 /**
@@ -278,14 +287,9 @@ function updateEventSpectrogram(form) {
   var image = form.querySelector("#EventDetectorSpectrogram");
   const PIXELS_PER_SECOND = 166.4; //TODO This was calculated using 282kbps wav files. May require changes in the future
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;
-  const durationPixel = eventCurrent.duration * PIXELS_PER_SECOND;
-  const endPixel = startPixel + durationPixel;
 
   image.src = eventCurrent.image;
-  //image.parentElement.style.width = durationPixel + "px";
-  image.parentElement.style.marginLeft = "-" + startPixel + "px";
-
-  console.log(image.parentElement.style);
+  image.style.marginLeft = "-" + startPixel + "px";
 }
 
 /**
