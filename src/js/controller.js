@@ -331,6 +331,8 @@ function updateGroup(id, filepath, success) {
             "\\" +
             filename +
             '" alt="' +
+            folder +
+            "\\" +
             filename +
             ' image" /></div></div>' +
             group.innerHTML;
