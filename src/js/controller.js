@@ -5,7 +5,7 @@ const SUPPORTED_AUDIO_FORMATS = ["wav"];
 const IS_WINDOWS = process.platform === "win32";
 const AP_LOCATION = IS_WINDOWS
   ? "C:/AP"
-  : app.getPath("documents") + "/VRES/AP";
+  : app.getPath("documents") + "/VRES/AP"; //Linux command is hard coded for my computer.
 const AP = IS_WINDOWS
   ? "AnalysisPrograms.exe"
   : AP_LOCATION + "/AnalysisPrograms.exe"; //Linux command is hard coded for my computer.
@@ -20,13 +20,16 @@ var audioFiles = [];
 var configFiles = [];
 var config = 0;
 var outputFolder = DEFAULT_OUTPUT_FOLDER;
-var audio2csvEnum = Object.freeze({ parallel: "-p" });
-var audio2csvOptions = [audio2csvEnum.parallel];
 
 /** Use in analysis to detemine output */
 var analysis = [];
 var fileQueue = [];
 var analysisQueue = [];
+var outputConfig;
+var outputOutputFolder;
+
+/** Tracks whether an analysis is running */
+var analysisInProgress = false;
 
 /**
  * This function outputs all terminal commands to the console for review.
@@ -43,6 +46,28 @@ var analysisQueue = [];
   }
   require("child_process").spawn = mySpawn;
 })();*/
+
+/**
+ * Rebuild analysis form
+ */
+function buildAnalysisForm() {
+  const fs = require("fs");
+
+  var template =
+    __dirname.substr(0, __dirname.lastIndexOf("\\") + 1) +
+    "html\\analysisForm.html";
+  var form = fs.readFileSync(template, "utf8");
+  document.getElementById("analysis-template-holder").innerHTML = form;
+
+  //Set submit button onclick function
+  document
+    .querySelector("#AnalysisForm")
+    .addEventListener("submit", submitForm);
+
+  //Update config and outputFolder
+  setConfig();
+  loadDefaultOutputFolder();
+}
 
 /**
  * Builds the output template code. In future this should load from a seperate html file for readability.
@@ -92,15 +117,24 @@ function buildOutputTemplate() {
     "</div>";
 }
 
+/**
+ * Analyse button press. Resets output page, updates navigation, and creates analysis details.
+ * @param {HTMLObject} e Submit Button
+ */
 function submitForm(e) {
   e.preventDefault();
 
+  if (analysisInProgress) {
+    alert("Previous Analysis Still Running");
+    return;
+  }
+
   //Reset output variables
-  analysis = [];
   fileQueue = [];
   analysisQueue = [];
 
   //Update HTML
+  buildAnalysisForm();
   buildOutputTemplate();
   document.querySelector("#analysis-tab").style.display = "none";
   document.querySelector("#output-tab").style.display = "inherit";
@@ -123,8 +157,16 @@ function submitForm(e) {
   });
   analysisList = [];
 
+  //Tranfer variables
+  outputConfig = config;
+  config = 0;
+  outputOutputFolder = outputFolder;
+  outputFolder = DEFAULT_OUTPUT_FOLDER;
+
+  //Analysis to run [fileIndex, analysisIndex]
   analysis = [0, -1];
 
+  analysisInProgress = true;
   analyse();
 }
 
@@ -140,6 +182,7 @@ function analyse() {
       analysis[FILE]++;
       analysis[ANALYSIS] = 0;
     } else {
+      analysisInProgress = false;
       return;
     }
   }
@@ -160,8 +203,8 @@ function analyse() {
     terminalOutput = require("child_process").spawn(AP, [
       analysisType,
       file,
-      configFiles[config].filePath,
-      outputFolder + "\\" + filename,
+      configFiles[outputConfig].filePath,
+      outputOutputFolder + "\\" + filename,
       "-p"
     ]);
   } else {
@@ -169,8 +212,8 @@ function analyse() {
       AP,
       analysisType,
       file,
-      configFiles[config].filePath,
-      outputFolder + "\\" + filename,
+      configFiles[outputConfig].filePath,
+      outputOutputFolder + "\\" + filename,
       "-p"
     ]);
   }
@@ -292,11 +335,11 @@ function updateGroup(id, filepath, success) {
 
   filepath = getFilename(filepath);
   var folder =
-    outputFolder +
+    outputOutputFolder +
     "\\" +
     filepath.substr(0, filepath.length - 4) +
     "\\" +
-    configFiles[config].fileName;
+    configFiles[outputConfig].fileName;
 
   fs.readdir(folder, function(err, filenames) {
     if (err) return console.log("Err: " + err);
@@ -407,8 +450,9 @@ function updateAnalyseButton() {
 /**
  * Basic loader to display output folder in form on load.
  */
-function loadOutputFolder() {
+function loadDefaultOutputFolder() {
   //Update html
+  outputFolder = DEFAULT_OUTPUT_FOLDER;
   document.querySelector("#outputFolder li").innerHTML = outputFolder;
 
   //Create folder incase it does not exist
@@ -537,6 +581,26 @@ function sortConfig() {
 }
 
 /**
+ * Update Config Selector with config files
+ */
+function setConfig() {
+  var select = document.querySelector("#config-select");
+
+  configFiles.forEach(file => {
+    //Create option for config files
+    var option = "<option ";
+    option += file.fileName === DEFAULT_CONFIG ? "selected " : "";
+    option += "value='" + file.id + "'>" + file.fileName + "</option>";
+    select.innerHTML += option;
+
+    //Update default config
+    config = file.fileName === DEFAULT_CONFIG ? file.id : config;
+  });
+
+  sortConfig();
+}
+
+/**
  * Get config files for the drop down list. This searches the CONFIG_DIRECTORY recursively until all .yml files are found.
  * @param {string} folder Folder Path. Defaults to CONFIG_DIRECTORY.
  */
@@ -570,7 +634,6 @@ function getConfig() {
   walk(CONFIG_DIRECTORY, function(err, results) {
     if (err) throw err;
 
-    var select = document.querySelector("#config-select");
     results.forEach(filepath => {
       //Check file is .yml
       if (filepath.substr(filepath.length - 4) === ".yml") {
@@ -584,19 +647,10 @@ function getConfig() {
         file.extension = filepath.substr(filepath.length - 4);
 
         configFiles.push(file);
-
-        //Create option for config files
-        var option = "<option ";
-        option += file.fileName === DEFAULT_CONFIG ? "selected " : "";
-        option += "value='" + file.id + "'>" + file.fileName + "</option>";
-        select.innerHTML += option;
-
-        //Update default config file
-        config = file.fileName === DEFAULT_CONFIG ? file.id : config;
       }
     });
 
-    sortConfig();
+    setConfig();
   });
 }
 
@@ -649,10 +703,8 @@ function checkEnvironment() {
 
       //Check terminal output for successful environment
       if (data.includes(match)) {
-        document.querySelector("#select").style.display = "inherit";
         document.querySelector("#environment").style.display = "none";
       } else {
-        document.querySelector("#select").style.display = "none";
         document.querySelector("#environment").style.display = "inherit";
       }
     }
