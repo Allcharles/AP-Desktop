@@ -291,7 +291,7 @@ function createLoader(id, filename) {
     filename.slice(filename.lastIndexOf("\\") + 1) +
     "</div>";
   document.querySelector("#filename-analysis").innerHTML +=
-    "<div class='filename-analysis' id='an" + id + "'>???</div>";
+    "<div class='filename-analysis' align='center' id='an" + id + "'>???</div>";
   document.querySelector("#filename-loader").innerHTML +=
     "<div class='progress3' id='pb" +
     id +
@@ -315,7 +315,7 @@ function updateLoader(id, analysis) {
  * @param {boolean} success True if successful
  */
 function finishLoader(id, success) {
-  document.querySelector("#an" + id).innerHTML = "finished";
+  document.querySelector("#an" + id).innerHTML = "<b>Finished<b>";
   success
     ? (document.querySelector("#pb" + id).innerHTML =
         "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>")
