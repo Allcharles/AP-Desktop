@@ -11,7 +11,8 @@ const AP = IS_WINDOWS
   : AP_LOCATION + "/AnalysisPrograms.exe"; //Linux command is hard coded for my computer.
 const DEFAULT_CONFIG = "Towsey.Acoustic";
 const CONFIG_DIRECTORY = AP_LOCATION + "/ConfigFiles";
-const DEFAULT_OUTPUT_FOLDER = app.getPath("documents") + "\\AP Desktop";
+const DEFAULT_OUTPUT_FOLDER =
+  app.getPath("documents") + (IS_WINDOWS ? "\\" : "/") + "AP Desktop";
 const fs = require("fs");
 
 /** Used in the form to determine inputs */
@@ -54,8 +55,8 @@ function buildAnalysisForm() {
   const fs = require("fs");
 
   var template =
-    __dirname.substr(0, __dirname.lastIndexOf("\\") + 1) +
-    "html\\analysisForm.html";
+    __dirname.substr(0, getFilenameIndex(__dirname) + 1) +
+    "html/analysisForm.html";
   var form = fs.readFileSync(template, "utf8");
   document.getElementById("analysis-template-holder").innerHTML = form;
 
@@ -74,8 +75,8 @@ function buildAnalysisForm() {
  */
 function buildOutputTemplate() {
   var template =
-    __dirname.substr(0, __dirname.lastIndexOf("\\") + 1) +
-    "html\\outputTemplate.html";
+    __dirname.substr(0, getFilenameIndex(__dirname) + 1) +
+    "html/outputTemplate.html";
   var div = fs.readFileSync(template, "utf8");
   document.getElementById("output-tab").innerHTML = div;
 }
@@ -152,7 +153,7 @@ function analyse() {
 
   //Determine analysis to run
   let file = fileQueue[analysis[FILE]];
-  let filename = file.substr(file.lastIndexOf("\\") + 1);
+  let filename = getFilename(file);
   filename = filename.substr(0, filename.length - 4);
   let id = generateID(file);
   let analysisType = analysisQueue[analysis[ANALYSIS]];
@@ -167,7 +168,7 @@ function analyse() {
       analysisType,
       file,
       configFiles[outputConfig].filePath,
-      outputOutputFolder + "\\" + filename,
+      outputOutputFolder + "/" + filename,
       "-p"
     ]);
   } else {
@@ -176,7 +177,7 @@ function analyse() {
       analysisType,
       file,
       configFiles[outputConfig].filePath,
-      outputOutputFolder + "\\" + filename,
+      outputOutputFolder + "/" + filename,
       "-p"
     ]);
   }
@@ -259,20 +260,53 @@ function generateID(filePath) {
  * @param {string} filePath File path
  */
 function getFilename(filePath) {
-  return filePath.slice(filePath.lastIndexOf("\\") + 1);
+  let index = filePath.lastIndexOf("\\");
+
+  if (index === -1) {
+    return filePath.slice(filePath.lastIndexOf("/") + 1);
+  } else {
+    return filePath.slice(filePath.lastIndexOf("\\") + 1);
+  }
+}
+
+/**
+ * Returns the index of the last / or \ depending on the filepath
+ * @param {string} filePath File path
+ */
+function getFilenameIndex(filePath) {
+  let index = filePath.lastIndexOf("\\");
+
+  if (index === -1) {
+    return filePath.lastIndexOf("/");
+  } else {
+    return index;
+  }
+}
+
+/**
+ * Sanitises a file path for windows and linux compatibility.
+ * @param {string} filePath File path
+ * @returns {string} Sanitised file path
+ */
+function sanitiseFilePath(filePath) {
+  if (IS_WINDOWS) {
+    return filePath.replace(new RegExp("/", "g"), "\\");
+  } else {
+    return filePath.replace(new RegExp("\\", "g"), "/");
+  }
 }
 
 /**
  * Create the group container for the files details
  * @param {string} id ID of the file
- * @param {string} filepath File path of the audio file
+ * @param {string} filePath File path of the audio file
  */
-function createGroup(id, filepath) {
+function createGroup(id, filePath) {
   document.querySelector("#output-tab").innerHTML +=
     '<div class="group" id="gr' +
     id +
     '"><div class="question" onclick="toggleHeader(this);"><p class="question-text">' +
-    getFilename(filepath) +
+    getFilename(filePath) +
     '</p></div><div class="group-content" style="display: none"id="pic' +
     id +
     '"><h1 id="ttl' +
@@ -285,9 +319,9 @@ function createGroup(id, filepath) {
 /**
  * Updates the group container to include all attached images
  * @param {string} id ID of the file
- * @param {string} filepath  File path of the audio file
+ * @param {string} filePath  File path of the audio file
  */
-function updateGroup(id, filepath, success) {
+function updateGroup(id, filePath, success) {
   if (!success) {
     var group = document.querySelector("#pic" + id).parentElement
       .firstElementChild;
@@ -296,12 +330,12 @@ function updateGroup(id, filepath, success) {
     return;
   }
 
-  filepath = getFilename(filepath);
+  filePath = getFilename(filePath);
   var folder =
     outputOutputFolder +
-    "\\" +
-    filepath.substr(0, filepath.length - 4) +
-    "\\" +
+    "/" +
+    filePath.substr(0, filePath.length - 4) +
+    "/" +
     configFiles[outputConfig].fileName;
 
   fs.readdir(folder, function(err, filenames) {
@@ -311,9 +345,9 @@ function updateGroup(id, filepath, success) {
 
     filenames.forEach(filename => {
       if (filename.substr(filename.length - 4) === ".png") {
-        var match = filepath.substr(0, filepath.length - 4) + "__";
+        var match = filePath.substr(0, filePath.length - 4) + "__";
         if (
-          filename.substr(filename.lastIndexOf("\\") + 1, match.length) ===
+          filename.substr(getFilenameIndex(filename) + 1, match.length) ===
           match
         ) {
           group.innerHTML =
@@ -321,18 +355,18 @@ function updateGroup(id, filepath, success) {
             generateID(filename) +
             '" onclick="toggleImage(this);">' +
             filename.substr(
-              filename.lastIndexOf("\\") + 1 + match.length,
+              getFilenameIndex(filename) + 1 + match.length,
               filename.length - 4
             ) +
             '</h1><div class="header-content" id="div' +
             generateID(filename) +
             '" style="display: none"><div class="scrollimage"><img src="' +
             folder +
-            "\\" +
+            "/" +
             filename +
             '" alt="' +
             folder +
-            "\\" +
+            "/" +
             filename +
             ' image" /></div></div>' +
             group.innerHTML;
@@ -349,9 +383,7 @@ function updateGroup(id, filepath, success) {
  */
 function createLoader(id, filename) {
   document.querySelector("#filename").innerHTML +=
-    "<div class='filename-container'>" +
-    filename.slice(filename.lastIndexOf("\\") + 1) +
-    "</div>";
+    "<div class='filename-container'>" + getFilename(filename) + "</div>";
   document.querySelector("#filename-analysis").innerHTML +=
     "<div class='filename-analysis' align='center' id='an" + id + "'>???</div>";
   document.querySelector("#filename-loader").innerHTML +=
@@ -599,17 +631,17 @@ function getConfig() {
   walk(CONFIG_DIRECTORY, function(err, results) {
     if (err) throw err;
 
-    results.forEach(filepath => {
+    results.forEach(filePath => {
       //Check file is .yml
-      if (filepath.substr(filepath.length - 4) === ".yml") {
-        var filename = filepath.substr(filepath.lastIndexOf("\\") + 1);
+      if (filePath.substr(filePath.length - 4) === ".yml") {
+        var filename = getFilename(filePath);
         filename = filename.substr(0, filename.length - 4);
 
         var file = {};
         file.id = configFiles.length;
-        file.filePath = filepath; //Full file path
+        file.filePath = filePath; //Full file path
         file.fileName = filename; //File name minus file extension
-        file.extension = filepath.substr(filepath.length - 4);
+        file.extension = filePath.substr(filePath.length - 4);
 
         configFiles.push(file);
       }
@@ -658,20 +690,20 @@ function checkEnvironment() {
   });
 
   terminalOutput.stdout.on("data", function(data) {
+    const MAX_ENVIRONMENT_OUTPUT = 3;
     count++;
     document.querySelector("#environment .group-content pre").innerHTML +=
       "\n" + data;
 
     //Third message from terminal contains the success message
-    if (count == 3) {
-      var match = "SUCCESS - Valid environment";
+    var match = "SUCCESS - Valid environment";
 
-      //Check terminal output for successful environment
-      if (data.includes(match)) {
-        document.querySelector("#environment").style.display = "none";
-      } else {
+    //Check terminal output for successful environment
+    if (data.includes(match)) {
+      document.querySelector("#environment").style.display = "none";
+    } else {
+      if (count >= MAX_ENVIRONMENT_OUTPUT)
         document.querySelector("#environment").style.display = "inherit";
-      }
     }
   });
 }
