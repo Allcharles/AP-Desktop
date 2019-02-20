@@ -18,3 +18,8 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 * Event Detection Helper utility
 * Loading bars for file analysis
 * Analyis spectrogram display
+
+
+# History
+
+Originally started as a VRES student project by Charles Alleman.
