@@ -36,7 +36,7 @@ var analysisInProgress = false;
  * This function outputs all terminal commands to the console for review.
  * Enable for debugging information.
  */
-/*
+
 (function() {
   var oldSpawn = require("child_process").spawn;
   function mySpawn() {
@@ -46,7 +46,7 @@ var analysisInProgress = false;
     return result;
   }
   require("child_process").spawn = mySpawn;
-})();*/
+})();
 
 /**
  * Rebuild analysis form from template
@@ -88,6 +88,9 @@ function buildOutputTemplate() {
 function submitAnalysis(e) {
   e.preventDefault();
 
+  console.log("Config 1: " + configFiles[config].fileName);
+  console.log("Output 1: " + outputFolder);
+
   if (analysisInProgress) {
     alert("Previous Analysis Still Running");
     return;
@@ -96,14 +99,6 @@ function submitAnalysis(e) {
   //Reset output variables
   fileQueue = [];
   analysisQueue = [];
-
-  //Update HTML
-  buildAnalysisForm();
-  buildOutputTemplate();
-  document.querySelector("#analysis-tab").style.display = "none";
-  document.querySelector("#output-tab").style.display = "inherit";
-  document.querySelector("#page").id = "analysis";
-  document.querySelector("#output").id = "page";
 
   //Create loading bars with blank analysis
   audioFiles.forEach(file => {
@@ -121,6 +116,9 @@ function submitAnalysis(e) {
   });
   analysisList = [];
 
+  console.log("Config 2: " + configFiles[config].fileName);
+  console.log("Output 2: " + outputFolder);
+
   //Tranfer variables
   outputConfig = config;
   config = 0;
@@ -130,6 +128,20 @@ function submitAnalysis(e) {
   //Analysis to run [fileIndex, analysisIndex]
   analysis = [0, -1];
 
+  console.log("Config 3: " + configFiles[config].fileName);
+  console.log("Output 3: " + outputFolder);
+  //Update HTML
+  buildAnalysisForm();
+  buildOutputTemplate();
+  document.querySelector("#analysis-tab").style.display = "none";
+  document.querySelector("#output-tab").style.display = "inherit";
+  document.querySelector("#page").id = "analysis";
+  document.querySelector("#output").id = "page";
+
+  console.log("Config 4: " + configFiles[config].fileName);
+  console.log("Output 4: " + outputFolder);
+
+  //Run Analysis
   analysisInProgress = true;
   analyse();
 }
