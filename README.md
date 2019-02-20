@@ -20,7 +20,6 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 * Analyis spectrogram display
 
 # Features Comming Soon
-* Parallel File Analysis
 * Linux Support
 * AP Installer
 
