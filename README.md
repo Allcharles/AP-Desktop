@@ -12,8 +12,8 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
   - `npm install -g electron`
   - `npm install -g electron-forge`
   - `npm install -g yarn`
-  - `yarn`
 - Open the file containing the AP Desktop code in Command Line and then execute the following command
+  - `yarn`
   - `npm start`
 
 ## Current Features
