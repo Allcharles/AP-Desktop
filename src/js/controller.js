@@ -96,20 +96,6 @@ function submitAnalysis(e) {
   fileQueue = [];
   analysisQueue = [];
 
-  //Update HTML
-  buildAnalysisForm();
-  buildOutputTemplate();
-  document.querySelector("#analysis-tab").style.display = "none";
-  document.querySelector("#output-tab").style.display = "inherit";
-  document.querySelector("#page").id = "analysis";
-  document.querySelector("#output").id = "page";
-
-  //Create loading bars with blank analysis
-  audioFiles.forEach(file => {
-    let id = generateID(file);
-    createLoader(id, file);
-  });
-
   //Transfer arrays
   audioFiles.forEach(file => {
     fileQueue.push(file);
@@ -122,12 +108,24 @@ function submitAnalysis(e) {
 
   //Tranfer variables
   outputConfig = config;
-  config = 0;
   outputOutputFolder = outputFolder;
-  outputFolder = DEFAULT_OUTPUT_FOLDER;
 
   //Analysis to run [fileIndex, analysisIndex]
   analysis = [0, -1];
+
+  //Update HTML
+  buildAnalysisForm();
+  buildOutputTemplate();
+  document.querySelector("#analysis-tab").style.display = "none";
+  document.querySelector("#output-tab").style.display = "inherit";
+  document.querySelector("#page").id = "analysis";
+  document.querySelector("#output").id = "page";
+
+  //Create loading bars with blank analysis
+  fileQueue.forEach(file => {
+    let id = generateID(file);
+    createLoader(id, file);
+  });
 
   analysisInProgress = true;
   analyse();
@@ -163,6 +161,21 @@ function analyse() {
 
   var terminalOutput;
   if (IS_WINDOWS) {
+    console.log(
+      "Command: " +
+        AP +
+        " " +
+        analysisType +
+        " " +
+        file +
+        " " +
+        configFiles[outputConfig].filePath +
+        " " +
+        outputOutputFolder +
+        "\\" +
+        filename +
+        " -p"
+    );
     terminalOutput = require("child_process").spawn(AP, [
       analysisType,
       file,
@@ -171,6 +184,21 @@ function analyse() {
       "-p"
     ]);
   } else {
+    console.log(
+      "Command: mono " +
+        AP +
+        " " +
+        analysisType +
+        " " +
+        file +
+        " " +
+        configFiles[outputConfig].filePath +
+        " " +
+        outputOutputFolder +
+        "\\" +
+        filename +
+        " -p"
+    );
     terminalOutput = require("child_process").spawn("mono", [
       AP,
       analysisType,
@@ -366,6 +394,7 @@ function createLoader(id, filename) {
  * @param {string} analysis Analysis type to run
  */
 function updateLoader(id, analysis) {
+  //console.log("ID: " + id);
   document.querySelector("#an" + id).innerHTML = analysis;
   document.querySelector("#pb" + id).innerHTML =
     "<div class='cssProgress-bar cssProgress-active-right cssProgress-warning' style='width: 0%;'><span class='cssProgress-label'>0%</span></div>";
