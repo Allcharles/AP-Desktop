@@ -88,9 +88,6 @@ function buildOutputTemplate() {
 function submitAnalysis(e) {
   e.preventDefault();
 
-  console.log("Config 1: " + configFiles[config].fileName);
-  console.log("Output 1: " + outputFolder);
-
   if (analysisInProgress) {
     alert("Previous Analysis Still Running");
     return;
@@ -109,9 +106,6 @@ function submitAnalysis(e) {
     analysisQueue.push(analysis);
   });
   analysisList = [];
-
-  console.log("Config 2: " + configFiles[config].fileName);
-  console.log("Output 2: " + outputFolder);
 
   //Tranfer variables
   outputConfig = config;
@@ -168,21 +162,6 @@ function analyse() {
 
   var terminalOutput;
   if (IS_WINDOWS) {
-    console.log(
-      "Command: " +
-        AP +
-        " " +
-        analysisType +
-        " " +
-        file +
-        " " +
-        configFiles[outputConfig].filePath +
-        " " +
-        outputOutputFolder +
-        "\\" +
-        filename +
-        " -p"
-    );
     terminalOutput = require("child_process").spawn(AP, [
       analysisType,
       file,
@@ -191,21 +170,6 @@ function analyse() {
       "-p"
     ]);
   } else {
-    console.log(
-      "Command: mono " +
-        AP +
-        " " +
-        analysisType +
-        " " +
-        file +
-        " " +
-        configFiles[outputConfig].filePath +
-        " " +
-        outputOutputFolder +
-        "\\" +
-        filename +
-        " -p"
-    );
     terminalOutput = require("child_process").spawn("mono", [
       AP,
       analysisType,
@@ -432,7 +396,6 @@ function createLoader(id, filename) {
  * @param {string} analysis Analysis type to run
  */
 function updateLoader(id, analysis) {
-  //console.log("ID: " + id);
   document.querySelector("#an" + id).innerHTML = analysis;
   document.querySelector("#pb" + id).innerHTML =
     "<div class='cssProgress-bar cssProgress-active-right cssProgress-warning' style='width: 0%;'><span class='cssProgress-label'>0%</span></div>";
