@@ -194,7 +194,7 @@ function eventDetectionUtilityNext(el) {
     const EVENT_START_OFFSET = 12;
     const FILENAME_CELL = 14;
     var csv = eventSelection.shift().filePath;
-    var path = getFilename(csv);
+    var path = getFolder(csv) + "/";
 
     //Read csv file
     var data = fs.readFileSync(csv, "utf8");

@@ -212,7 +212,6 @@ function getTerminalOutputFolder(data) {
 
   var res = match.exec(data.toString());
   if (res !== null && res.length == 2) {
-    console.log(res);
     terminalOutputFolder = res[1];
   }
 }
@@ -270,8 +269,23 @@ function generateID(filePath) {
 }
 
 /**
+ * Returns the folder path for the file path exclusive of final '/'
+ * @param {string} filePath File path
+ * @returns {string} Folder path exclusive of final '/'
+ */
+function getFolder(filePath) {
+  let index = filePath.lastIndexOf("\\");
+  if (index === -1) {
+    return filePath.slice(0, filePath.lastIndexOf("/") + 1);
+  } else {
+    return filePath.slice(0, filePath.lastIndexOf("\\") + 1);
+  }
+}
+
+/**
  * Returns the filename from the file path
  * @param {string} filePath File path
+ * @returns {string} Filename
  */
 function getFilename(filePath) {
   let index = filePath.lastIndexOf("\\");
@@ -286,6 +300,7 @@ function getFilename(filePath) {
 /**
  * Returns the index of the last / or \ depending on the filepath
  * @param {string} filePath File path
+ * @returns {int} Index position of last / or \
  */
 function getFilenameIndex(filePath) {
   let index = filePath.lastIndexOf("\\");
@@ -353,9 +368,7 @@ function updateGroup(id, fullFilename, success, folder) {
 
     var group = document.querySelector("#pic" + id);
 
-    console.log("Reading Folder: " + folder);
     filenames.forEach(filename => {
-      console.log(filename);
       if (filename.substr(filename.length - 4) === ".png") {
         var match = fullFilename.substr(0, fullFilename.length - 4);
         if (
