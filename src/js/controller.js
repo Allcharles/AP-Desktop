@@ -1,7 +1,19 @@
 const electron = require("electron");
 const { app } = electron.remote;
 const dialog = electron.remote.dialog;
-const SUPPORTED_AUDIO_FORMATS = ["wav"];
+/** All ffmpeg supported audio formats */
+const SUPPORTED_AUDIO_FORMATS = [
+  ".wav",
+  ".mp3",
+  ".pcm",
+  ".aiff",
+  ".aac",
+  ".ogg",
+  ".wma",
+  ".flac",
+  ".alac",
+  ".mwa"
+];
 const IS_WINDOWS = process.platform === "win32";
 const AP_LOCATION = IS_WINDOWS
   ? "C:/AP"
@@ -298,7 +310,7 @@ function getFilename(filePath) {
 }
 
 /**
- * Returns the index of the last / or \ depending on the filepath
+ * Returns the index of the last / or \ depending on the file path
  * @param {string} filePath File path
  * @returns {int} Index position of last / or \
  */
@@ -523,55 +535,133 @@ function getAudio() {
   process.dlopen = () => {
     throw new Error("Load native module is not safe");
   };
+
   //Open file selector dialog
   dialog.showOpenDialog(
     {
-      properties: ["openFile", "multiSelections"],
-      filters: [{ name: "Audio", extensions: SUPPORTED_AUDIO_FORMATS }],
-      title: "Select Audio Files"
+      properties: ["openDirectory", "multiSelections"],
+      title: "Select Audio Recordings Folder"
     },
-    function(filePaths) {
-      document.querySelector("#audiospinner").style.display = "none";
-
-      if (filePaths === undefined || filePaths.length == 0) {
-        failure("audio");
-
-        document.querySelector("#audio .group-content p").style.display =
-          "inherit";
-        document.querySelector("#audio .group-content ul").style.display =
-          "none";
-
-        audioFiles = [];
-      } else {
-        success("audio");
-
-        document.querySelector("#audio .group-content p").style.display =
-          "none";
-        document.querySelector("#audio .group-content ul").style.display =
-          "inherit";
-
-        audioFiles = filePaths;
-
-        updateAudio();
-      }
-
-      updateAnalyseButton();
+    function(folders) {
+      findAudioFiles(folders, SUPPORTED_AUDIO_FORMATS);
     }
   );
 }
 
 /**
- *
+ * Finds all files inside a folder recursively which match a list of extension types
+ * @param {[string]} extensions File extensions to find
+ * @returns {[string]} List of all files matching file extension
+ */
+function findAudioFiles(folders, extensions = [""]) {
+  //Parallel Recursive Search (https://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search)
+  var fs = require("fs");
+  var path = require("path");
+  var walk = function(dir, done) {
+    var results = [];
+    fs.readdir(dir, function(err, list) {
+      if (err) return done(err);
+      var pending = list.length;
+      if (!pending) return done(null, results);
+      list.forEach(function(file) {
+        file = path.resolve(dir, file);
+
+        //Determine if file is a directory
+        fs.stat(file, function(err, stat) {
+          if (stat && stat.isDirectory()) {
+            //Check folder recursively
+            walk(file, function(err, res) {
+              results = results.concat(res);
+              if (!--pending) done(null, results);
+            });
+          } else {
+            //Check file extension is found
+            extensions.some(function(extension) {
+              if (file.substr(file.length - extension.length) === extension) {
+                console.log("Extension Match: " + extension);
+                results.push(file);
+                return true;
+              }
+            });
+
+            if (!--pending) done(null, results);
+          }
+        });
+      });
+    });
+  };
+
+  if (folders === undefined) {
+    failure("audio");
+
+    document.querySelector("#audiospinner").style.display = "none";
+    document.querySelector("#audio .group-content p").style.display = "inherit";
+    document.querySelector("#audio .group-content ul").style.display = "none";
+    return;
+  }
+
+  //TODO Parallelise this so that load times are faster for large amounts of files
+  var count = 0;
+  var maxCount = folders.length;
+  audioFiles = [];
+
+  for (let i = 0; i < maxCount; i++) {
+    walk(folders[i], function(err, results) {
+      audioFiles = audioFiles.concat(results);
+      count++;
+
+      if (count == maxCount) {
+        document.querySelector("#audiospinner").style.display = "none";
+
+        if (audioFiles.length == 0) {
+          failure("audio");
+
+          document.querySelector("#audio .group-content p").style.display =
+            "inherit";
+          document.querySelector("#audio .group-content ul").style.display =
+            "none";
+        } else {
+          success("audio");
+
+          document.querySelector("#audio .group-content p").style.display =
+            "none";
+          document.querySelector("#audio .group-content ul").style.display =
+            "inherit";
+
+          updateAudio();
+        }
+
+        updateAnalyseButton();
+      }
+    });
+  }
+}
+
+/**
+ * Updates the Select Recordings Folder list of selected audio files
  */
 function updateAudio() {
   //Display list of files
   var files = document.querySelector("#audio .group-content ul");
   files.innerHTML = "";
+  files.innerHTML +=
+    "<li><b>Number of Loaded Files: " + audioFiles.length + "</b></li>";
 
+  //Storing files and then outputting to html is far faster
+  var temp = "";
   //Add files to list
   for (var file = 0; file < audioFiles.length; file++) {
-    files.innerHTML += '<li class="files">' + audioFiles[file] + "</li>";
+    temp += '<li class="files">' + audioFiles[file] + "</li>";
+
+    //Push periodically to reduce ram burden
+    if (file % 1000 == 0) {
+      files.innerHTML += temp;
+      temp = "";
+    }
   }
+
+  //Final push to html
+  files.innerHTML += temp;
 }
 
 /**
