@@ -136,10 +136,7 @@ function submitAnalysis(e) {
   document.querySelector("#output").id = "page";
 
   //Create loading bars with blank analysis
-  fileQueue.forEach(file => {
-    let id = generateID(file);
-    createLoader(id, file);
-  });
+  createLoaders(fileQueue);
 
   analysisInProgress = true;
   analyse();
@@ -411,6 +408,55 @@ function updateGroup(id, fullFilename, success, folder) {
       }
     });
   });
+}
+
+function createLoaders(fileQueue) {
+  var progressList = [];
+  for (let i = 0; i < fileQueue.length; i++) {
+    let id = generateID(fileQueue[i]);
+    progressList.push([
+      "<div class='filename-container'>" + getFilename(fileQueue[i]) + "</div>",
+      "<div class='filename-analysis' align='center' id='an" +
+        id +
+        "'>???</div>",
+      "<div class='progress3' id='pb" +
+        id +
+        "'> <div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>"
+    ]);
+
+    if (i % 1000 == 0) {
+      var row1 = "";
+      var row2 = "";
+      var row3 = "";
+
+      progressList.forEach(item => {
+        row1 += item[0];
+        row2 += item[1];
+        row3 += item[2];
+      });
+      progressList = [];
+
+      document.querySelector("#filename").innerHTML += row1;
+      document.querySelector("#filename-analysis").innerHTML += row2;
+      document.querySelector("#filename-loader").innerHTML += row3;
+    }
+  }
+
+  //Final push to html
+  var row1 = "";
+  var row2 = "";
+  var row3 = "";
+
+  progressList.forEach(item => {
+    row1 += item[0];
+    row2 += item[1];
+    row3 += item[2];
+  });
+  progressList = [];
+
+  document.querySelector("#filename").innerHTML += row1;
+  document.querySelector("#filename-analysis").innerHTML += row2;
+  document.querySelector("#filename-loader").innerHTML += row3;
 }
 
 /**
