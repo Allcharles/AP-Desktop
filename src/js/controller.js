@@ -353,9 +353,11 @@ function updateGroup(id, fullFilename, success, folder) {
 
     var group = document.querySelector("#pic" + id);
 
+    console.log("Reading Folder: " + folder);
     filenames.forEach(filename => {
+      console.log(filename);
       if (filename.substr(filename.length - 4) === ".png") {
-        var match = fullFilename.substr(0, fullFilename.length - 4) + "__";
+        var match = fullFilename.substr(0, fullFilename.length - 4);
         if (
           filename.substr(getFilenameIndex(filename) + 1, match.length) ===
           match
