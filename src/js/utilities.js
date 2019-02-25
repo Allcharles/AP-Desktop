@@ -252,6 +252,7 @@ function eventDetectionUtilityNext(el) {
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
 function updateEventAudio(form) {
+  console.log("updateEventAudio: " + eventCurrent.sound);
   form.querySelector("#EventDetectorSound").innerHTML =
     '<audio controls id="EventDetectorSound"><source type="audio/wav" src="' +
     eventCurrent.sound +
@@ -285,6 +286,7 @@ function updateEventAudio(form) {
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
 function updateEventSpectrogram(form) {
+  console.log("updateEventAudio: " + eventCurrent.image);
   const fs = require("fs");
   const PIXELS_PER_SECOND = 166.4; //TODO This was calculated using 282kbps wav files. May require changes in the future
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;

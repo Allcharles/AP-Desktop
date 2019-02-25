@@ -28,6 +28,7 @@ var fileQueue = [];
 var analysisQueue = [];
 var outputConfig;
 var outputOutputFolder;
+var terminalOutputFolder;
 
 /** Tracks whether an analysis is running */
 var analysisInProgress = false;
@@ -190,15 +191,30 @@ function analyse() {
     updateGroup(
       generateID(fileQueue[analysis[0]]),
       fileQueue[analysis[0]],
-      code === 0
+      code === 0,
+      terminalOutputFolder
     );
     analyse();
   });
 
   terminalOutput.stdout.on("data", function(data) {
+    getTerminalOutputFolder(data);
     updateProgressBar(data);
     updateTerminalOutput(data);
   });
+}
+
+/** Updates terminalOutputFolder with the output folder for the analysis
+ * @param {string} data Terminal output
+ */
+function getTerminalOutputFolder(data) {
+  const match = /Output=(.*)/m;
+
+  var res = match.exec(data.toString());
+  if (res !== null && res.length == 2) {
+    console.log(res);
+    terminalOutputFolder = res[1];
+  }
 }
 
 /**
@@ -317,9 +333,11 @@ function createGroup(id, filePath) {
 /**
  * Updates the group container to include all attached images
  * @param {string} id ID of the file
- * @param {string} filePath  File path of the audio file
+ * @param {string} fullFilename  File path of the audio file
+ * @param {bool} success True if the analysis was successful
+ * @param {string} folder Folder path to output
  */
-function updateGroup(id, filePath, success) {
+function updateGroup(id, fullFilename, success, folder) {
   if (!success) {
     var group = document.querySelector("#pic" + id).parentElement
       .firstElementChild;
@@ -328,13 +346,7 @@ function updateGroup(id, filePath, success) {
     return;
   }
 
-  filePath = getFilename(filePath);
-  var folder =
-    outputOutputFolder +
-    "/" +
-    filePath.substr(0, filePath.length - 4) +
-    "/" +
-    configFiles[outputConfig].fileName;
+  fullFilename = getFilename(fullFilename);
 
   fs.readdir(folder, function(err, filenames) {
     if (err) return console.log("Err: " + err);
@@ -343,7 +355,7 @@ function updateGroup(id, filePath, success) {
 
     filenames.forEach(filename => {
       if (filename.substr(filename.length - 4) === ".png") {
-        var match = filePath.substr(0, filePath.length - 4) + "__";
+        var match = fullFilename.substr(0, fullFilename.length - 4) + "__";
         if (
           filename.substr(getFilenameIndex(filename) + 1, match.length) ===
           match
