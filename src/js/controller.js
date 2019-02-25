@@ -11,7 +11,8 @@ const AP = IS_WINDOWS
   : AP_LOCATION + "/AnalysisPrograms.exe"; //Linux command is hard coded for my computer.
 const DEFAULT_CONFIG = "Towsey.Acoustic";
 const CONFIG_DIRECTORY = AP_LOCATION + "/ConfigFiles";
-const DEFAULT_OUTPUT_FOLDER = app.getPath("documents") + "\\AP Desktop";
+const DEFAULT_OUTPUT_FOLDER =
+  app.getPath("documents") + (IS_WINDOWS ? "\\" : "/") + "AP Desktop";
 const fs = require("fs");
 
 /** Used in the form to determine inputs */
@@ -27,6 +28,7 @@ var fileQueue = [];
 var analysisQueue = [];
 var outputConfig;
 var outputOutputFolder;
+var terminalOutputFolder;
 
 /** Tracks whether an analysis is running */
 var analysisInProgress = false;
@@ -35,7 +37,7 @@ var analysisInProgress = false;
  * This function outputs all terminal commands to the console for review.
  * Enable for debugging information.
  */
-/*
+
 (function() {
   var oldSpawn = require("child_process").spawn;
   function mySpawn() {
@@ -45,7 +47,7 @@ var analysisInProgress = false;
     return result;
   }
   require("child_process").spawn = mySpawn;
-})();*/
+})();
 
 /**
  * Rebuild analysis form from template
@@ -54,8 +56,8 @@ function buildAnalysisForm() {
   const fs = require("fs");
 
   var template =
-    __dirname.substr(0, __dirname.lastIndexOf("\\") + 1) +
-    "html\\analysisForm.html";
+    __dirname.substr(0, getFilenameIndex(__dirname) + 1) +
+    "html/analysisForm.html";
   var form = fs.readFileSync(template, "utf8");
   document.getElementById("analysis-template-holder").innerHTML = form;
 
@@ -74,8 +76,8 @@ function buildAnalysisForm() {
  */
 function buildOutputTemplate() {
   var template =
-    __dirname.substr(0, __dirname.lastIndexOf("\\") + 1) +
-    "html\\outputTemplate.html";
+    __dirname.substr(0, getFilenameIndex(__dirname) + 1) +
+    "html/outputTemplate.html";
   var div = fs.readFileSync(template, "utf8");
   document.getElementById("output-tab").innerHTML = div;
 }
@@ -150,7 +152,7 @@ function analyse() {
 
   //Determine analysis to run
   let file = fileQueue[analysis[FILE]];
-  let filename = file.substr(file.lastIndexOf("\\") + 1);
+  let filename = getFilename(file);
   filename = filename.substr(0, filename.length - 4);
   let id = generateID(file);
   let analysisType = analysisQueue[analysis[ANALYSIS]];
@@ -161,50 +163,20 @@ function analyse() {
 
   var terminalOutput;
   if (IS_WINDOWS) {
-    console.log(
-      "Command: " +
-        AP +
-        " " +
-        analysisType +
-        " " +
-        file +
-        " " +
-        configFiles[outputConfig].filePath +
-        " " +
-        outputOutputFolder +
-        "\\" +
-        filename +
-        " -p"
-    );
     terminalOutput = require("child_process").spawn(AP, [
       analysisType,
       file,
       configFiles[outputConfig].filePath,
-      outputOutputFolder + "\\" + filename,
+      outputOutputFolder + "/" + filename,
       "-p"
     ]);
   } else {
-    console.log(
-      "Command: mono " +
-        AP +
-        " " +
-        analysisType +
-        " " +
-        file +
-        " " +
-        configFiles[outputConfig].filePath +
-        " " +
-        outputOutputFolder +
-        "\\" +
-        filename +
-        " -p"
-    );
     terminalOutput = require("child_process").spawn("mono", [
       AP,
       analysisType,
       file,
       configFiles[outputConfig].filePath,
-      outputOutputFolder + "\\" + filename,
+      outputOutputFolder + "/" + filename,
       "-p"
     ]);
   }
@@ -219,15 +191,29 @@ function analyse() {
     updateGroup(
       generateID(fileQueue[analysis[0]]),
       fileQueue[analysis[0]],
-      code === 0
+      code === 0,
+      terminalOutputFolder
     );
     analyse();
   });
 
   terminalOutput.stdout.on("data", function(data) {
+    getTerminalOutputFolder(data);
     updateProgressBar(data);
     updateTerminalOutput(data);
   });
+}
+
+/** Updates terminalOutputFolder with the output folder for the analysis
+ * @param {string} data Terminal output
+ */
+function getTerminalOutputFolder(data) {
+  const match = /Output=(.*)/m;
+
+  var res = match.exec(data.toString());
+  if (res !== null && res.length == 2) {
+    terminalOutputFolder = res[1];
+  }
 }
 
 /**
@@ -283,24 +269,73 @@ function generateID(filePath) {
 }
 
 /**
+ * Returns the folder path for the file path exclusive of final '/'
+ * @param {string} filePath File path
+ * @returns {string} Folder path exclusive of final '/'
+ */
+function getFolder(filePath) {
+  let index = filePath.lastIndexOf("\\");
+  if (index === -1) {
+    return filePath.slice(0, filePath.lastIndexOf("/") + 1);
+  } else {
+    return filePath.slice(0, filePath.lastIndexOf("\\") + 1);
+  }
+}
+
+/**
  * Returns the filename from the file path
  * @param {string} filePath File path
+ * @returns {string} Filename
  */
 function getFilename(filePath) {
-  return filePath.slice(filePath.lastIndexOf("\\") + 1);
+  let index = filePath.lastIndexOf("\\");
+
+  if (index === -1) {
+    return filePath.slice(filePath.lastIndexOf("/") + 1);
+  } else {
+    return filePath.slice(filePath.lastIndexOf("\\") + 1);
+  }
+}
+
+/**
+ * Returns the index of the last / or \ depending on the filepath
+ * @param {string} filePath File path
+ * @returns {int} Index position of last / or \
+ */
+function getFilenameIndex(filePath) {
+  let index = filePath.lastIndexOf("\\");
+
+  if (index === -1) {
+    return filePath.lastIndexOf("/");
+  } else {
+    return index;
+  }
+}
+
+/**
+ * Sanitises a file path for windows and linux compatibility.
+ * @param {string} filePath File path
+ * @returns {string} Sanitised file path
+ */
+function sanitiseFilePath(filePath) {
+  if (IS_WINDOWS) {
+    return filePath.replace(new RegExp("/", "g"), "\\");
+  } else {
+    return filePath.replace(new RegExp("\\", "g"), "/");
+  }
 }
 
 /**
  * Create the group container for the files details
  * @param {string} id ID of the file
- * @param {string} filepath File path of the audio file
+ * @param {string} filePath File path of the audio file
  */
-function createGroup(id, filepath) {
+function createGroup(id, filePath) {
   document.querySelector("#output-tab").innerHTML +=
     '<div class="group" id="gr' +
     id +
     '"><div class="question" onclick="toggleHeader(this);"><p class="question-text">' +
-    getFilename(filepath) +
+    getFilename(filePath) +
     '</p></div><div class="group-content" style="display: none"id="pic' +
     id +
     '"><h1 id="ttl' +
@@ -313,9 +348,11 @@ function createGroup(id, filepath) {
 /**
  * Updates the group container to include all attached images
  * @param {string} id ID of the file
- * @param {string} filepath  File path of the audio file
+ * @param {string} fullFilename  File path of the audio file
+ * @param {bool} success True if the analysis was successful
+ * @param {string} folder Folder path to output
  */
-function updateGroup(id, filepath, success) {
+function updateGroup(id, fullFilename, success, folder) {
   if (!success) {
     var group = document.querySelector("#pic" + id).parentElement
       .firstElementChild;
@@ -324,13 +361,7 @@ function updateGroup(id, filepath, success) {
     return;
   }
 
-  filepath = getFilename(filepath);
-  var folder =
-    outputOutputFolder +
-    "\\" +
-    filepath.substr(0, filepath.length - 4) +
-    "\\" +
-    configFiles[outputConfig].fileName;
+  fullFilename = getFilename(fullFilename);
 
   fs.readdir(folder, function(err, filenames) {
     if (err) return console.log("Err: " + err);
@@ -339,9 +370,9 @@ function updateGroup(id, filepath, success) {
 
     filenames.forEach(filename => {
       if (filename.substr(filename.length - 4) === ".png") {
-        var match = filepath.substr(0, filepath.length - 4) + "__";
+        var match = fullFilename.substr(0, fullFilename.length - 4);
         if (
-          filename.substr(filename.lastIndexOf("\\") + 1, match.length) ===
+          filename.substr(getFilenameIndex(filename) + 1, match.length) ===
           match
         ) {
           group.innerHTML =
@@ -349,18 +380,18 @@ function updateGroup(id, filepath, success) {
             generateID(filename) +
             '" onclick="toggleImage(this);">' +
             filename.substr(
-              filename.lastIndexOf("\\") + 1 + match.length,
+              getFilenameIndex(filename) + 1 + match.length,
               filename.length - 4
             ) +
             '</h1><div class="header-content" id="div' +
             generateID(filename) +
             '" style="display: none"><div class="scrollimage"><img src="' +
             folder +
-            "\\" +
+            "/" +
             filename +
             '" alt="' +
             folder +
-            "\\" +
+            "/" +
             filename +
             ' image" /></div></div>' +
             group.innerHTML;
@@ -377,9 +408,7 @@ function updateGroup(id, filepath, success) {
  */
 function createLoader(id, filename) {
   document.querySelector("#filename").innerHTML +=
-    "<div class='filename-container'>" +
-    filename.slice(filename.lastIndexOf("\\") + 1) +
-    "</div>";
+    "<div class='filename-container'>" + getFilename(filename) + "</div>";
   document.querySelector("#filename-analysis").innerHTML +=
     "<div class='filename-analysis' align='center' id='an" + id + "'>???</div>";
   document.querySelector("#filename-loader").innerHTML +=
@@ -394,7 +423,6 @@ function createLoader(id, filename) {
  * @param {string} analysis Analysis type to run
  */
 function updateLoader(id, analysis) {
-  //console.log("ID: " + id);
   document.querySelector("#an" + id).innerHTML = analysis;
   document.querySelector("#pb" + id).innerHTML =
     "<div class='cssProgress-bar cssProgress-active-right cssProgress-warning' style='width: 0%;'><span class='cssProgress-label'>0%</span></div>";
@@ -628,17 +656,17 @@ function getConfig() {
   walk(CONFIG_DIRECTORY, function(err, results) {
     if (err) throw err;
 
-    results.forEach(filepath => {
+    results.forEach(filePath => {
       //Check file is .yml
-      if (filepath.substr(filepath.length - 4) === ".yml") {
-        var filename = filepath.substr(filepath.lastIndexOf("\\") + 1);
+      if (filePath.substr(filePath.length - 4) === ".yml") {
+        var filename = getFilename(filePath);
         filename = filename.substr(0, filename.length - 4);
 
         var file = {};
         file.id = configFiles.length;
-        file.filePath = filepath; //Full file path
+        file.filePath = filePath; //Full file path
         file.fileName = filename; //File name minus file extension
-        file.extension = filepath.substr(filepath.length - 4);
+        file.extension = filePath.substr(filePath.length - 4);
 
         configFiles.push(file);
       }
@@ -687,20 +715,20 @@ function checkEnvironment() {
   });
 
   terminalOutput.stdout.on("data", function(data) {
+    const MAX_ENVIRONMENT_OUTPUT = 3;
     count++;
     document.querySelector("#environment .group-content pre").innerHTML +=
       "\n" + data;
 
     //Third message from terminal contains the success message
-    if (count == 3) {
-      var match = "SUCCESS - Valid environment";
+    var match = "SUCCESS - Valid environment";
 
-      //Check terminal output for successful environment
-      if (data.includes(match)) {
-        document.querySelector("#environment").style.display = "none";
-      } else {
+    //Check terminal output for successful environment
+    if (data.includes(match)) {
+      document.querySelector("#environment").style.display = "none";
+    } else {
+      if (count >= MAX_ENVIRONMENT_OUTPUT)
         document.querySelector("#environment").style.display = "inherit";
-      }
     }
   });
 }

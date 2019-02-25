@@ -92,8 +92,9 @@ function findFilesRecursive(folderList, match, contains = "") {
     walk(dir, function(err, results) {
       if (err) throw err;
 
-      results.forEach(filepath => {
-        var fullFilename = filepath.substr(filepath.lastIndexOf("\\") + 1);
+      results.forEach(filePath => {
+        console.log(filePath);
+        var fullFilename = getFilename(filePath);
         var filename = fullFilename.substr(
           0,
           fullFilename.lastIndexOf("_") - 1
@@ -101,9 +102,9 @@ function findFilesRecursive(folderList, match, contains = "") {
 
         var file = {};
         file.id = eventList.length;
-        file.filePath = filepath; //Full file path
+        file.filePath = filePath; //Full file path
         file.fileName = filename; //File name minus file extension
-        file.extension = filepath.substr(filepath.length - match.length);
+        file.extension = filePath.substr(filePath.length - match.length);
 
         if (file.extension === match && fullFilename.includes(contains)) {
           //First element found
@@ -193,7 +194,7 @@ function eventDetectionUtilityNext(el) {
     const EVENT_START_OFFSET = 12;
     const FILENAME_CELL = 14;
     var csv = eventSelection.shift().filePath;
-    var path = csv.substr(0, csv.lastIndexOf("\\") + 1);
+    var path = getFolder(csv) + "/";
 
     //Read csv file
     var data = fs.readFileSync(csv, "utf8");
@@ -251,6 +252,7 @@ function eventDetectionUtilityNext(el) {
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
 function updateEventAudio(form) {
+  console.log("updateEventAudio: " + eventCurrent.sound);
   form.querySelector("#EventDetectorSound").innerHTML =
     '<audio controls id="EventDetectorSound"><source type="audio/wav" src="' +
     eventCurrent.sound +
@@ -284,6 +286,7 @@ function updateEventAudio(form) {
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
 function updateEventSpectrogram(form) {
+  console.log("updateEventAudio: " + eventCurrent.image);
   const fs = require("fs");
   const PIXELS_PER_SECOND = 166.4; //TODO This was calculated using 282kbps wav files. May require changes in the future
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;
