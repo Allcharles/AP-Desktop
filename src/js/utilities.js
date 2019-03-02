@@ -252,32 +252,33 @@ function eventDetectionUtilityNext(el) {
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
 function updateEventAudio(form) {
-  console.log("updateEventAudio: " + eventCurrent.sound);
   form.querySelector("#EventDetectorSound").innerHTML =
-    '<audio controls id="EventDetectorSound"><source type="audio/wav" src="' +
-    eventCurrent.sound +
-    '"/></audio>';
-
+    '<audio controls id="EventDetectorSound"><source type="audio/wav" src=""/></audio>';
   var audio = form.querySelector("#EventDetectorSound audio");
 
-  audio.load();
-  //Set minimum time to eventCurrent.start
-  audio.addEventListener("canplaythrough", function() {
-    var start = parseInt(eventCurrent.start);
+  fs.readFile(eventCurrent.sound, function(err, buffer) {
+    var blob = new window.Blob([new Uint8Array(buffer)]);
+    audio.src = URL.createObjectURL(blob);
 
-    //Set the minimum time to eventCurrent.start
-    if (this.currentTime < start) {
-      this.currentTime = start;
-    }
-  });
-  //Reset audio when hitting end of sound file
-  audio.addEventListener("ended", function() {
-    var start = parseInt(eventCurrent.start);
-    var finish = parseInt(eventCurrent.start + eventCurrent.duration + 1);
+    audio.load();
+    //Set minimum time to eventCurrent.start
+    audio.addEventListener("canplaythrough", function() {
+      var start = parseInt(eventCurrent.start);
 
-    if (this.currentTime > finish) {
-      this.currentTime = start;
-    }
+      //Set the minimum time to eventCurrent.start
+      if (this.currentTime < start) {
+        this.currentTime = start;
+      }
+    });
+    //Reset audio when hitting end of sound file
+    audio.addEventListener("ended", function() {
+      var start = parseInt(eventCurrent.start);
+      var finish = parseInt(eventCurrent.start + eventCurrent.duration + 1);
+
+      if (this.currentTime > finish) {
+        this.currentTime = start;
+      }
+    });
   });
 }
 
@@ -286,7 +287,7 @@ function updateEventAudio(form) {
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
 function updateEventSpectrogram(form) {
-  console.log("updateEventAudio: " + eventCurrent.image);
+  console.log("updateEventSpectrogram: " + eventCurrent.image);
   const fs = require("fs");
   const PIXELS_PER_SECOND = 166.4; //TODO This was calculated using 282kbps wav files. May require changes in the future
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;
@@ -296,9 +297,15 @@ function updateEventSpectrogram(form) {
   try {
     fs.accessSync(eventCurrent.image);
 
-    //Add image and manipulate to cut image
-    image.src = eventCurrent.image;
-    image.style.marginLeft = "-" + startPixel + "px";
+    image.innerHTML = "";
+    buildImageSync(
+      image,
+      eventCurrent.image,
+      "",
+      "",
+      "margin-left: -" + startPixel + "px",
+      "If you are seeing this message, update options SaveIntermediateWavFiles and SaveSonogramImages to 'WhenEventsDetected' in config file. The run analysis again to activate sound and spectrogram."
+    );
   } catch (e) {
     //Do nothing
   }

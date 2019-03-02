@@ -378,32 +378,40 @@ function updateGroup(id, fullFilename, success, folder) {
     var group = document.querySelector("#pic" + id);
 
     filenames.forEach(filename => {
+      //Searches for all .png files
       if (filename.substr(filename.length - 4) === ".png") {
         var match = fullFilename.substr(0, fullFilename.length - 4);
         if (
           filename.substr(getFilenameIndex(filename) + 1, match.length) ===
           match
         ) {
+          var title = filename.substr(
+            getFilenameIndex(filename) + 1 + match.length,
+            filename.length - 4
+          );
+          title = title.substr(title.lastIndexOf("_") + 1);
+          var id = generateID(filename);
+
           group.innerHTML =
             '<h1 id="ttl' +
-            generateID(filename) +
+            id +
             '" onclick="toggleImage(this);">' +
-            filename.substr(
-              getFilenameIndex(filename) + 1 + match.length,
-              filename.length - 4
-            ) +
+            title +
             '</h1><div class="header-content" id="div' +
-            generateID(filename) +
-            '" style="display: none"><div class="scrollimage"><img src="' +
-            folder +
-            "/" +
-            filename +
-            '" alt="' +
-            folder +
-            "/" +
-            filename +
-            ' image" /></div></div>' +
+            id +
+            '" style="display: none"><div class="scrollimage" id="img' +
+            id +
+            '"></div></div>' +
             group.innerHTML;
+
+          buildImageSync(
+            document.getElementById("img" + id),
+            folder + "/" + filename,
+            "",
+            "",
+            "",
+            ""
+          );
         }
       }
     });

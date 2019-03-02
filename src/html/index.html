@@ -20,6 +20,7 @@
     <script type="text/javascript" src="../js/utilities.js"></script>
     <script type="text/javascript" src="../js/navigation.js"></script>
     <script type="text/javascript" src="../js/toggleImage.js"></script>
+    <script type="text/javascript" src="../js/htmlBuilder.js"></script>
     <meta charset="utf-8" />
     <title>AP Desktop</title>
   </head>
@@ -150,12 +151,10 @@
                 <h1 style="margin: 0; padding: 0; text-align: center">
                   Spectrogram
                 </h1>
-                <div style="overflow: hidden;">
-                  <img
-                    id="EventDetectorSpectrogram"
-                    alt="If you are seeing this update options SaveIntermediateWavFiles and SaveSonogramImages to 'WhenEventsDetected' in config file. The run analysis again to activate sound and spectrogram."
-                  />
-                </div>
+                <div
+                  style="overflow: hidden;"
+                  id="EventDetectorSpectrogram"
+                ></div>
 
                 <table class="flex padding-right-p">
                   <tr>

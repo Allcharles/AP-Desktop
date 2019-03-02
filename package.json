@@ -36,10 +36,6 @@
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "",
-        "name": ""
-      },
       "windowsStoreConfig": {
         "packageName": "",
         "name": "ap_desktop"
