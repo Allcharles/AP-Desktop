@@ -1,7 +1,7 @@
 {
   "name": "ap_desktop",
   "productName": "AP Desktop",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe).",
   "main": "src/index.js",
   "scripts": {
