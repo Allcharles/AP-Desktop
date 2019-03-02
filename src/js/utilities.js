@@ -296,9 +296,14 @@ function updateEventSpectrogram(form) {
   try {
     fs.accessSync(eventCurrent.image);
 
-    //Add image and manipulate to cut image
-    image.src = eventCurrent.image;
-    image.style.marginLeft = "-" + startPixel + "px";
+    buildImageSync(
+      image,
+      eventCurrent.image,
+      "",
+      "",
+      "margin-left: -" + startPixel + "px",
+      "If you are seeing this message, update options SaveIntermediateWavFiles and SaveSonogramImages to 'WhenEventsDetected' in config file. The run analysis again to activate sound and spectrogram."
+    );
   } catch (e) {
     //Do nothing
   }
