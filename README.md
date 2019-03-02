@@ -22,10 +22,10 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 - Event Detection Helper utility
 - Loading bars for file analysis
 - Analysis spectrogram display
+- Linux Support
 
 ## Features Coming Soon
 
-- Linux Support
 - AP Installer
 
 ## History
