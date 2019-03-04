@@ -2,19 +2,17 @@
 
 AP Desktop is a Graphical User Interface (GUI) for the open source program AnalysisPrograms.exe provided by QUT/EcoAcoustics. This GUI is designed to help researchers use the software without learning complicated terminal commands.
 
-## Setting up Development Environment
+## Installing Project
 
-### Windows Instructions
-
-- Download and install Node.js [link](https://nodejs.org/en/download/)
-- Download and install Git [link](https://git-scm.com/download/win)
-- Open Command Line and run the following commands:
-  - `npm install -g electron`
-  - `npm install -g electron-forge`
-  - `npm install -g yarn`
-- Open the file containing the AP Desktop code in Command Line and then execute the following command
-  - `yarn`
+- Download and install Node.js v11.10.0 or newer [link](https://nodejs.org/en/download/)
+- Open the file containing the AP Desktop code in Command Line and then execute the following commands:
+  - `npm install`
   - `npm start`
+
+## Building Project
+
+- To build the project, run the following command: `npm run release`
+- You will need to run this once on each patform (Windows/Linux/Mac) to get the full suit
 
 ## Current Features
 
