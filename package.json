@@ -1,13 +1,14 @@
 {
   "name": "ap_desktop",
   "productName": "AP Desktop",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe).",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "release": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
@@ -28,9 +29,7 @@
           "rpm"
         ]
       },
-      "electronPackagerConfig": {
-        "packageManager": "yarn"
-      },
+      "electronPackagerConfig": {"packageManager": "npm"},
       "electronWinstallerConfig": {
         "name": "ap_desktop"
       },
@@ -59,6 +58,7 @@
     "eslint-config-airbnb": "^15",
     "eslint-plugin-import": "^2",
     "eslint-plugin-jsx-a11y": "^5",
-    "eslint-plugin-react": "^7"
+    "eslint-plugin-react": "^7",
+    "git": "^0.1.5"
   }
 }
