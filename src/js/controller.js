@@ -563,12 +563,10 @@ function setOutputFolder() {
       var content = document.querySelector("#outputFolder .group-content");
 
       //No folder selected
-      if (folder === undefined) {
-        failure("outputFolder");
-        outputFolder = DEFAULT_OUTPUT_FOLDER;
-      } else {
-        success("outputFolder");
+      if (folder !== undefined) {
         outputFolder = folder[0];
+
+        //TODO check for write permissions to folder
       }
 
       content.lastElementChild.firstElementChild.innerHTML = outputFolder;
@@ -597,7 +595,24 @@ function getAudio() {
       title: "Select Audio Recordings Folder"
     },
     function(folders) {
-      findAudioFiles(folders, SUPPORTED_AUDIO_FORMATS);
+      if (folders === undefined) {
+        document.querySelector("#audiospinner").style.display = "none";
+
+        //If files have previously been selected
+        if (audioFiles.length === 0) {
+          document.querySelector("#audio .group-content p").style.display =
+            "inherit";
+          document.querySelector("#audio .group-content ul").style.display =
+            "none";
+        } else {
+          document.querySelector("#audio .group-content p").style.display =
+            "none";
+          document.querySelector("#audio .group-content ul").style.display =
+            "inherit";
+        }
+      } else {
+        findAudioFiles(folders, SUPPORTED_AUDIO_FORMATS);
+      }
     }
   );
 }
@@ -644,15 +659,6 @@ function findAudioFiles(folders, extensions = [""]) {
       });
     });
   };
-
-  if (folders === undefined) {
-    failure("audio");
-
-    document.querySelector("#audiospinner").style.display = "none";
-    document.querySelector("#audio .group-content p").style.display = "inherit";
-    document.querySelector("#audio .group-content ul").style.display = "none";
-    return;
-  }
 
   //TODO Parallelise this so that load times are faster for large amounts of files
   var count = 0;
