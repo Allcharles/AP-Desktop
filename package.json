@@ -8,7 +8,8 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "release": "electron-forge make",
+    "release:windows": "echo Downloading Latest version of AP for Release. This could take up to 15 minutes. && powershell ./download_ap.ps1 -windows:$true && electron-forge make",
+    "release:linux": "echo Downloading Latest version of AP for Release. This could take up to 15 minutes. && powershell ./download_ap.ps1 -windows:$false && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
@@ -29,7 +30,9 @@
           "rpm"
         ]
       },
-      "electronPackagerConfig": {"packageManager": "npm"},
+      "electronPackagerConfig": {
+        "packageManager": "npm"
+      },
       "electronWinstallerConfig": {
         "name": "ap_desktop"
       },
