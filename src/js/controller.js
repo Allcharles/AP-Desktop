@@ -15,16 +15,6 @@ const SUPPORTED_AUDIO_FORMATS = [
   ".mwa"
 ];
 const IS_WINDOWS = process.platform === "win32";
-const AP_LOCATION = IS_WINDOWS
-  ? "C:/AP"
-  : app.getPath("documents") + "/VRES/AP"; //Linux command is hard coded for my computer.
-const AP = IS_WINDOWS
-  ? "AnalysisPrograms.exe"
-  : AP_LOCATION + "/AnalysisPrograms.exe"; //Linux command is hard coded for my computer.
-const DEFAULT_CONFIG = "Towsey.Acoustic";
-const CONFIG_DIRECTORY = AP_LOCATION + "/ConfigFiles";
-const DEFAULT_OUTPUT_FOLDER =
-  app.getPath("documents") + (IS_WINDOWS ? "\\" : "/") + "AP Desktop";
 const fs = require("fs");
 
 /** Used in the form to determine inputs */
@@ -32,7 +22,7 @@ var analysisList = [];
 var audioFiles = [];
 var configFiles = [];
 var config = 0;
-var outputFolder = DEFAULT_OUTPUT_FOLDER;
+var outputFolder = Defaults.getDefaultOutputDirectory();
 
 /** Use in analysis to detemine output */
 var analysis = [];
@@ -44,22 +34,6 @@ var terminalOutputFolder;
 
 /** Tracks whether an analysis is running */
 var analysisInProgress = false;
-
-/**
- * This function outputs all terminal commands to the console for review.
- * Enable for debugging information.
- */
-
-(function() {
-  var oldSpawn = require("child_process").spawn;
-  function mySpawn() {
-    console.debug("spawn called");
-    console.debug(arguments);
-    var result = oldSpawn.apply(this, arguments);
-    return result;
-  }
-  require("child_process").spawn = mySpawn;
-})();
 
 /**
  * Rebuild analysis form from template
@@ -170,32 +144,18 @@ function analyse() {
   //If the file has not be analysed before, create group to store its data
   if (document.querySelector("#gr" + id) === null) createGroup(id, file);
 
-  var terminalOutput;
-  if (IS_WINDOWS) {
-    terminalOutput = require("child_process").spawn(AP, [
-      analysisType,
-      file,
-      configFiles[outputConfig].filePath,
-      outputOutputFolder + "/" + filename,
-      "-p"
-    ]);
-  } else {
-    terminalOutput = require("child_process").spawn("mono", [
-      AP,
-      analysisType,
-      file,
-      configFiles[outputConfig].filePath,
-      outputOutputFolder + "/" + filename,
-      "-p"
-    ]);
-  }
+  var terminal = Terminal.createAPTerminal([analysisType,
+    file,
+    configFiles[outputConfig].filePath,
+    outputOutputFolder + "/" + filename,
+    "-p"]);
 
-  terminalOutput.on("error", function(err) {
+  terminal.on("error", function (err) {
     console.error(err);
     finishLoader(generateID(fileQueue[analysis[0]]), false);
   });
 
-  terminalOutput.on("close", function(code) {
+  terminal.on("close", function (code) {
     finishLoader(generateID(fileQueue[analysis[0]]), code === 0);
     updateGroup(
       generateID(fileQueue[analysis[0]]),
@@ -206,7 +166,7 @@ function analyse() {
     analyse();
   });
 
-  terminalOutput.stdout.on("data", function(data) {
+  terminal.stdout.on("data", function (data) {
     getTerminalOutputFolder(data);
     updateProgressBar(data);
     updateTerminalOutput(data);
@@ -372,7 +332,7 @@ function updateGroup(id, fullFilename, success, folder) {
 
   fullFilename = getFilename(fullFilename);
 
-  fs.readdir(folder, function(err, filenames) {
+  fs.readdir(folder, function (err, filenames) {
     if (err) return console.log("Err: " + err);
 
     var group = document.querySelector("#pic" + id);
@@ -425,11 +385,11 @@ function createLoaders(fileQueue) {
     progressList.push([
       "<div class='filename-container'>" + getFilename(fileQueue[i]) + "</div>",
       "<div class='filename-analysis' align='center' id='an" +
-        id +
-        "'>???</div>",
+      id +
+      "'>???</div>",
       "<div class='progress3' id='pb" +
-        id +
-        "'> <div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>"
+      id +
+      "'> <div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>"
     ]);
 
     if (i % 1000 == 0) {
@@ -503,9 +463,9 @@ function finishLoader(id, success) {
   document.querySelector("#an" + id).innerHTML = "<b>Finished<b>";
   success
     ? (document.querySelector("#pb" + id).innerHTML =
-        "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>")
+      "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>")
     : (document.querySelector("#pb" + id).innerHTML =
-        "<div class='cssProgress-bar cssProgress-active-right cssProgress-danger' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>");
+      "<div class='cssProgress-bar cssProgress-active-right cssProgress-danger' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>");
 }
 
 function audio2csvToggle() {
@@ -540,7 +500,7 @@ function updateAnalyseButton() {
  */
 function loadDefaultOutputFolder() {
   //Update html
-  outputFolder = DEFAULT_OUTPUT_FOLDER;
+  outputFolder = Defaults.getDefaultOutputDirectory();
   document.querySelector("#outputFolder li").innerHTML = outputFolder;
 
   //Create folder incase it does not exist
@@ -559,7 +519,7 @@ function setOutputFolder() {
       properties: ["openDirectory", "createDirectory"],
       title: "Select Output Folder"
     },
-    function(folder) {
+    function (folder) {
       var content = document.querySelector("#outputFolder .group-content");
 
       //No folder selected
@@ -594,7 +554,7 @@ function getAudio() {
       properties: ["openDirectory", "multiSelections"],
       title: "Select Audio Recordings Folder"
     },
-    function(folders) {
+    function (folders) {
       if (folders === undefined) {
         document.querySelector("#audiospinner").style.display = "none";
 
@@ -626,26 +586,26 @@ function findAudioFiles(folders, extensions = [""]) {
   //Parallel Recursive Search (https://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search)
   var fs = require("fs");
   var path = require("path");
-  var walk = function(dir, done) {
+  var walk = function (dir, done) {
     var results = [];
-    fs.readdir(dir, function(err, list) {
+    fs.readdir(dir, function (err, list) {
       if (err) return done(err);
       var pending = list.length;
       if (!pending) return done(null, results);
-      list.forEach(function(file) {
+      list.forEach(function (file) {
         file = path.resolve(dir, file);
 
         //Determine if file is a directory
-        fs.stat(file, function(err, stat) {
+        fs.stat(file, function (err, stat) {
           if (stat && stat.isDirectory()) {
             //Check folder recursively
-            walk(file, function(err, res) {
+            walk(file, function (err, res) {
               results = results.concat(res);
               if (!--pending) done(null, results);
             });
           } else {
             //Check file extension is found
-            extensions.some(function(extension) {
+            extensions.some(function (extension) {
               if (file.substr(file.length - extension.length) === extension) {
                 console.log("Extension Match: " + extension);
                 results.push(file);
@@ -666,7 +626,7 @@ function findAudioFiles(folders, extensions = [""]) {
   audioFiles = [];
 
   for (let i = 0; i < maxCount; i++) {
-    walk(folders[i], function(err, results) {
+    walk(folders[i], function (err, results) {
       audioFiles = audioFiles.concat(results);
       count++;
 
@@ -737,7 +697,7 @@ function sortConfig() {
   });
 
   //Sort list alphabetically ignoring case
-  arr.sort(function(o1, o2) {
+  arr.sort(function (o1, o2) {
     var t1 = o1.t.toLowerCase(),
       t2 = o2.t.toLowerCase();
 
@@ -748,7 +708,7 @@ function sortConfig() {
   for (var i = 0; i < options.length; i++) {
     options[i].value = arr[i].v;
     options[i].innerHTML = arr[i].t;
-    options[i].selected = arr[i].t === DEFAULT_CONFIG ? true : false;
+    options[i].selected = arr[i].t === Defaults.getDefaultConfigFile();
   }
 }
 
@@ -761,12 +721,12 @@ function setConfig() {
   configFiles.forEach(file => {
     //Create option for config files
     var option = "<option ";
-    option += file.fileName === DEFAULT_CONFIG ? "selected " : "";
+    option += file.fileName === Defaults.getDefaultConfigFile() ? "selected " : "";
     option += "value='" + file.id + "'>" + file.fileName + "</option>";
     select.innerHTML += option;
 
     //Update default config
-    config = file.fileName === DEFAULT_CONFIG ? file.id : config;
+    config = file.fileName === Defaults.getDefaultConfigFile() ? file.id : config;
   });
 
   sortConfig();
@@ -779,17 +739,17 @@ function setConfig() {
 function getConfig() {
   //Parallel Recursive Search (https://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search)
   var path = require("path");
-  var walk = function(dir, done) {
+  var walk = function (dir, done) {
     var results = [];
-    fs.readdir(dir, function(err, list) {
+    fs.readdir(dir, function (err, list) {
       if (err) return done(err);
       var pending = list.length;
       if (!pending) return done(null, results);
-      list.forEach(function(file) {
+      list.forEach(function (file) {
         file = path.resolve(dir, file);
-        fs.stat(file, function(err, stat) {
+        fs.stat(file, function (err, stat) {
           if (stat && stat.isDirectory()) {
-            walk(file, function(err, res) {
+            walk(file, function (err, res) {
               results = results.concat(res);
               if (!--pending) done(null, results);
             });
@@ -803,7 +763,7 @@ function getConfig() {
   };
 
   //Get Config Files
-  walk(CONFIG_DIRECTORY, function(err, results) {
+  walk(Defaults.getConfigDirectory(), function (err, results) {
     if (err) throw err;
 
     results.forEach(filePath => {
@@ -848,23 +808,14 @@ function updateConfig(el) {
  */
 let count = 0;
 function checkEnvironment() {
-  var terminalOutput;
+  var terminal = Terminal.createAPTerminal(["CheckEnvironment"]);
 
-  if (IS_WINDOWS) {
-    terminalOutput = require("child_process").spawn(AP, ["CheckEnvironment"]);
-  } else {
-    terminalOutput = require("child_process").spawn("mono", [
-      AP,
-      "CheckEnvironment"
-    ]);
-  }
-
-  terminalOutput.on("error", function(err) {
+  terminal.on("error", function (err) {
     console.log(err);
     document.querySelector("#environment").style.display = "inherit";
   });
 
-  terminalOutput.stdout.on("data", function(data) {
+  terminal.stdout.on("data", function (data) {
     const MAX_ENVIRONMENT_OUTPUT = 3;
     count++;
     document.querySelector("#environment .group-content pre").innerHTML +=
