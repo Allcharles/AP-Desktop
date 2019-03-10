@@ -3,12 +3,14 @@ Remove-Item ./ap -Recurse
 New-Item -Path ./ap -ItemType Directory
 
 # Get AP Downloader
-curl.exe https://raw.githubusercontent.com/QutEcoacoustics/audio-analysis/master/build/download_ap.ps1 -o ./ap/download_ap.ps1
-
-# Check if not linux
+# Check if Linux
 if ([System.Environment]::OSVersion.Platform -ne "Win32NT") {
   Write-Output("Linux Detected")
+  curl https://raw.githubusercontent.com/QutEcoacoustics/audio-analysis/master/build/download_ap.ps1 -o ./ap/download_ap.ps1
   chmod +x ./download_ap.ps1
+} else {
+  Write-Output("Windows Detected")
+  curl.exe https://raw.githubusercontent.com/QutEcoacoustics/audio-analysis/master/build/download_ap.ps1 -o ./ap/download_ap.ps1
 }
 
 # Extract AP to folder
@@ -16,3 +18,4 @@ if ([System.Environment]::OSVersion.Platform -ne "Win32NT") {
 
 #Remove AP Downloader
 Remove-Item -Path ./ap/download_ap.ps1
+# Write-Output(Get-Command curl -CommandType Application -TotalCount 1)

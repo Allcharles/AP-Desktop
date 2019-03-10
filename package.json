@@ -8,7 +8,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "ap_download": "echo Downloading Latest version of AP for Release. This could take up to 15 minutes. && @powershell -ExecutionPolicy ByPass -File ./download_ap.ps1",
+    "ap_download": "echo Downloading Latest version of AP for Release. This could take up to 15 minutes. && pwsh -ExecutionPolicy ByPass -File ./download_ap.ps1",
     "install": "npm run ap_download",
     "release": "npm run ap_download && electron-forge make",
     "publish": "electron-forge publish",
@@ -63,6 +63,7 @@
     "eslint-plugin-import": "^2",
     "eslint-plugin-jsx-a11y": "^5",
     "eslint-plugin-react": "^7",
-    "git": "^0.1.5"
+    "git": "^0.1.5",
+    "pwsh": "^0.2.0"
   }
 }
