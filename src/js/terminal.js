@@ -3,19 +3,13 @@
  * Defaults must be imported into the the html file before this script.
  */
 class Terminal {
-  static staticConstructor() {
-    this.isWindows = process.platform === "win32"
-    this.childProcess = require("child_process")
-    this.AP = Defaults.getAPDirectory + "/AnalysisPrograms.exe"
-  }
-
   /**
    * Creates and returns a terminal. This function does not account for differences between Windows and Linux.
-   * @param {string} func Function to call 
+   * @param {string} func Function to call
    * @param {[string]} args  List of arguments to pass to the terminal.
    */
   static createTerminal(func, args) {
-    return this.childProcess.spawn(func, args)
+    return this.childProcess.spawn(func, args);
   }
 
   /**
@@ -23,18 +17,21 @@ class Terminal {
    * @param {[string]} args List of arguements to pass to the terminal
    */
   static createAPTerminal(args) {
-    var terminal
+    var AP = Defaults.AP_DIRECTORY + "/AnalysisPrograms.exe";
+    var terminal;
 
-    if (this.isWindows) {
-      terminal = this.childProcess.spawn(this.AP, args)
+    if (Defaults.WINDOWS) {
+      console.log(AP);
+      console.log(args);
+      terminal = childProcess.spawn(AP, args);
     } else {
       //Prepend AP to start of command
-      args.shift(this.AP)
-      terminal = this.childProcess.spawn("mono", args)
+      args.shift(AP);
+      console.log("mono");
+      console.log(args);
+      terminal = childProcess.spawn("mono", args);
     }
 
-    return terminal
+    return terminal;
   }
 }
-
-Terminal.staticConstructor()

@@ -1,34 +1,23 @@
-class Defaults {
-  static staticConstructor() {
-    const electron = require("electron")
-    const { app } = electron.remote
+const electron = require("electron");
+const { app } = electron.remote;
+const dialog = electron.remote.dialog;
+const fs = require("fs");
+const childProcess = require("child_process");
 
-    this.AP_DIRECTORY = "../../ap"
-    this.CONFIG_DIRECTORY = this.AP_DIRECTORY + "/ConfigFiles"
-    this.DEFAULT_OUTPUT_DIRECTORY = app.getPath("documents") + "/AP Desktop"
-    this.DEFAULT_CONFIG_FILE = "Towsey.Acoustic"
-  }
-
-  static getAPDirectory() {
-    console.log("AP Directory: " + this.AP_DIRECTORY)
-    return this.AP_DIRECTORY
-  }
-
-  static getConfigDirectory() {
-    console.log("Config Directory: " + this.CONFIG_DIRECTORY)
-    return this.CONFIG_DIRECTORY
-  }
-
-  static getDefaultOutputDirectory() {
-    console.log("Output Directory: " + this.DEFAULT_OUTPUT_DIRECTORY)
-    return this.DEFAULT_OUTPUT_DIRECTORY
-  }
-
-  static getDefaultConfigFile() {
-
-    console.log("Default Config File: " + this.DEFAULT_CONFIG_FILE)
-    return this.DEFAULT_CONFIG_FILE
-  }
+var lastIndex = __dirname.lastIndexOf("src/");
+if (lastIndex == -1) {
+  lastIndex = __dirname.lastIndexOf("src\\");
 }
+var __rootFolder = __dirname.substr(0, lastIndex);
 
-Defaults.staticConstructor()
+/**
+ * Default variables used throughout the system
+ */
+var Defaults = {
+  AP_DIRECTORY: `${__rootFolder}ap`,
+  CONFIG_DIRECTORY: `${__rootFolder}/ap/ConfigFiles`,
+  DEFAULT_OUTPUT_DIRECTORY: app.getPath("documents") + "/AP Desktop",
+  DEFAULT_CONFIG_FILE: "Towsey.Acoustic",
+  WINDOWS: process.platform === "win32"
+};
+Object.freeze(Defaults);
