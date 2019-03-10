@@ -26,7 +26,7 @@ class Terminal {
       terminal = childProcess.spawn(AP, args);
     } else {
       //Prepend AP to start of command
-      args.shift(AP);
+      args.unshift(AP);
       console.log("mono");
       console.log(args);
       terminal = childProcess.spawn("mono", args);
