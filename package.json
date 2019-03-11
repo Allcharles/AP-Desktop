@@ -8,8 +8,8 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "ap_download": "echo Downloading Latest version of AP for Release. This could take up to 15 minutes. && export LANG=en_US.UTF-8 && pwsh -ExecutionPolicy ByPass -File ./script_ap.ps1",
-    "install": "npm run ap_download",
+    "ap_download:windows": "echo Downloading latest version of AP for Release. This could take up to 15 minutes. && powershell -ExecutionPolicy ByPass -File ./script_ap.ps1",
+    "ap_download:linux": "echo Downloading latest version of AP for Release. This could take up to 15 minutes. && pwsh -ExecutionPolicy ByPass -File ./script_ap.ps1",
     "release": "npm run ap_download && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
