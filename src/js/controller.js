@@ -1,15 +1,15 @@
 /** All ffmpeg supported audio formats */
 const SUPPORTED_AUDIO_FORMATS = [
-  ".wav",
-  ".mp3",
-  ".pcm",
-  ".aiff",
-  ".aac",
-  ".ogg",
-  ".wma",
-  ".flac",
-  ".alac",
-  ".mwa"
+  "wav",
+  "mp3",
+  "pcm",
+  "aiff",
+  "aac",
+  "ogg",
+  "wma",
+  "flac",
+  "alac",
+  "mwa"
 ];
 const IS_WINDOWS = process.platform === "win32";
 
@@ -533,10 +533,70 @@ function setOutputFolder() {
   );
 }
 
+function getAudioFiles() {
+  //Display loading animation
+  document.querySelector("#audio .group-content p").style.display = "none";
+  document.querySelector("#audio .group-content ul").style.display = "none";
+  document.querySelector("#audiospinner").style.display = "inherit";
+
+  process.dlopen = () => {
+    throw new Error("Load native module is not safe");
+  };
+
+  //Open file selector dialog
+  dialog.showOpenDialog(
+    {
+      properties: ["openFile", "multiSelections"],
+      filters: [{ name: "Audio", extensions: SUPPORTED_AUDIO_FORMATS }],
+      title: "Select Audio Recording Files"
+    },
+    function(files) {
+      if (files === undefined) {
+        //If files have previously been selected
+        if (audioFiles.length === 0) {
+          document.querySelector("#audio .group-content p").style.display =
+            "inherit";
+          document.querySelector("#audio .group-content ul").style.display =
+            "none";
+        } else {
+          document.querySelector("#audio .group-content p").style.display =
+            "none";
+          document.querySelector("#audio .group-content ul").style.display =
+            "inherit";
+        }
+      } else {
+        console.log(files);
+
+        if (files.count == 0) {
+          failure("audio");
+
+          document.querySelector("#audio .group-content p").style.display =
+            "inherit";
+          document.querySelector("#audio .group-content ul").style.display =
+            "none";
+        } else {
+          success("audio");
+
+          document.querySelector("#audio .group-content p").style.display =
+            "none";
+          document.querySelector("#audio .group-content ul").style.display =
+            "inherit";
+
+          audioFiles = files;
+          updateAudio();
+        } 
+      }
+      
+      document.querySelector("#audiospinner").style.display = "none";
+      updateAnalyseButton();
+    }
+  );
+}
+
 /**
- * Get audio files
+ * Get audio files from folder
  */
-function getAudio() {
+function getAudioFolder() {
   //Display loading animation
   document.querySelector("#audio .group-content p").style.display = "none";
   document.querySelector("#audio .group-content ul").style.display = "none";
@@ -902,8 +962,10 @@ function failure(id) {
   if (title !== null) title.setAttribute("class", "question-fail");
   else return;
 
-  var extra = document.querySelector("#" + id + " a .question-button");
-  if (extra !== null) extra.setAttribute("class", "question-button-fail");
+  var extra = document.querySelectorAll("#" + id + " a .question-button");
+  extra.forEach(button => {
+    if (button !== null) button.setAttribute("class", "question-button-fail")
+  });
 }
 
 /**
@@ -915,6 +977,8 @@ function success(id) {
   if (title !== null) title.setAttribute("class", "question");
   else return;
 
-  var extra = document.querySelector("#" + id + " a .question-button-fail");
-  if (extra !== null) extra.setAttribute("class", "question-button");
+  var extra = document.querySelectorAll("#" + id + " a .question-button-fail");
+  extra.forEach(button => {
+    if (button !== null) button.setAttribute("class", "question-button")
+  });
 }
