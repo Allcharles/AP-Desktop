@@ -93,7 +93,6 @@ function findFilesRecursive(folderList, match, contains = "") {
       if (err) throw err;
 
       results.forEach(filePath => {
-        console.log(filePath);
         var fullFilename = getFilename(filePath);
         var filename = fullFilename.substr(
           0,
@@ -234,7 +233,6 @@ function eventDetectionUtilityNext(el) {
 
   //Get event details
   eventCurrent = eventEvents.shift();
-  console.log("Event: " + eventCurrent.csv);
 
   //Update form with details
   var form = document.getElementById("EventDetectorAnswerForm");
@@ -287,7 +285,6 @@ function updateEventAudio(form) {
  * @param [HTMLElement] form HTMLElement for the encompasing form. Used to reduce processing time.
  */
 function updateEventSpectrogram(form) {
-  console.log("updateEventSpectrogram: " + eventCurrent.image);
   const fs = require("fs");
   const PIXELS_PER_SECOND = 166.4; //TODO This was calculated using 282kbps wav files. May require changes in the future
   const startPixel = eventCurrent.start * PIXELS_PER_SECOND;

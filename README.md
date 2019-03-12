@@ -5,6 +5,7 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 ## Installing Project
 
 - Download and install Node.js v11.10.0 or newer [link](https://nodejs.org/en/download/)
+- Install git (Linux: `sudo apt-get install git`) [link](https://git-scm.com/download/win)
 - Open the file containing the AP Desktop code in Command Line and then execute the following commands:
   - `npm install`
   - `npm start`
