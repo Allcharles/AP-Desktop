@@ -71,7 +71,7 @@ ul li.files:last-child {
 .flex tr,
 .flex td {
   margin: 0;
-  . padding: 0;
+  padding: 0;
 }
 
 .padding-right-p p {
@@ -125,10 +125,22 @@ table.output td {
   word-wrap: break-word;
 }
 
-textarea {
+.configEditor {
   width: 100%;
   height: 500px;
   margin: 0px;
   padding: 0px;
   border: 0px;
+  resize: vertical;
+}
+
+a.button {
+  appearance: button;
+  -moz-appearance: button;
+  -webkit-appearance: button;
+  text-decoration: none;
+  font: menu;
+  color: ButtonText;
+  display: inline-block;
+  padding: 2px 8px;
 }

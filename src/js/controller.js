@@ -273,7 +273,7 @@ function getFilename(filePath) {
 /**
  * Returns the index of the last / or \ depending on the file path
  * @param {string} filePath File path
- * @returns {int} Index position of last / or \
+ * @returns {number} Index position of last / or \
  */
 function getFilenameIndex(filePath) {
   let index = filePath.lastIndexOf("\\");
@@ -382,6 +382,10 @@ function updateGroup(id, fullFilename, success, folder) {
   });
 }
 
+/**
+ * Creates loading bars in batches of 1000
+ * @param {[]} fileQueue Queue of files to build loading bars for
+ */
 function createLoaders(fileQueue) {
   var progressList = [];
   for (let i = 0; i < fileQueue.length; i++) {
@@ -429,22 +433,6 @@ function createLoaders(fileQueue) {
   document.querySelector("#filename").innerHTML += row1;
   document.querySelector("#filename-analysis").innerHTML += row2;
   document.querySelector("#filename-loader").innerHTML += row3;
-}
-
-/**
- * Creates the loading details for each of the files
- * @param {string} id ID of the file
- * @param {string} filename File path of the audio file
- */
-function createLoader(id, filename) {
-  document.querySelector("#filename").innerHTML +=
-    "<div class='filename-container'>" + getFilename(filename) + "</div>";
-  document.querySelector("#filename-analysis").innerHTML +=
-    "<div class='filename-analysis' align='center' id='an" + id + "'>???</div>";
-  document.querySelector("#filename-loader").innerHTML +=
-    "<div class='progress3' id='pb" +
-    id +
-    "'> <div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>";
 }
 
 /**
@@ -889,32 +877,6 @@ function updateConfig(el) {
   updateAnalyseButton();
 
   updateConfigEditor(config);
-}
-
-/**
- * Updates the config file editor
- * @param {int} option Config file option selected
- */
-function updateConfigEditor(option) {
-  if (option === -1) {
-    let editor = document.getElementById("configFileEditor");
-    editor.style.display = "none";
-    editor.firstElementChild.innerHTML = "";
-    return;
-  }
-
-  let file = configFiles[option];
-
-  //Read and update config editor asynchronously
-  fs.readFile(file.filePath, function(err, data) {
-    if (err) {
-      return console.log(err);
-    }
-
-    var editor = document.getElementById("configFileEditor");
-    editor.style.display = "inherit";
-    editor.firstElementChild.innerHTML = data.toString();
-  });
 }
 
 /**

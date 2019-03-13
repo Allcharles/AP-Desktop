@@ -119,12 +119,17 @@
       <p class="question-text">Config File</p>
     </div>
     <div class="group-content">
-      <select id="config-select" onchange="updateConfig(this)">
-        <option value="-1">Custom Preset</option>
-      </select>
-
+      <h1 class="h1-no-hover">Select Template</h1>
+      <div class="header-content-padded" style="margin-bottom: 14px;">
+        <select id="config-select" onchange="updateConfig(this)"></select>
+      </div>
+      <h1 class="h1-no-hover">
+        Edit Template
+        <a onclick="saveConfigOnClick();">Save</a>
+        <a onclick="resetConfigOnClick();">Reset</a>
+      </h1>
       <div id="configFileEditor" style="margin-top: 14px;">
-        <textarea></textarea>
+        <textarea class="configEditor"></textarea>
       </div>
     </div>
   </div>
