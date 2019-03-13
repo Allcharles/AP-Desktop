@@ -115,20 +115,28 @@
   </div>
 
   <div class="group" id="config" style="display: none">
-    <div class="question"><p class="question-text">Config File</p></div>
+    <div class="question">
+      <p class="question-text">Config File</p>
+    </div>
     <div class="group-content">
       <select id="config-select" onchange="updateConfig(this)">
         <option value="-1">Custom Preset</option>
       </select>
+
+      <div class="header-content-padded" style="margin-bottom: 0px;">
+        <div class="output" style="display: inherit;" id="configFileEditor">
+          <pre></pre>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="group" id="outputFolder" style="display: none">
     <div class="question">
       <p class="question-text">Output Folder</p>
-      <a onclick="setOutputFolder()"
-        ><div class="question-button">Select Folder</div></a
-      >
+      <a onclick="setOutputFolder()">
+        <div class="question-button">Select Folder</div>
+      </a>
     </div>
     <div class="group-content">
       <ul>
@@ -140,9 +148,9 @@
   <div class="group" id="audio2csv-options" style="display: none">
     <div class="question">
       <p class="question-text">Audio to CSV</p>
-      <a onclick="audio2csvToggle()"
-        ><div class="question-button">Advanced</div></a
-      >
+      <a onclick="audio2csvToggle()">
+        <div class="question-button">Advanced</div>
+      </a>
     </div>
     <div class="group-content" style="display: none">
       <table class="flex">

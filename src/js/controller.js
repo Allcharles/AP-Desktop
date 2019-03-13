@@ -467,9 +467,13 @@ function finishLoader(id, success) {
   progressBarCurrent++;
 
   if (progressBarCurrent == progressBarMaximum) {
-    document.getElementById("pbOverall").innerHTML = "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>"
+    document.getElementById("pbOverall").innerHTML =
+      "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>";
   } else {
-    var percent = parseInt((parseFloat(progressBarCurrent) / parseFloat(progressBarMaximum)) * 100)  + "%";
+    var percent =
+      parseInt(
+        (parseFloat(progressBarCurrent) / parseFloat(progressBarMaximum)) * 100
+      ) + "%";
     var plBar = document.getElementById("pbOverall").firstElementChild;
 
     plBar.style.width = percent;
@@ -602,9 +606,9 @@ function getAudioFiles() {
 
           audioFiles = files;
           updateAudio();
-        } 
+        }
       }
-      
+
       document.querySelector("#audiospinner").style.display = "none";
       updateAnalyseButton();
     }
@@ -793,18 +797,24 @@ function sortConfig() {
  */
 function setConfig() {
   var select = document.querySelector("#config-select");
+  let option;
 
   configFiles.forEach(file => {
     //Create option for config files
-    var option = "<option ";
-    option += file.fileName === Defaults.DEFAULT_CONFIG_FILE ? "selected " : "";
-    option += "value='" + file.id + "'>" + file.fileName + "</option>";
-    select.innerHTML += option;
+    option += `<option value="${file.id}"`;
+
+    if (file.fileName === Defaults.DEFAULT_CONFIG_FILE) {
+      option += "selected";
+      updateConfigEditor(file.id);
+    }
+
+    option += `>${file.fileName}</option>`;
 
     //Update default config
     config = file.fileName === Defaults.DEFAULT_CONFIG_FILE ? file.id : config;
   });
 
+  select.innerHTML += option;
   sortConfig();
 }
 
@@ -877,6 +887,34 @@ function updateConfig(el) {
 
   config = option;
   updateAnalyseButton();
+
+  updateConfigEditor(config);
+}
+
+/**
+ * Updates the config file editor
+ * @param {int} option Config file option selected
+ */
+function updateConfigEditor(option) {
+  if (option == 1) {
+    let editor = document.getElementById("configFileEditor");
+    editor.style.display = "none";
+    editor.firstElementChild.innerHTML = "";
+    return;
+  }
+
+  let file = configFiles[option];
+
+  //Read and update config editor asynchronously
+  fs.readFile(file.filePath, function(err, data) {
+    if (err) {
+      return console.log(err);
+    }
+
+    var editor = document.getElementById("configFileEditor");
+    editor.style.display = "inherit";
+    editor.firstElementChild.innerHTML = data.toString();
+  });
 }
 
 /**
@@ -982,7 +1020,7 @@ function failure(id) {
 
   var extra = document.querySelectorAll("#" + id + " a .question-button");
   extra.forEach(button => {
-    if (button !== null) button.setAttribute("class", "question-button-fail")
+    if (button !== null) button.setAttribute("class", "question-button-fail");
   });
 }
 
@@ -997,6 +1035,6 @@ function success(id) {
 
   var extra = document.querySelectorAll("#" + id + " a .question-button-fail");
   extra.forEach(button => {
-    if (button !== null) button.setAttribute("class", "question-button")
+    if (button !== null) button.setAttribute("class", "question-button");
   });
 }
