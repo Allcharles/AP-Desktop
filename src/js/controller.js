@@ -896,7 +896,7 @@ function updateConfig(el) {
  * @param {int} option Config file option selected
  */
 function updateConfigEditor(option) {
-  if (option == 1) {
+  if (option === -1) {
     let editor = document.getElementById("configFileEditor");
     editor.style.display = "none";
     editor.firstElementChild.innerHTML = "";
