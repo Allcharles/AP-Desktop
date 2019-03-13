@@ -27,6 +27,8 @@ var analysisQueue = [];
 var outputConfig;
 var outputOutputFolder;
 var terminalOutputFolder;
+var progressBarMaximum = 0; //Tracks total progress through analysis
+var progressBarCurrent = 0; //Tracks current progress through analysis
 
 /** Tracks whether an analysis is running */
 var analysisInProgress = false;
@@ -89,6 +91,10 @@ function submitAnalysis(e) {
     analysisQueue.push(analysis);
   });
   analysisList = [];
+
+  //Set progress bar variables to track total analysis
+  progressBarMaximum = fileQueue.length * analysisQueue.length;
+  progressBarCurrent = 0;
 
   //Tranfer variables
   outputConfig = config;
@@ -453,11 +459,23 @@ function updateLoader(id, analysis) {
 }
 
 /**
- * Changes the progress bar to green and removes the analysis detail
+ * Changes the progress bar to green and removes the analysis detail. Updates the global progress bar.
  * @param {string} id ID of the file
  * @param {boolean} success True if successful
  */
 function finishLoader(id, success) {
+  progressBarCurrent++;
+
+  if (progressBarCurrent == progressBarMaximum) {
+    document.getElementById("pbOverall").innerHTML = "<div class='cssProgress-bar cssProgress-active-right cssProgress-success' style='width: 100%;'><span class='cssProgress-label'>100%</span></div>"
+  } else {
+    var percent = parseInt((parseFloat(progressBarCurrent) / parseFloat(progressBarMaximum)) * 100)  + "%";
+    var plBar = document.getElementById("pbOverall").firstElementChild;
+
+    plBar.style.width = percent;
+    plBar.firstElementChild.innerHTML = percent;
+  }
+
   document.querySelector("#an" + id).innerHTML = "<b>Finished<b>";
   success
     ? (document.querySelector("#pb" + id).innerHTML =
