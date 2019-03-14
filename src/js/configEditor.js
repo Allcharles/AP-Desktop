@@ -1,3 +1,9 @@
+/** Tracks any unsaved changes to the editor. If a person
+ * tries to run an analysis with unsaved changes, this
+ * should prompt them to save the changes.
+ */
+let editorChanged = false;
+
 /**
  * Updates the config file editor
  * @param {number} option Config file option selected
@@ -42,35 +48,56 @@ function saveConfigOnClick() {
   //Determine if you should show the option to set the template name or save the file
   if (reset.style.display == "none") {
     let input = document.getElementById("editTemplateInput");
-    const regex = /^[\w,\s-]+$/m;
-    let format = regex.exec(input.value);
-    if (format == null) return;
+    let id;
+    let folder;
+    let filename;
+    let filePath;
 
+    //If this is a new file
+    if (input.value != "") {
+      const regex = /^[\w,\s-]+$/m;
+      let format = regex.exec(input.value);
+      if (format == null) return;
+
+      id = configFiles.length;
+      folder = configFiles[config].getFolder();
+      filename = configFiles[config].getFilename() + "." + input.value;
+      filePath = `${folder}${filename}.yml`;
+    } else {
+      //Save data to old template
+      id = configFiles.length;
+      folder = configFiles[config].getFolder();
+      filename = configFiles[config].getFilename();
+      filePath = `${folder}${filename}.yml`;
+    }
+
+    //Reset header to hide input and cancel options
     reset.style.display = "inline-flex";
     input.style.display = "none";
     document.getElementById("editTemplateCancel").style.display = "none";
 
-    let id = configFiles.length;
-    let folder = configFiles[config].getFolder();
-    let filename = configFiles[config].getFilename() + "." + input.value;
-    let filePath = `${folder}${filename}.yml`;
-
+    //Rewrite file
     fs.writeFileSync(
       filePath,
       document.getElementById("configFileEditor").firstElementChild.value
     );
 
-    //Add file to config files
-    configFiles.push(new ConfigFile(id, folder, filename, ".yml"));
+    //If this is a new file
+    if (input.value != "") {
+      //Add file to config files
+      configFiles.push(new ConfigFile(id, folder, filename, ".yml"));
 
-    //Add file to selection
-    let select = document.querySelector("#config-select");
-    for (let i = 0; i < select.childElementCount; i++) {
-      select[i].selected = "";
+      //Add file to selection
+      let select = document.querySelector("#config-select");
+      for (let i = 0; i < select.childElementCount; i++) {
+        select[i].selected = "";
+      }
+      select.innerHTML += `<option value="${id}" selected>${filename}</option>`;
+      sortConfig();
+
+      //Update selected config
+      config = id;
     }
-    select.innerHTML += `<option value="${id}" selected>${filename}</option>`;
-    sortConfig();
-    config = id;
   } else {
     reset.style.display = "none";
     document.getElementById("editTemplateInput").style.display = "inherit";
