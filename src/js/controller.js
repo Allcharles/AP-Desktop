@@ -757,26 +757,27 @@ function updateAudio() {
  */
 function sortConfig() {
   //Get options from select table and create an array
-  var options = document.querySelectorAll("#config-select option");
-
-  var arr = [];
+  let options = document.querySelectorAll("#config-select option");
+  let selectedID = 0;
+  let arr = [];
   options.forEach(option => {
+    if (option.selected) selectedID = option.value;
     arr.push({ t: option.innerHTML, v: option.value });
   });
 
   //Sort list alphabetically ignoring case
   arr.sort(function(o1, o2) {
-    var t1 = o1.t.toLowerCase(),
+    let t1 = o1.t.toLowerCase(),
       t2 = o2.t.toLowerCase();
 
     return t1 > t2 ? 1 : t1 < t2 ? -1 : 0;
   });
 
   //Update options
-  for (var i = 0; i < options.length; i++) {
+  for (let i = 0; i < options.length; i++) {
     options[i].value = arr[i].v;
     options[i].innerHTML = arr[i].t;
-    options[i].selected = arr[i].t === Defaults.DEFAULT_CONFIG_FILE;
+    options[i].selected = arr[i].v === selectedID;
   }
 }
 
@@ -792,7 +793,7 @@ function setConfig() {
     option += `<option value="${file.getID()}"`;
 
     if (file.getFilename() === Defaults.DEFAULT_CONFIG_FILE) {
-      option += "selected";
+      option += " selected";
       updateConfigEditor(file.getID());
     }
 

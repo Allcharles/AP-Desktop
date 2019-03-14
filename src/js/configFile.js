@@ -14,6 +14,10 @@ class ConfigFile {
     this.folder = folder;
     this.filename = filename;
     this.extension = extension;
+
+    this.toString = function() {
+      return this.folder + this.filename + this.extension;
+    };
   }
 
   /**

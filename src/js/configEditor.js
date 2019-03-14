@@ -20,7 +20,7 @@ function updateConfigEditor(option) {
       return console.log(err);
     }
 
-    var editor = document.getElementById("configFileEditor");
+    let editor = document.getElementById("configFileEditor");
     editor.style.display = "inherit";
     editor.firstElementChild.value = data.toString();
   });
@@ -37,29 +37,40 @@ function resetConfigOnClick() {
  * Saves the config settings to a new file
  */
 function saveConfigOnClick() {
-  var reset = document.getElementById("editTemplateReset");
+  let reset = document.getElementById("editTemplateReset");
 
   //Determine if you should show the option to set the template name or save the file
   if (reset.style.display == "none") {
-    var input = document.getElementById("editTemplateInput");
+    let input = document.getElementById("editTemplateInput");
     const regex = /^[\w,\s-]+$/m;
-    var format = regex.exec(input.value);
+    let format = regex.exec(input.value);
     if (format == null) return;
 
     reset.style.display = "inline-flex";
     input.style.display = "none";
     document.getElementById("editTemplateCancel").style.display = "none";
 
-    var filePath = `${getFolder(
-      configFiles[config].getFilePath()
-    )}${configFiles[config].getFilename()}.${input.value}.yml`;
+    let id = configFiles.length;
+    let folder = configFiles[config].getFolder();
+    let filename = configFiles[config].getFilename() + "." + input.value;
+    let filePath = `${folder}${filename}.yml`;
 
     fs.writeFileSync(
       filePath,
       document.getElementById("configFileEditor").firstElementChild.value
     );
 
-    getConfig();
+    //Add file to config files
+    configFiles.push(new ConfigFile(id, folder, filename, ".yml"));
+
+    //Add file to selection
+    let select = document.querySelector("#config-select");
+    for (let i = 0; i < select.childElementCount; i++) {
+      select[i].selected = "";
+    }
+    select.innerHTML += `<option value="${id}" selected>${filename}</option>`;
+    sortConfig();
+    config = id;
   } else {
     reset.style.display = "none";
     document.getElementById("editTemplateInput").style.display = "inherit";
