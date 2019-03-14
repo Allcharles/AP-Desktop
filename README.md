@@ -22,10 +22,13 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 - Loading bars for file analysis
 - Analysis spectrogram display
 - Linux Support
+- AP Installer
+- Config File Editor
 
 ## Features Coming Soon
 
-- AP Installer
+- Advanced audio2csv analysis
+- Pre-built analysis tools
 
 ## History
 
