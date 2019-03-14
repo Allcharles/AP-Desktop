@@ -161,6 +161,23 @@ body {
   background: #00543d !important;
 }
 
+.group-content h1.error {
+  background: #4b0000;
+  width: 101%;
+  font-size: 18px;
+  color: white;
+  margin: 0px;
+  padding: 10px 15px 10px 10px;
+  margin-left: -14px;
+  margin-top: -14px;
+}
+
+.group-content div.error p {
+  color: #8b0000;
+  font-weight: bold;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+
 .group-content h1 a {
   background-color: #014633;
   color: white;

@@ -162,7 +162,6 @@ function createEventDetectionUtility(el) {
 
   //Update forms and disable buttons
   input.style.display = "none";
-  document.getElementById("EventDetectorAnswerForm").style.display = "inherit";
   eventDetectionUtilityNext(el);
 }
 
@@ -234,15 +233,36 @@ function eventDetectionUtilityNext(el) {
   //Get event details
   eventCurrent = eventEvents.shift();
 
-  //Update form with details
-  var form = document.getElementById("EventDetectorAnswerForm");
-  form.querySelector("#EventDetectorSwitch").checked = false;
-  form.querySelector("#EventDetectorAnimal").value = eventCurrent.species;
-  form.querySelector("#EventDetectorAnimal").disabled = true;
-  form.querySelector("#EventDetectorComment").value = "";
-  form.querySelector("#EventDetectorComment").disabled = true;
-  updateEventSpectrogram(form);
-  updateEventAudio(form);
+  //Check files exist
+  if (fs.existsSync(eventCurrent.sound) && fs.existsSync(eventCurrent.image)) {
+    document.getElementById("EventDetectorAnswerForm").style.display =
+      "inherit";
+    document.getElementById("EventDetectionHelperError").style.display = "none";
+
+    //Update form with details
+    document.getElementById("EventDetectionHelperError").style.display = "none";
+    var form = document.getElementById("EventDetectorAnswerForm");
+    form.querySelector("#EventDetectorSwitch").checked = false;
+    form.querySelector("#EventDetectorAnimal").value = eventCurrent.species;
+    form.querySelector("#EventDetectorAnimal").disabled = true;
+    form.querySelector("#EventDetectorComment").value = "";
+    form.querySelector("#EventDetectorComment").disabled = true;
+    updateEventSpectrogram(form);
+    updateEventAudio(form);
+  } else {
+    //Files do not exist, display error and cancel out of helper
+    eventCurrent = [];
+    eventEvents = [];
+
+    document.getElementById("EventDetectorForm").style.display = "inherit";
+    document.getElementById("EventDetectorAnswerForm").style.display = "none";
+    document.getElementById("EventDetectionHelperError").style.display =
+      "inherit";
+    document.querySelector("#eventitems").style.display = "none";
+    document.querySelector(
+      "#EventDetectionHelper .h1-no-hover"
+    ).style.marginBottom = "-14px";
+  }
 }
 
 /**
