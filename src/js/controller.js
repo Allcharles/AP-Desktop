@@ -242,9 +242,9 @@ function generateID(filePath) {
 }
 
 /**
- * Returns the folder path for the file path exclusive of final '/'
+ * Returns the folder path for the file path inclusive of final '/'
  * @param {string} filePath File path
- * @returns {string} Folder path exclusive of final '/'
+ * @returns {string} Folder path inclusive of final '/'
  */
 function getFolder(filePath) {
   let index = filePath.lastIndexOf("\\");
@@ -784,7 +784,7 @@ function sortConfig() {
  * Update Config Selector with config files
  */
 function setConfig() {
-  var select = document.querySelector("#config-select");
+  let select = document.querySelector("#config-select");
   let option;
 
   configFiles.forEach(file => {
@@ -802,7 +802,7 @@ function setConfig() {
     config = file.fileName === Defaults.DEFAULT_CONFIG_FILE ? file.id : config;
   });
 
-  select.innerHTML += option;
+  select.innerHTML = option;
   sortConfig();
 }
 
@@ -837,6 +837,7 @@ function getConfig() {
   };
 
   //Get Config Files
+  configFiles = [];
   walk(Defaults.CONFIG_DIRECTORY, function(err, results) {
     if (err) throw err;
 

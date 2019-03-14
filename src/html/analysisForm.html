@@ -123,10 +123,23 @@
       <div class="header-content-padded" style="margin-bottom: 14px;">
         <select id="config-select" onchange="updateConfig(this)"></select>
       </div>
-      <h1 class="h1-no-hover">
+      <h1 class="h1-no-hover" id="editTemplate">
         Edit Template
-        <a onclick="saveConfigOnClick();">Save</a>
-        <a onclick="resetConfigOnClick();">Reset</a>
+        <a id="editTemplateSave" onclick="saveConfigOnClick();">Save</a>
+        <a id="editTemplateReset" onclick="resetConfigOnClick();">Reset</a>
+        <a
+          id="editTemplateCancel"
+          onclick="cancelConfigOnClick();"
+          style="display: none"
+        >
+          Cancel
+        </a>
+        <input
+          id="editTemplateInput"
+          type="text"
+          style="display: none"
+          placeholder="Template Name"
+        />
       </h1>
       <div id="configFileEditor" style="margin-top: 14px;">
         <textarea class="configEditor"></textarea>
