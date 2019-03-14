@@ -3,7 +3,9 @@
  * @param {number} option Config file option selected
  */
 function updateConfigEditor(option) {
+  console.log("updateConfigEditor");
   if (option === -1) {
+    console.log("Nothing to do");
     let editor = document.getElementById("configFileEditor");
     editor.style.display = "none";
     editor.firstElementChild.innerHTML = "";
@@ -20,7 +22,7 @@ function updateConfigEditor(option) {
 
     var editor = document.getElementById("configFileEditor");
     editor.style.display = "inherit";
-    editor.firstElementChild.innerHTML = data.toString();
+    editor.firstElementChild.value = data.toString();
   });
 }
 
@@ -28,7 +30,6 @@ function updateConfigEditor(option) {
  * Resets the config settings
  */
 function resetConfigOnClick() {
-  console.log("Reset Config Editor");
   updateConfigEditor(config);
 }
 
