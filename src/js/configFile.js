@@ -66,6 +66,6 @@ class ConfigFile {
    * Returns the contents of the file
    */
   getContents() {
-    return fs.readFileSync(this.folder + this.filename).toString();
+    return fs.readFileSync(this.getFilePath()).toString();
   }
 }

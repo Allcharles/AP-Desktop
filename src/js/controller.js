@@ -493,9 +493,10 @@ function audio2csvToggle() {
 function updateAnalyseButton() {
   var button = document.querySelector("#AnalysisSubmit button");
   if (
-    analysisList.length > 0 &&
-    audioFiles.length > 0 &&
-    configFiles[config].getFilename() !== ""
+    analysisList.length > 0 && //Check an analysis has been added
+    audioFiles.length > 0 && //Check audio files have been added
+    configFiles[config].getFilename() !== "" && //Check config file has been selected
+    !editorChanged //Check no unsaved changes have been made to config
   ) {
     button.disabled = false;
   } else {

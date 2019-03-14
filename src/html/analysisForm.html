@@ -142,7 +142,11 @@
         />
       </h1>
       <div id="configFileEditor" style="margin-top: 14px;">
-        <textarea class="configEditor"></textarea>
+        <textarea
+          class="configEditor"
+          onchange="onConfigEditorChange()"
+          onblur="checkConfigEditorChanges()"
+        ></textarea>
       </div>
     </div>
   </div>

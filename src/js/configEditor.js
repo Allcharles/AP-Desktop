@@ -5,6 +5,39 @@
 let editorChanged = false;
 
 /**
+ * Sets editorChanged to true, this disables the analysis button.
+ */
+function onConfigEditorChange() {
+  if (!editorChanged) {
+    editorChanged = true;
+    updateAnalyseButton();
+  }
+}
+
+/**
+ * When text area loses focus, check if the user has made any changes.
+ * If not, set editorChanged to false.
+ */
+function checkConfigEditorChanges() {
+  if (editorChanged) {
+    //Check if any changes have occured
+    if (
+      document.getElementById("configFileEditor").firstElementChild.value !==
+      configFiles[config].getContents()
+    ) {
+      //File changes detected, show save file message.
+      dialog.showMessageBox({
+        message: "Please save any changes to the file before running analysis.",
+        buttons: ["OK"]
+      });
+    } else {
+      editorChanged = false;
+      updateAnalyseButton();
+    }
+  }
+}
+
+/**
  * Updates the config file editor
  * @param {number} option Config file option selected
  */
@@ -36,7 +69,9 @@ function updateConfigEditor(option) {
  * Resets the config settings
  */
 function resetConfigOnClick() {
+  editorChanged = false;
   updateConfigEditor(config);
+  updateAnalyseButton();
 }
 
 /**
@@ -70,6 +105,9 @@ function saveConfigOnClick() {
       filename = configFiles[config].getFilename();
       filePath = `${folder}${filename}.yml`;
     }
+
+    //Reset text area changes tracker
+    editorChanged = false;
 
     //Reset header to hide input and cancel options
     reset.style.display = "inline-flex";
