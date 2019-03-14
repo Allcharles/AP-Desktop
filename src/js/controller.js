@@ -149,7 +149,7 @@ function analyse() {
   var terminal = Terminal.createAPTerminal([
     analysisType,
     file,
-    configFiles[outputConfig].filePath,
+    configFiles[outputConfig].getFilePath(),
     outputOutputFolder + "/" + filename,
     "-p"
   ]);
@@ -495,7 +495,7 @@ function updateAnalyseButton() {
   if (
     analysisList.length > 0 &&
     audioFiles.length > 0 &&
-    configFiles[config].fileName !== ""
+    configFiles[config].getFilename() !== ""
   ) {
     button.disabled = false;
   } else {
@@ -789,17 +789,20 @@ function setConfig() {
 
   configFiles.forEach(file => {
     //Create option for config files
-    option += `<option value="${file.id}"`;
+    option += `<option value="${file.getID()}"`;
 
-    if (file.fileName === Defaults.DEFAULT_CONFIG_FILE) {
+    if (file.getFilename() === Defaults.DEFAULT_CONFIG_FILE) {
       option += "selected";
-      updateConfigEditor(file.id);
+      updateConfigEditor(file.getID());
     }
 
-    option += `>${file.fileName}</option>`;
+    option += `>${file.getFilename()}</option>`;
 
     //Update default config
-    config = file.fileName === Defaults.DEFAULT_CONFIG_FILE ? file.id : config;
+    config =
+      file.getFilename() === Defaults.DEFAULT_CONFIG_FILE
+        ? file.getID()
+        : config;
   });
 
   select.innerHTML = option;
@@ -847,13 +850,14 @@ function getConfig() {
         var filename = getFilename(filePath);
         filename = filename.substr(0, filename.length - 4);
 
-        var file = {};
-        file.id = configFiles.length;
-        file.filePath = filePath; //Full file path
-        file.fileName = filename; //File name minus file extension
-        file.extension = filePath.substr(filePath.length - 4);
-
-        configFiles.push(file);
+        configFiles.push(
+          new ConfigFile(
+            configFiles.length,
+            getFolder(filePath),
+            filename,
+            ".yml"
+          )
+        );
       }
     });
 

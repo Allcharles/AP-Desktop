@@ -1,5 +1,3 @@
-import { getDefaultConfiguration } from "electron-compile";
-
 /**
  * Updates the config file editor
  * @param {number} option Config file option selected
@@ -17,7 +15,7 @@ function updateConfigEditor(option) {
   let file = configFiles[option];
 
   //Read and update config editor asynchronously
-  fs.readFile(file.filePath, function(err, data) {
+  fs.readFile(file.getFilePath(), function(err, data) {
     if (err) {
       return console.log(err);
     }
@@ -52,9 +50,9 @@ function saveConfigOnClick() {
     input.style.display = "none";
     document.getElementById("editTemplateCancel").style.display = "none";
 
-    var filePath = `${getFolder(configFiles[config].filePath)}${
-      configFiles[config].fileName
-    }.${input.value}.yml`;
+    var filePath = `${getFolder(
+      configFiles[config].getFilePath()
+    )}${configFiles[config].getFilename()}.${input.value}.yml`;
 
     fs.writeFileSync(
       filePath,
