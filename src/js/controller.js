@@ -68,7 +68,7 @@ function buildOutputTemplate() {
 
 /**
  * Analyse button press. Resets output page, updates navigation, and creates analysis details.
- * @param {HTMLObject} e Submit Button
+ * @param {HTMLElement} e Submit Button
  */
 function submitAnalysis(e) {
 	e.preventDefault();

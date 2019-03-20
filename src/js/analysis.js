@@ -10,6 +10,10 @@ class APCommand {
 	constructor(type, options = null) {
 		this.type = type;
 		this.options = options;
+
+		this.toString = function() {
+			return `${this.type} ${this.options}`;
+		};
 	}
 
 	/**
@@ -45,6 +49,11 @@ class AnalysisOption {
 	constructor(option, value = null) {
 		this.option = option;
 		this.value = value;
+
+		this.toString = function() {
+			if (this.containsValue()) return `${this.option}=${this.value}`;
+			else return `${this.option}`;
+		};
 	}
 
 	/**
@@ -83,14 +92,9 @@ class APAnalysis extends APCommand {
 	 */
 	constructor(type, source, config, output, options = null) {
 		//Add source, config, and output to options for APCommand
-		options.unshift.apply(
-			[
-				new AnalysisOption(source),
-				new AnalysisOption(config),
-				new AnalysisOption(output)
-			],
-			options
-		);
+		options.unshift(new AnalysisOption(output));
+		options.unshift(new AnalysisOption(config));
+		options.unshift(new AnalysisOption(source));
 
 		console.log("APAnalysis: " + `${type} ${options}`);
 
