@@ -236,8 +236,14 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="temp-dir" class="checkbox-custom-label">
+            <label for="temp-dir" class="checkbox-custom-label tooltip">
               Temporary Directory
+              <span class="tooltiptext">
+                <p>
+                  A TEMP directory where cut files will be stored. Use this
+                  option for efficiency (eg. write to a RAM Disk).
+                </p>
+              </span>
             </label>
           </td>
           <td>
@@ -254,8 +260,13 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="start-offset" class="checkbox-custom-label">
+            <label for="start-offset" class="checkbox-custom-label tooltip">
               Start Offset (s)
+              <span class="tooltiptext">
+                <p>
+                  The start offset to start analyzing from (in seconds)
+                </p>
+              </span>
             </label>
           </td>
           <td>
@@ -277,8 +288,13 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="end-offset" class="checkbox-custom-label">
+            <label for="end-offset" class="checkbox-custom-label tooltip">
               End Offset (s)
+              <span class="tooltiptext">
+                <p>
+                  The end offset to start analyzing from (in seconds)
+                </p>
+              </span>
             </label>
           </td>
           <td>
@@ -300,8 +316,14 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="align-to-minute" class="checkbox-custom-label">
+            <label for="align-to-minute" class="checkbox-custom-label tooltip">
               Align to Minute
+              <span class="tooltiptext">
+                <p>
+                  Allow advancing the start of the analysis to the nearest
+                  minute. A valid datetime must be available in the file name.
+                </p>
+              </span>
             </label>
           </td>
           <td>
@@ -326,8 +348,13 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="channels" class="checkbox-custom-label">
+            <label for="channels" class="checkbox-custom-label tooltip">
               Channels
+              <span class="tooltiptext">
+                <p>
+                  An array of channels to select. Default is all channels.
+                </p>
+              </span>
             </label>
           </td>
           <td>
@@ -342,9 +369,16 @@
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
+              checked
             />
-            <label for="mix-down-to-mono" class="checkbox-custom-label">
+            <label for="mix-down-to-mono" class="checkbox-custom-label tooltip">
               Mono Channel
+              <span class="tooltiptext">
+                <p>
+                  Mix all selected input channels down into one mono channel.
+                  Default is to mixdown
+                </p>
+              </span>
             </label>
           </td>
         </tr>
@@ -358,8 +392,14 @@
               type="checkbox"
               checked
             />
-            <label for="parallel" class="checkbox-custom-label">
+            <label for="parallel" class="checkbox-custom-label tooltip">
               Parallel
+              <span class="tooltiptext">
+                <p>
+                  Whether or not run this analysis in parallel - multiple
+                  segents can be analyzed at the same time.
+                </p>
+              </span>
             </label>
           </td>
         </tr>
@@ -372,8 +412,18 @@
               name="audio2csv"
               type="checkbox"
             />
-            <label for="when-exit-copy-log" class="checkbox-custom-label">
+            <label
+              for="when-exit-copy-log"
+              class="checkbox-custom-label tooltip"
+            >
               Output Log
+              <span class="tooltiptext">
+                <p>
+                  If true, attempts to copy the executable's log file to output
+                  directory. If it can't determine an output directory, it
+                  copies to the working directory.
+                </p>
+              </span>
             </label>
           </td>
         </tr>
@@ -386,8 +436,19 @@
               name="audio2csv"
               type="checkbox"
             />
-            <label for="when-exit-copy-config" class="checkbox-custom-label">
+            <label
+              for="when-exit-copy-config"
+              class="checkbox-custom-label tooltip"
+            >
               Output Config
+              <span class="tooltiptext">
+                <p>
+                  If true, attempts to copy the executable's log file to output
+                  directory. If it can't determine an output directory, it
+                  copies to the working directory. If it can't find a config
+                  file, nothing is copied.
+                </p>
+              </span>
             </label>
           </td>
         </tr>
@@ -401,8 +462,13 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="log-level" class="checkbox-custom-label">
+            <label for="log-level" class="checkbox-custom-label tooltip">
               Log Level
+              <span class="tooltiptext">
+                <p>
+                  Set the log verbosity level.
+                </p>
+              </span>
             </label>
           </td>
           <td>
