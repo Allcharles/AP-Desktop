@@ -69,6 +69,11 @@ class APAnalysis extends APCommand {
 	 * @param {[AnalysisOption]} options List of AP command options (Optional)
 	 */
 	constructor(type, source, config, output, options = null) {
+		this.type = type;
+		this.source = source;
+		this.config = config;
+		this.output = output;
+
 		if (options !== null) {
 			//Add source, config, and output to options for APCommand
 			options.unshift(new AnalysisOption(output));
@@ -83,6 +88,38 @@ class APAnalysis extends APCommand {
 		}
 
 		super(type, options);
+	}
+
+	/**
+	 * Returns the analysis type to run
+	 * @returns {String} Analysis type to run
+	 */
+	getType() {
+		return this.type;
+	}
+
+	/**
+	 * Returns the audio file to be processed
+	 * @returns {string} Full filepath of audio file to process
+	 */
+	getSource() {
+		return this.source;
+	}
+
+	/**
+	 * Returns the config file to be processed
+	 * @returns {string} Full filepath of config file to process
+	 */
+	getConfig() {
+		return this.config;
+	}
+
+	/**
+	 * Returns the output folder to be processed
+	 * @returns {string} Full filepath of output folder
+	 */
+	getOutput() {
+		return this.output;
 	}
 }
 
@@ -107,22 +144,18 @@ class Audio2CSVAnalysis extends APAnalysis {
 	 * @param {string} source Audio file path
 	 * @param {string} config Config file path
 	 * @param {string} output Output file path
-	 * @param {[AnalysisOption]} options List of AP command options (If undefined, this will search the document for the latest values)
+	 * @param {[AnalysisOption]} options List of AP command options
 	 */
 	constructor(source, config, output, options = null) {
-		let finalOptions;
-
-		//Get options
-		if (options === undefined) {
-			this.getOptions(finalOptions);
-		} else {
-			finalOptions = options;
-		}
-
-		super("audio2csv", source, config, output, finalOptions);
+		super("audio2csv", source, config, output, options);
 	}
 
-	getOptions(finalOptions) {
+	/**
+	 * Takes in an empty list of analysis options, searches the form for selected advanced options, and adds the options to the list.
+	 * @param {[AnalysisOption]} finalOptions Empty list of analysis options
+	 */
+	static getOptions() {
+		console.log("getOptions");
 		const form = document.getElementById("AnalysisForm");
 		const SWITCH = 0,
 			INPUT = 1,
@@ -142,25 +175,23 @@ class Audio2CSVAnalysis extends APAnalysis {
 		];
 
 		//Reset variable
-		finalOptions = [];
+		let finalOptions = [];
 
 		//Find all attached audio2csv options
 		AUDIO2CSV_ADVANCED.forEach(checkbox => {
 			let item = form.querySelector(`#${checkbox[0]}`);
+			console.log(item);
 
 			//If item is a true/false input
 			if (checkbox[1] === SWITCH) {
-				finalOptions.push(new AnalysisOption(item.value, item.checked));
+				//Only add if checked
+				if (item.checked) finalOptions.push(new AnalysisOption(item.value));
 			} else if (item.checked) {
-				//If item is an input or select input
-				if (checkbox[1] === INPUT) {
-					if (checkbox[1] === INPUT) {
-						finalOptions.push(
-							new AnalysisOption(form.querySelector(`#{item.id}-input`).value)
-						);
-					}
-				} else if (checkbox[1] === SELECT) {
-				}
+				console.log("Checked");
+				let input = form.querySelector(`#{item.id}-input`);
+				finalOptions.push(new AnalysisOption(item.value, input.value));
+			} else {
+				console.log("Not Checked");
 			}
 		});
 
@@ -168,5 +199,9 @@ class Audio2CSVAnalysis extends APAnalysis {
 		if (finalOptions.length === 0) {
 			finalOptions = null;
 		}
+
+		console.log(finalOptions);
+
+		return finalOptions;
 	}
 }

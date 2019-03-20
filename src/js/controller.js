@@ -21,12 +21,8 @@ var config = 0;
 var outputFolder = Defaults.DEFAULT_OUTPUT_DIRECTORY;
 
 /** Use in analysis to detemine output */
-var analysis = [];
-var fileQueue = [];
-var analysisQueue = [];
-var outputConfig;
-var outputOutputFolder;
-var terminalOutputFolder;
+var currentAnalysis; //Tracks current position in analysis
+var analysisQueue = [APAnalysis]; //Queue of analysis jobs
 var progressBarMaximum = 0; //Tracks total progress through analysis
 var progressBarCurrent = 0; //Tracks current progress through analysis
 
@@ -82,26 +78,33 @@ function submitAnalysis(e) {
 	fileQueue = [];
 	analysisQueue = [];
 
-	//Transfer arrays
-	audioFiles.forEach(file => {
-		fileQueue.push(file);
-	});
+	//Build analysis array in reverse order. This is because we pop the array and need to do so by analysis type and file name order.
+	for (
+		let analysisType = analysisList.length - 1;
+		analysisType > 0;
+		analysisType--
+	) {
+		if (analysisList[analysisType] === "audio2csv") {
+			let advancedOptions = Audio2CSVAnalysis.getOptions();
+
+			for (let audioFile = audioFiles.length - 1; audioFile > 0; audioFile--) {
+				analysisQueue.push(
+					new Audio2CSVAnalysis(
+						audioFiles[audioFile],
+						configFiles[config].getFilePath(),
+						outputFolder + "/" + filename,
+						advancedOptions
+					)
+				);
+			}
+		}
+	}
 	audioFiles = [];
-	analysisList.forEach(analysis => {
-		analysisQueue.push(analysis);
-	});
 	analysisList = [];
 
 	//Set progress bar variables to track total analysis
-	progressBarMaximum = fileQueue.length * analysisQueue.length;
+	progressBarMaximum = analysisQueue.length;
 	progressBarCurrent = 0;
-
-	//Tranfer variables
-	outputConfig = config;
-	outputOutputFolder = outputFolder;
-
-	//Analysis to run [fileIndex, analysisIndex]
-	analysis = [0, -1];
 
 	//Update HTML
 	buildAnalysisForm();
@@ -112,21 +115,20 @@ function submitAnalysis(e) {
 	document.querySelector("#output").id = "page";
 
 	//Create loading bars with blank analysis
-	createLoaders(fileQueue);
+	createLoaders();
 
 	analysisInProgress = true;
 	analyse();
 }
 
 function analyse() {
-	const FILE = 0;
-	const ANALYSIS = 1;
+	currentAnalysis = analysisQueue.pop();
 
 	//Set next analysis details
 	if (analysis[ANALYSIS] < analysisQueue.length - 1) {
 		analysis[ANALYSIS]++;
 	} else {
-		if (analysis[FILE] < fileQueue.length - 1) {
+		if (analysis[FILE] < analysisQueue.length - 1) {
 			analysis[FILE]++;
 			analysis[ANALYSIS] = 0;
 		} else {
@@ -136,37 +138,33 @@ function analyse() {
 	}
 
 	//Determine analysis to run
-	let file = fileQueue[analysis[FILE]];
+	let analysisObject = analysisQueue[analysis[FILE]];
+	let file = analysisObject.getSource();
 	let filename = getFilename(file);
 	filename = filename.substr(0, filename.length - 4);
 	let id = generateID(file);
-	let analysisType = analysisQueue[analysis[ANALYSIS]];
+	let analysisType = analysisObject.getType();
 	updateLoader(id, analysisType);
 
 	//If the file has not be analysed before, create group to store its data
 	if (document.querySelector("#gr" + id) === null) createGroup(id, file);
-
-	//Create analysis object
-	let analysisObject = new Audio2CSVAnalysis(
-		file,
-		configFiles[outputConfig].getFilePath(),
-		outputOutputFolder + "/" + filename,
-		undefined
-	);
 
 	//Get terminal
 	var terminal = analysisObject.getTerminal();
 
 	terminal.on("error", function(err) {
 		console.error(err);
-		finishLoader(generateID(fileQueue[analysis[0]]), false);
+		finishLoader(generateID(analysisQueue[analysis[FILE].getSource()]), false);
 	});
 
 	terminal.on("close", function(code) {
-		finishLoader(generateID(fileQueue[analysis[0]]), code === 0);
+		finishLoader(
+			generateID(analysisQueue[analysis[FILE].getSource()]),
+			code === 0
+		);
 		updateGroup(
-			generateID(fileQueue[analysis[0]]),
-			fileQueue[analysis[0]],
+			generateID(analysisQueue[analysis[FILE].getSource()]),
+			analysisQueue[analysis[FILE]].getSource(),
 			code === 0,
 			terminalOutputFolder
 		);
@@ -198,7 +196,7 @@ function getTerminalOutputFolder(data) {
  */
 function updateTerminalOutput(data) {
 	var terminalOutput = document.querySelector(
-		"#gr" + generateID(fileQueue[analysis[0]]) + " pre"
+		"#gr" + generateID(analysisQueue[analysis[FILE]].getSource()) + " pre"
 	);
 
 	terminalOutput.innerHTML += data;
@@ -216,7 +214,7 @@ function updateProgressBar(data) {
 		const PARALLEL_REGEX = /INFO.+\/(\d+).+ (\d+) /;
 		const SERIAL_REGEX = /INFO.+(\d+)\/(\d+)$/;
 		var progress = document.querySelector(
-			"#pb" + generateID(fileQueue[analysis[0]])
+			"#pb" + generateID(analysisQueue[analysis[FILE]].getSource())
 		);
 		var res = PARALLEL_REGEX.exec(data.toString());
 		if (res !== null && res.length == PARALLEL_MATCH_LENGTH) {
@@ -387,20 +385,34 @@ function updateGroup(id, fullFilename, success, folder) {
 
 /**
  * Creates loading bars in batches of 1000
- * @param {[]} fileQueue Queue of files to build loading bars for
  */
-function createLoaders(fileQueue) {
+function createLoaders() {
 	var progressList = [];
-	for (let i = 0; i < fileQueue.length; i++) {
-		let id = generateID(fileQueue[i]);
+	var processedIDs = [];
+	for (let i = 0; i < analysisQueue.length; i++) {
+		let id = generateID(analysisQueue[i].getSource());
+
+		//Check if the file already has a group
+		processedIDs.forEach(usedID => {
+			//If group exists, cancel out of for loop
+			if (id === usedID) {
+				break;
+			}
+		});
+		processedIDs.push(id);
+
 		progressList.push([
-			"<div class='filename-container'>" + getFilename(fileQueue[i]) + "</div>",
-			"<div class='filename-analysis' align='center' id='an" +
-				id +
-				"'>???</div>",
-			"<div class='progress3' id='pb" +
-				id +
-				"'> <div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>"
+			`<div class='filename-container'>
+				${getFilename(analysisQueue[i].getSource())}
+			</div>
+			<div class='filename-analysis' align='center' id='an${id}'>
+				${analysisQueue[i].getType()}
+			</div>
+			<div class='progress3' id='pb${id}'>
+				<div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'>
+					<span class='cssProgress-label'>0%</span>
+				</div>
+			</div>`
 		]);
 
 		if (i % 1000 == 0) {
