@@ -110,18 +110,19 @@ class Audio2CSVAnalysis extends APAnalysis {
 	 * @param {[AnalysisOption]} options List of AP command options (If undefined, this will search the document for the latest values)
 	 */
 	constructor(source, config, output, options = null) {
-		let finalOptions = options;
+		let finalOptions;
 
 		//Get options
-		if (finalOptions === undefined) {
-			finalOptions = this.getOptions();
+		if (options === undefined) {
+			this.getOptions(finalOptions);
+		} else {
+			finalOptions = options;
 		}
 
 		super("audio2csv", source, config, output, finalOptions);
 	}
 
 	getOptions(finalOptions) {
-		finalOptions = [];
 		const form = document.getElementById("AnalysisForm");
 		const SWITCH = 0,
 			INPUT = 1,
@@ -140,20 +141,25 @@ class Audio2CSVAnalysis extends APAnalysis {
 			["log-level", SELECT]
 		];
 
+		//Reset variable
+		finalOptions = [];
+
 		//Find all attached audio2csv options
 		AUDIO2CSV_ADVANCED.forEach(checkbox => {
 			let item = form.querySelector(`#${checkbox[0]}`);
+
+			//If item is a true/false input
 			if (checkbox[1] === SWITCH) {
 				finalOptions.push(new AnalysisOption(item.value, item.checked));
 			} else if (item.checked) {
+				//If item is an input or select input
 				if (checkbox[1] === INPUT) {
-					let input = form.querySelector(`#{item.id}-input`);
 					if (checkbox[1] === INPUT) {
 						finalOptions.push(
 							new AnalysisOption(form.querySelector(`#{item.id}-input`).value)
 						);
 					}
-				} else if (checkbox[1] === SWITCH) {
+				} else if (checkbox[1] === SELECT) {
 				}
 			}
 		});
@@ -162,6 +168,5 @@ class Audio2CSVAnalysis extends APAnalysis {
 		if (finalOptions.length === 0) {
 			finalOptions = null;
 		}
-		return finalOptions;
 	}
 }
