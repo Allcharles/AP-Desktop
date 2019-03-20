@@ -179,22 +179,19 @@
             <input
               id="analysis-identifier"
               value="-a"
-              class="checkbox-custom tooltip"
+              class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label
-              for="analysis-identifier"
-              class="checkbox-custom-label tooltip"
-            >
+            <label for="analysis-identifier" class="checkbox-custom-label">
               Analysis Identifier
-              <span class="tooltiptext">
-                <p>
-                  Sets the name of the analysis to run. If not set, analysis
-                  identifier is parsed from the config file name.
-                </p>
-              </span>
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                class="tooltip"
+                title="Sets the name of the analysis to run. If not set, analysis identifier is parsed from the config file name."
+              ></i>
             </label>
           </td>
           <td>

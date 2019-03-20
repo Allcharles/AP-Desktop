@@ -146,29 +146,42 @@ a.button {
   text-decoration: none;
 }
 
-/* Tooltip text */
-.tooltip .tooltiptext {
-  background-color: black;
-  border-radius: 6px;
-  color: #fff;
-  display: block;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  position: absolute;
-  text-decoration: none;
-  z-index: 1;
-  margin-top: 5px;
-  width: 0px;
-  visibility: hidden;
-  transition: width 500ms ease-in 1s;
-  overflow: hidden;
+/* Tooltip Styling */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
 }
 
-/* Displays tooltip text on hover */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
 .tooltip:hover .tooltiptext {
-  transition: width 0s;
-  visibility: inherit;
-  white-space: normal;
-  width: 500px;
-  padding: 5px 5px;
+  visibility: visible;
+  opacity: 1;
 }
