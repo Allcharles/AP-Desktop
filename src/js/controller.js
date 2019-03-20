@@ -73,6 +73,15 @@ function buildOutputTemplate() {
 function submitAnalysis(e) {
   e.preventDefault();
 
+  const formElements = ["parallel"];
+  let form = document.getElementById("AnalysisForm");
+
+  formElements.forEach(checkbox => {
+    console.log(form.getElementById(checkbox));
+  });
+
+  return;
+
   if (analysisInProgress) {
     alert("Previous Analysis Still Running");
     return;
