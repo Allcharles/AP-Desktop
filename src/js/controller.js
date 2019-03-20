@@ -151,7 +151,7 @@ function analyse() {
 		file,
 		configFiles[outputConfig].getFilePath(),
 		outputOutputFolder + "/" + filename,
-		[new AnalysisOption("-p")]
+		undefined
 	);
 
 	//Get terminal

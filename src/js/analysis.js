@@ -28,8 +28,7 @@ class APCommand {
 		//Append option names and values
 		if (this.options != null) {
 			this.options.forEach(option => {
-				args.push(option.getOption());
-				if (option.containsValue()) args.push(option.getValue());
+				args.push(option.toString());
 			});
 		}
 
@@ -51,30 +50,9 @@ class AnalysisOption {
 		this.value = value;
 
 		this.toString = function() {
-			if (this.containsValue()) return `${this.option}=${this.value}`;
+			if (this.value !== null) return `${this.option}=${this.value}`;
 			else return `${this.option}`;
 		};
-	}
-
-	/**
-	 * Returns true if option has a value for its key
-	 */
-	containsValue() {
-		return this.value != null;
-	}
-
-	/**
-	 * Returns the option string
-	 */
-	getOption() {
-		return this.option;
-	}
-
-	/**
-	 * Returns the value of the option
-	 */
-	getValue() {
-		return this.value;
 	}
 }
 
@@ -91,12 +69,18 @@ class APAnalysis extends APCommand {
 	 * @param {[AnalysisOption]} options List of AP command options (Optional)
 	 */
 	constructor(type, source, config, output, options = null) {
-		//Add source, config, and output to options for APCommand
-		options.unshift(new AnalysisOption(output));
-		options.unshift(new AnalysisOption(config));
-		options.unshift(new AnalysisOption(source));
-
-		console.log("APAnalysis: " + `${type} ${options}`);
+		if (options !== null) {
+			//Add source, config, and output to options for APCommand
+			options.unshift(new AnalysisOption(output));
+			options.unshift(new AnalysisOption(config));
+			options.unshift(new AnalysisOption(source));
+		} else {
+			options = [
+				new AnalysisOption(source),
+				new AnalysisOption(config),
+				new AnalysisOption(output)
+			];
+		}
 
 		super(type, options);
 	}
@@ -129,25 +113,20 @@ class Audio2CSVAnalysis extends APAnalysis {
 		let finalOptions = options;
 
 		//Get options
-		if (finalOptions == undefined) finalOptions = findOptions();
-		else finalOptions = options;
-
-		console.log(
-			"Audio2CSVAnalysis: " + `${source} ${config} ${output} ${finalOptions}`
-		);
+		if (finalOptions === undefined) {
+			finalOptions = this.getOptions();
+		}
 
 		super("audio2csv", source, config, output, finalOptions);
 	}
 
-	/**
-	 * Finds the most up-to-date audio2csv advanced options from the document.
-	 */
-	findOptions() {
+	getOptions(finalOptions) {
+		finalOptions = [];
 		const form = document.getElementById("AnalysisForm");
 		const SWITCH = 0,
 			INPUT = 1,
 			SELECT = 2;
-		const AUDIO2CSV_ADVANCED = (formElements = [
+		const AUDIO2CSV_ADVANCED = [
 			["analysis-identifier", SELECT],
 			["temp-dir", INPUT],
 			["start-offset", INPUT],
@@ -159,16 +138,30 @@ class Audio2CSVAnalysis extends APAnalysis {
 			["when-exit-copy-log", SWITCH],
 			["when-exit-copy-config", SWITCH],
 			["log-level", SELECT]
-		]);
+		];
 
 		//Find all attached audio2csv options
 		AUDIO2CSV_ADVANCED.forEach(checkbox => {
-			let item = form.getElementById(checkbox);
-			if (item.checked) {
-				console.log(item);
+			let item = form.querySelector(`#${checkbox[0]}`);
+			if (checkbox[1] === SWITCH) {
+				finalOptions.push(new AnalysisOption(item.value, item.checked));
+			} else if (item.checked) {
+				if (checkbox[1] === INPUT) {
+					let input = form.querySelector(`#{item.id}-input`);
+					if (checkbox[1] === INPUT) {
+						finalOptions.push(
+							new AnalysisOption(form.querySelector(`#{item.id}-input`).value)
+						);
+					}
+				} else if (checkbox[1] === SWITCH) {
+				}
 			}
 		});
 
-		return null;
+		//If no options were selected, reset to null
+		if (finalOptions.length === 0) {
+			finalOptions = null;
+		}
+		return finalOptions;
 	}
 }
