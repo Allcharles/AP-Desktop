@@ -29,6 +29,8 @@
         />
         <label for="audio2csv" class="checkbox-custom-label">
           Audio to CSV
+          <i style="text-align: right" class="fa fa-info-circle" aria-hidden="true"
+            title="Analyses long recordings using the analysis specified in the config file."></i>
         </label>
       </li>
       <li>
@@ -187,9 +189,9 @@
             <label for="analysis-identifier" class="checkbox-custom-label">
               Analysis Identifier
               <i
+                style="text-align: right"
                 class="fa fa-info-circle"
                 aria-hidden="true"
-                class="tooltip"
                 title="Sets the name of the analysis to run. If not set, analysis identifier is parsed from the config file name."
               ></i>
             </label>
@@ -233,14 +235,14 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="temp-dir" class="checkbox-custom-label tooltip">
+            <label for="temp-dir" class="checkbox-custom-label">
               Temporary Directory
-              <span class="tooltiptext">
-                <p>
-                  A TEMP directory where cut files will be stored. Use this
-                  option for efficiency (eg. write to a RAM Disk).
-                </p>
-              </span>
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="A TEMP directory where cut files will be stored. Use this
+                  option for efficiency (eg. write to a RAM Disk)."
+              ></i>
             </label>
           </td>
           <td>
@@ -257,13 +259,13 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="start-offset" class="checkbox-custom-label tooltip">
+            <label for="start-offset" class="checkbox-custom-label">
               Start Offset (s)
-              <span class="tooltiptext">
-                <p>
-                  The start offset to start analyzing from (in seconds)
-                </p>
-              </span>
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="The start offset to start analyzing from (in seconds)."
+              ></i>
             </label>
           </td>
           <td>
@@ -285,13 +287,13 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="end-offset" class="checkbox-custom-label tooltip">
+            <label for="end-offset" class="checkbox-custom-label">
               End Offset (s)
-              <span class="tooltiptext">
-                <p>
-                  The end offset to start analyzing from (in seconds)
-                </p>
-              </span>
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="The end offset to start analyzing from (in seconds)."
+              ></i>
             </label>
           </td>
           <td>
@@ -313,14 +315,14 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="align-to-minute" class="checkbox-custom-label tooltip">
+            <label for="align-to-minute" class="checkbox-custom-label">
               Align to Minute
-              <span class="tooltiptext">
-                <p>
-                  Allow advancing the start of the analysis to the nearest
-                  minute. A valid datetime must be available in the file name.
-                </p>
-              </span>
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="Allow advancing the start of the analysis to the nearest
+                  minute. A valid datetime must be available in the file name."
+              ></i>
             </label>
           </td>
           <td>
@@ -345,13 +347,13 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="channels" class="checkbox-custom-label tooltip">
+            <label for="channels" class="checkbox-custom-label">
               Channels
-              <span class="tooltiptext">
-                <p>
-                  An array of channels to select. Default is all channels.
-                </p>
-              </span>
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="An array of channels to select. Default is all channels."
+              ></i>
             </label>
           </td>
           <td>
@@ -368,14 +370,14 @@
               type="checkbox"
               checked
             />
-            <label for="mix-down-to-mono" class="checkbox-custom-label tooltip">
+            <label for="mix-down-to-mono" class="checkbox-custom-label">
               Mono Channel
-              <span class="tooltiptext">
-                <p>
-                  Mix all selected input channels down into one mono channel.
-                  Default is to mixdown
-                </p>
-              </span>
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="Mix all selected input channels down into one mono channel.
+                  Default is to mixdown."
+              ></i>
             </label>
           </td>
         </tr>
@@ -389,14 +391,14 @@
               type="checkbox"
               checked
             />
-            <label for="parallel" class="checkbox-custom-label tooltip">
+            <label for="parallel" class="checkbox-custom-label">
               Parallel
-              <span class="tooltiptext">
-                <p>
-                  Whether or not run this analysis in parallel - multiple
-                  segents can be analyzed at the same time.
-                </p>
-              </span>
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="Whether or not run this analysis in parallel - multiple
+                  segents can be analyzed at the same time."
+              ></i>
             </label>
           </td>
         </tr>
@@ -411,16 +413,16 @@
             />
             <label
               for="when-exit-copy-log"
-              class="checkbox-custom-label tooltip"
+              class="checkbox-custom-label"
             >
               Output Log
-              <span class="tooltiptext">
-                <p>
-                  If true, attempts to copy the executable's log file to output
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="If true, attempts to copy the executable's log file to output
                   directory. If it can't determine an output directory, it
-                  copies to the working directory.
-                </p>
-              </span>
+                  copies to the working directory."
+              ></i>
             </label>
           </td>
         </tr>
@@ -435,17 +437,17 @@
             />
             <label
               for="when-exit-copy-config"
-              class="checkbox-custom-label tooltip"
+              class="checkbox-custom-label"
             >
               Output Config
-              <span class="tooltiptext">
-                <p>
-                  If true, attempts to copy the executable's log file to output
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+                title="If true, attempts to copy the executable's log file to output
                   directory. If it can't determine an output directory, it
                   copies to the working directory. If it can't find a config
-                  file, nothing is copied.
-                </p>
-              </span>
+                  file, nothing is copied."
+              ></i>
             </label>
           </td>
         </tr>
@@ -459,12 +461,9 @@
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="log-level" class="checkbox-custom-label tooltip">
+            <label for="log-level" class="checkbox-custom-label">
               Log Level
-              <span class="tooltiptext">
-                <p>
-                  Set the log verbosity level.
-                </p>
+              <i class="fa fa-info-circle" aria-hidden="true" title="Set the log verbosity level."></i>
               </span>
             </label>
           </td>
