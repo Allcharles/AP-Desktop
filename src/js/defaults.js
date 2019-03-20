@@ -20,4 +20,5 @@ var Defaults = {
   DEFAULT_CONFIG_FILE: "Towsey.Acoustic",
   WINDOWS: process.platform === "win32"
 };
+
 Object.freeze(Defaults);
