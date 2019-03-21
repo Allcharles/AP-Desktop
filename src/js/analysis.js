@@ -69,11 +69,6 @@ class APAnalysis extends APCommand {
 	 * @param {[AnalysisOption]} options List of AP command options (Optional)
 	 */
 	constructor(type, source, config, output, options = null) {
-		this.type = type;
-		this.source = source;
-		this.config = config;
-		this.output = output;
-
 		if (options !== null) {
 			//Add source, config, and output to options for APCommand
 			options.unshift(new AnalysisOption(output));
@@ -88,6 +83,26 @@ class APAnalysis extends APCommand {
 		}
 
 		super(type, options);
+		this.type = type;
+		this.source = source;
+		this.config = config;
+		this.output = output;
+		this.terminalOutput = output;
+	}
+
+	/**
+	 * Determines whether an input is a FlagWithValue based on its classList
+	 * @param {DOMTokenList} flagList List of classNames
+	 * @returns {boolean} True if input is a FlagWithValue
+	 */
+	static isFlagsWithValues(flagList) {
+		for (let i = 0; i < flagList.length; i++) {
+			if (flagList[i] === "flagsWithValues") {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -120,6 +135,22 @@ class APAnalysis extends APCommand {
 	 */
 	getOutput() {
 		return this.output;
+	}
+
+	/**
+	 * Set final output which is determined at runtime by AP
+	 * @param {string} terminalOutput Output for analysis files
+	 */
+	setTerminalOutput(terminalOutput) {
+		this.terminalOutput = terminalOutput;
+	}
+
+	/**
+	 * Returns the output folder determined at runtime by AP
+	 * @returns {string} Output location of analysis files
+	 */
+	getTerminalOutput() {
+		return this.terminalOutput;
 	}
 }
 
@@ -180,18 +211,22 @@ class Audio2CSVAnalysis extends APAnalysis {
 		//Find all attached audio2csv options
 		AUDIO2CSV_ADVANCED.forEach(checkbox => {
 			let item = form.querySelector(`#${checkbox[0]}`);
-			console.log(item);
 
 			//If item is a true/false input
 			if (checkbox[1] === SWITCH) {
-				//Only add if checked
-				if (item.checked) finalOptions.push(new AnalysisOption(item.value));
+				if (this.isFlagsWithValues(item.classList)) {
+					//FlagWithValue item
+					finalOptions.push(
+						new AnalysisOption(
+							`${item.value}=${item.checked ? "True" : "False"}`
+						)
+					);
+				} else if (item.checked) {
+					finalOptions.push(new AnalysisOption(item.value));
+				}
 			} else if (item.checked) {
-				console.log("Checked");
 				let input = form.querySelector(`#{item.id}-input`);
 				finalOptions.push(new AnalysisOption(item.value, input.value));
-			} else {
-				console.log("Not Checked");
 			}
 		});
 

@@ -67,6 +67,7 @@ function buildOutputTemplate() {
  * @param {HTMLElement} e Submit Button
  */
 function submitAnalysis(e) {
+	console.log("Submitted Analysis");
 	e.preventDefault();
 
 	if (analysisInProgress) {
@@ -74,16 +75,18 @@ function submitAnalysis(e) {
 		return;
 	}
 
-	//Reset output variables
-	fileQueue = [];
 	analysisQueue = [];
+
+	console.log("Analysis List: ");
+	console.log(analysisList);
 
 	//Build analysis array in reverse order. This is because we pop the array and need to do so by analysis type and file name order.
 	for (
 		let analysisType = analysisList.length - 1;
-		analysisType > 0;
+		analysisType >= 0;
 		analysisType--
 	) {
+		console.log(`AnalysisType: ${analysisList[analysisType]}`);
 		if (analysisList[analysisType] === "audio2csv") {
 			let advancedOptions = Audio2CSVAnalysis.getOptions();
 
@@ -99,6 +102,7 @@ function submitAnalysis(e) {
 			}
 		}
 	}
+	console.log(analysisQueue);
 	audioFiles = [];
 	analysisList = [];
 
@@ -122,51 +126,44 @@ function submitAnalysis(e) {
 }
 
 function analyse() {
-	currentAnalysis = analysisQueue.pop();
+	console.log("Analysing");
 
 	//Set next analysis details
-	if (analysis[ANALYSIS] < analysisQueue.length - 1) {
-		analysis[ANALYSIS]++;
+	if (analysisQueue.length !== 0) {
+		currentAnalysis = analysisQueue.pop();
+		console.log(currentAnalysis);
 	} else {
-		if (analysis[FILE] < analysisQueue.length - 1) {
-			analysis[FILE]++;
-			analysis[ANALYSIS] = 0;
-		} else {
-			analysisInProgress = false;
-			return;
-		}
+		currentAnalysis = null;
+		analysisInProgress = false;
+		return;
 	}
 
 	//Determine analysis to run
-	let analysisObject = analysisQueue[analysis[FILE]];
-	let file = analysisObject.getSource();
+	let file = currentAnalysis.getSource();
 	let filename = getFilename(file);
 	filename = filename.substr(0, filename.length - 4);
 	let id = generateID(file);
-	let analysisType = analysisObject.getType();
+	let analysisType = currentAnalysis.getType();
 	updateLoader(id, analysisType);
 
 	//If the file has not be analysed before, create group to store its data
 	if (document.querySelector("#gr" + id) === null) createGroup(id, file);
 
 	//Get terminal
-	var terminal = analysisObject.getTerminal();
+	var terminal = currentAnalysis.getTerminal();
 
 	terminal.on("error", function(err) {
 		console.error(err);
-		finishLoader(generateID(analysisQueue[analysis[FILE].getSource()]), false);
+		finishLoader(generateID(currentAnalysis.getSource()), false);
 	});
 
 	terminal.on("close", function(code) {
-		finishLoader(
-			generateID(analysisQueue[analysis[FILE].getSource()]),
-			code === 0
-		);
+		finishLoader(generateID(currentAnalysis.getSource()), code === 0);
 		updateGroup(
-			generateID(analysisQueue[analysis[FILE].getSource()]),
-			analysisQueue[analysis[FILE]].getSource(),
+			generateID(currentAnalysis.getSource()),
+			currentAnalysis.getSource(),
 			code === 0,
-			terminalOutputFolder
+			currentAnalysis.getTerminalOutput()
 		);
 		analyse();
 	});
@@ -186,7 +183,7 @@ function getTerminalOutputFolder(data) {
 
 	var res = match.exec(data.toString());
 	if (res !== null && res.length == 2) {
-		terminalOutputFolder = res[1];
+		currentAnalysis.setTerminalOutput(res[1]);
 	}
 }
 
@@ -196,7 +193,7 @@ function getTerminalOutputFolder(data) {
  */
 function updateTerminalOutput(data) {
 	var terminalOutput = document.querySelector(
-		"#gr" + generateID(analysisQueue[analysis[FILE]].getSource()) + " pre"
+		"#gr" + generateID(currentAnalysis.getSource()) + " pre"
 	);
 
 	terminalOutput.innerHTML += data;
@@ -214,7 +211,7 @@ function updateProgressBar(data) {
 		const PARALLEL_REGEX = /INFO.+\/(\d+).+ (\d+) /;
 		const SERIAL_REGEX = /INFO.+(\d+)\/(\d+)$/;
 		var progress = document.querySelector(
-			"#pb" + generateID(analysisQueue[analysis[FILE]].getSource())
+			"#pb" + generateID(currentAnalysis.getSource())
 		);
 		var res = PARALLEL_REGEX.exec(data.toString());
 		if (res !== null && res.length == PARALLEL_MATCH_LENGTH) {
@@ -387,17 +384,15 @@ function updateGroup(id, fullFilename, success, folder) {
  * Creates loading bars in batches of 1000
  */
 function createLoaders() {
+	console.log("Creating Loaders");
 	var progressList = [];
 	var processedIDs = [];
 	for (let i = 0; i < analysisQueue.length; i++) {
 		let id = generateID(analysisQueue[i].getSource());
 
 		//Check if the file already has a group
-		processedIDs.forEach(usedID => {
-			//If group exists, cancel out of for loop
-			if (id === usedID) {
-				break;
-			}
+		processedIDs.some(function(usedID) {
+			return usedID === id;
 		});
 		processedIDs.push(id);
 

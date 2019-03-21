@@ -3,11 +3,11 @@
  * @param el {HTMLElement} Title element
  */
 function toggleImage(el) {
-  let img = document.querySelector("#div" + el.id.substr(3));
+	let img = document.querySelector("#div" + el.id.substr(3));
 
-  img.style.display === "none"
-    ? (img.style.display = "inherit")
-    : (img.style.display = "none");
+	img.style.display === "none"
+		? (img.style.display = "inherit")
+		: (img.style.display = "none");
 }
 
 /**
@@ -15,16 +15,16 @@ function toggleImage(el) {
  * @param el {HTMLElement} Title element
  */
 function toggleTerminal(el) {
-  let terminal = document.querySelector("#div" + el.id.substr(3));
-  let parent = terminal.parentElement;
+	let terminal = document.querySelector("#div" + el.id.substr(3));
+	let parent = terminal.parentElement;
 
-  if (terminal.style.display === "none") {
-    terminal.style.display = "inherit";
-    parent.style.marginBottom = "0px";
-  } else {
-    terminal.style.display = "none";
-    parent.style.marginBottom = "-28px";
-  }
+	if (terminal.style.display === "none") {
+		terminal.style.display = "inherit";
+		parent.style.marginBottom = "0px";
+	} else {
+		terminal.style.display = "none";
+		parent.style.marginBottom = "-28px";
+	}
 }
 
 /**
@@ -32,11 +32,11 @@ function toggleTerminal(el) {
  * @param {HTMLElement} el Header element
  */
 function toggleHeader(el) {
-  let body = el.parentElement.lastElementChild;
+	let body = el.parentElement.lastElementChild;
 
-  body.style.display === "none"
-    ? (body.style.display = "inherit")
-    : (body.style.display = "none");
+	body.style.display === "none"
+		? (body.style.display = "inherit")
+		: (body.style.display = "none");
 }
 
 /**
@@ -45,10 +45,10 @@ function toggleHeader(el) {
  * @param {HTMLElement} el Checkbox which toggles editability of associated input
  */
 function toggleInput(el) {
-  let id = `${el.id}-input`;
+	let id = `${el.id}-input`;
 
-  //If item is checked, enable input. Else disable
-  el.checked
-    ? (document.getElementById(id).disabled = false)
-    : (document.getElementById(id).disabled = true);
+	//If item is checked, enable input. Else disable
+	el.checked
+		? (document.getElementById(id).disabled = false)
+		: (document.getElementById(id).disabled = true);
 }
