@@ -223,7 +223,7 @@ class Audio2CSVAnalysis extends APAnalysis {
 					finalOptions.push(new AnalysisOption(item.value));
 				}
 			} else if (item.checked) {
-				let input = form.querySelector(`#{item.id}-input`);
+				let input = form.querySelector(`#${checkbox[0]}-input`);
 				finalOptions.push(new AnalysisOption(item.value, input.value));
 			}
 		});
