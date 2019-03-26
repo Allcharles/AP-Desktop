@@ -67,7 +67,6 @@ function buildOutputTemplate() {
  * @param {HTMLElement} e Submit Button
  */
 function submitAnalysis(e) {
-	console.log("Submitted Analysis");
 	e.preventDefault();
 
 	if (analysisInProgress) {
@@ -76,10 +75,6 @@ function submitAnalysis(e) {
 	}
 
 	analysisQueue = [];
-
-	console.log("Analysis List: ");
-	console.log(analysisList);
-
 	//Build analysis array in reverse order. This is because we pop the array and need to do so by analysis type and file name order.
 	for (
 		let analysisType = analysisList.length - 1;
@@ -95,14 +90,15 @@ function submitAnalysis(e) {
 					new Audio2CSVAnalysis(
 						audioFiles[audioFile],
 						configFiles[config].getFilePath(),
-						outputFolder + "/" + filename,
+						outputFolder +
+							"/" +
+							audioFiles[audioFile].substr(0, audioFiles[audioFile].length - 4),
 						advancedOptions
 					)
 				);
 			}
 		}
 	}
-	console.log(analysisQueue);
 	audioFiles = [];
 	analysisList = [];
 
@@ -126,12 +122,9 @@ function submitAnalysis(e) {
 }
 
 function analyse() {
-	console.log("Analysing");
-
 	//Set next analysis details
 	if (analysisQueue.length !== 0) {
 		currentAnalysis = analysisQueue.pop();
-		console.log(currentAnalysis);
 	} else {
 		currentAnalysis = null;
 		analysisInProgress = false;
@@ -384,10 +377,11 @@ function updateGroup(id, fullFilename, success, folder) {
  * Creates loading bars in batches of 1000
  */
 function createLoaders() {
-	console.log("Creating Loaders");
 	var progressList = [];
 	var processedIDs = [];
-	for (let i = 0; i < analysisQueue.length; i++) {
+	console.log("CreateLoaders");
+	console.log(analysisQueue);
+	for (let i = analysisQueue.length - 1; i >= 0; i--) {
 		let id = generateID(analysisQueue[i].getSource());
 
 		//Check if the file already has a group
@@ -399,11 +393,11 @@ function createLoaders() {
 		progressList.push([
 			`<div class='filename-container'>
 				${getFilename(analysisQueue[i].getSource())}
-			</div>
-			<div class='filename-analysis' align='center' id='an${id}'>
+			</div>`,
+			`<div class='filename-analysis' align='center' id='an${id}'>
 				${analysisQueue[i].getType()}
-			</div>
-			<div class='progress3' id='pb${id}'>
+			</div>`,
+			`<div class='progress3' id='pb${id}'>
 				<div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'>
 					<span class='cssProgress-label'>0%</span>
 				</div>
@@ -411,38 +405,27 @@ function createLoaders() {
 		]);
 
 		if (i % 1000 == 0) {
-			var row1 = "";
-			var row2 = "";
-			var row3 = "";
-
-			progressList.forEach(item => {
-				row1 += item[0];
-				row2 += item[1];
-				row3 += item[2];
-			});
-			progressList = [];
-
-			document.querySelector("#filename").innerHTML += row1;
-			document.querySelector("#filename-analysis").innerHTML += row2;
-			document.querySelector("#filename-loader").innerHTML += row3;
+			createLoaderBatch();
 		}
 	}
 
 	//Final push to html
-	var row1 = "";
-	var row2 = "";
-	var row3 = "";
+	createLoaderBatch();
 
-	progressList.forEach(item => {
-		row1 += item[0];
-		row2 += item[1];
-		row3 += item[2];
-	});
-	progressList = [];
-
-	document.querySelector("#filename").innerHTML += row1;
-	document.querySelector("#filename-analysis").innerHTML += row2;
-	document.querySelector("#filename-loader").innerHTML += row3;
+	function createLoaderBatch() {
+		var row1 = "";
+		var row2 = "";
+		var row3 = "";
+		progressList.forEach(item => {
+			row1 += item[0];
+			row2 += item[1];
+			row3 += item[2];
+		});
+		progressList = [];
+		document.querySelector("#filename").innerHTML += row1;
+		document.querySelector("#filename-analysis").innerHTML += row2;
+		document.querySelector("#filename-loader").innerHTML += row3;
+	}
 }
 
 /**
@@ -586,8 +569,6 @@ function getAudioFiles() {
 						"inherit";
 				}
 			} else {
-				console.log(files);
-
 				if (files.count == 0) {
 					failure("audio");
 
@@ -686,7 +667,6 @@ function findAudioFiles(folders, extensions = [""]) {
 						//Check file extension is found
 						extensions.some(function(extension) {
 							if (file.substr(file.length - extension.length) === extension) {
-								console.log("Extension Match: " + extension);
 								results.push(file);
 								return true;
 							}

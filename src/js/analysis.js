@@ -69,20 +69,19 @@ class APAnalysis extends APCommand {
 	 * @param {[AnalysisOption]} options List of AP command options (Optional)
 	 */
 	constructor(type, source, config, output, options = null) {
+		//Append options to new array
+		let combinedOptions = [];
+		combinedOptions.push(new AnalysisOption(source));
+		combinedOptions.push(new AnalysisOption(config));
+		combinedOptions.push(new AnalysisOption(output));
+
+		//If options given
 		if (options !== null) {
-			//Add source, config, and output to options for APCommand
-			options.unshift(new AnalysisOption(output));
-			options.unshift(new AnalysisOption(config));
-			options.unshift(new AnalysisOption(source));
-		} else {
-			options = [
-				new AnalysisOption(source),
-				new AnalysisOption(config),
-				new AnalysisOption(output)
-			];
+			//Push options to array
+			combinedOptions.push.apply(combinedOptions, options);
 		}
 
-		super(type, options);
+		super(type, combinedOptions);
 		this.type = type;
 		this.source = source;
 		this.config = config;
@@ -186,7 +185,6 @@ class Audio2CSVAnalysis extends APAnalysis {
 	 * @param {[AnalysisOption]} finalOptions Empty list of analysis options
 	 */
 	static getOptions() {
-		console.log("getOptions");
 		const form = document.getElementById("AnalysisForm");
 		const SWITCH = 0,
 			INPUT = 1,
@@ -234,8 +232,6 @@ class Audio2CSVAnalysis extends APAnalysis {
 		if (finalOptions.length === 0) {
 			finalOptions = null;
 		}
-
-		console.log(finalOptions);
 
 		return finalOptions;
 	}

@@ -23,14 +23,10 @@ class Terminal {
 		var terminal;
 
 		if (Defaults.WINDOWS) {
-			console.log(AP);
-			console.log(args);
 			terminal = childProcess.spawn(AP, args);
 		} else {
 			//Prepend AP to start of command
 			args.unshift(AP);
-			console.log("mono");
-			console.log(args);
 			terminal = childProcess.spawn("mono", args);
 		}
 
