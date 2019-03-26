@@ -85,14 +85,19 @@ function submitAnalysis(e) {
 		if (analysisList[analysisType] === "audio2csv") {
 			let advancedOptions = Audio2CSVAnalysis.getOptions();
 
-			for (let audioFile = audioFiles.length - 1; audioFile > 0; audioFile--) {
+			for (let audioFile = audioFiles.length - 1; audioFile >= 0; audioFile--) {
 				analysisQueue.push(
 					new Audio2CSVAnalysis(
 						audioFiles[audioFile],
 						configFiles[config].getFilePath(),
 						outputFolder +
 							"/" +
-							audioFiles[audioFile].substr(0, audioFiles[audioFile].length - 4),
+							//("/home/charles/Documents/VRES/Test Data/F_014S01_20100803_130000.wav" =>
+							// "/F_014S01_20100803_130000")
+							audioFiles[audioFile].substr(
+								getFilenameIndex(audioFiles[audioFile]),
+								audioFiles[audioFile].length - 4
+							),
 						advancedOptions
 					)
 				);
