@@ -21,12 +21,8 @@ var config = 0;
 var outputFolder = Defaults.DEFAULT_OUTPUT_DIRECTORY;
 
 /** Use in analysis to detemine output */
-var analysis = [];
-var fileQueue = [];
-var analysisQueue = [];
-var outputConfig;
-var outputOutputFolder;
-var terminalOutputFolder;
+var currentAnalysis; //Tracks current position in analysis
+var analysisQueue = [APAnalysis]; //Queue of analysis jobs
 var progressBarMaximum = 0; //Tracks total progress through analysis
 var progressBarCurrent = 0; //Tracks current progress through analysis
 
@@ -68,7 +64,7 @@ function buildOutputTemplate() {
 
 /**
  * Analyse button press. Resets output page, updates navigation, and creates analysis details.
- * @param {HTMLObject} e Submit Button
+ * @param {HTMLElement} e Submit Button
  */
 function submitAnalysis(e) {
   e.preventDefault();
@@ -78,30 +74,42 @@ function submitAnalysis(e) {
     return;
   }
 
-  //Reset output variables
-  fileQueue = [];
   analysisQueue = [];
+  //Build analysis array in reverse order. This is because we pop the array and need to do so by analysis type and file name order.
+  for (
+    let analysisType = analysisList.length - 1;
+    analysisType >= 0;
+    analysisType--
+  ) {
+    console.log(`AnalysisType: ${analysisList[analysisType]}`);
+    if (analysisList[analysisType] === "audio2csv") {
+      let advancedOptions = Audio2CSVAnalysis.getOptions();
 
-  //Transfer arrays
-  audioFiles.forEach(file => {
-    fileQueue.push(file);
-  });
+      for (let audioFile = audioFiles.length - 1; audioFile >= 0; audioFile--) {
+        analysisQueue.push(
+          new Audio2CSVAnalysis(
+            audioFiles[audioFile],
+            configFiles[config].getFilePath(),
+            outputFolder +
+              "/" +
+              //("/home/charles/Documents/VRES/Test Data/F_014S01_20100803_130000.wav" =>
+              // "/F_014S01_20100803_130000")
+              audioFiles[audioFile].substr(
+                getFilenameIndex(audioFiles[audioFile]),
+                audioFiles[audioFile].length - 4
+              ),
+            advancedOptions
+          )
+        );
+      }
+    }
+  }
   audioFiles = [];
-  analysisList.forEach(analysis => {
-    analysisQueue.push(analysis);
-  });
   analysisList = [];
 
   //Set progress bar variables to track total analysis
-  progressBarMaximum = fileQueue.length * analysisQueue.length;
+  progressBarMaximum = analysisQueue.length;
   progressBarCurrent = 0;
-
-  //Tranfer variables
-  outputConfig = config;
-  outputOutputFolder = outputFolder;
-
-  //Analysis to run [fileIndex, analysisIndex]
-  analysis = [0, -1];
 
   //Update HTML
   buildAnalysisForm();
@@ -112,60 +120,48 @@ function submitAnalysis(e) {
   document.querySelector("#output").id = "page";
 
   //Create loading bars with blank analysis
-  createLoaders(fileQueue);
+  createLoaders();
 
   analysisInProgress = true;
   analyse();
 }
 
 function analyse() {
-  const FILE = 0;
-  const ANALYSIS = 1;
-
   //Set next analysis details
-  if (analysis[ANALYSIS] < analysisQueue.length - 1) {
-    analysis[ANALYSIS]++;
+  if (analysisQueue.length !== 0) {
+    currentAnalysis = analysisQueue.pop();
   } else {
-    if (analysis[FILE] < fileQueue.length - 1) {
-      analysis[FILE]++;
-      analysis[ANALYSIS] = 0;
-    } else {
-      analysisInProgress = false;
-      return;
-    }
+    currentAnalysis = null;
+    analysisInProgress = false;
+    return;
   }
 
   //Determine analysis to run
-  let file = fileQueue[analysis[FILE]];
+  let file = currentAnalysis.getSource();
   let filename = getFilename(file);
   filename = filename.substr(0, filename.length - 4);
   let id = generateID(file);
-  let analysisType = analysisQueue[analysis[ANALYSIS]];
+  let analysisType = currentAnalysis.getType();
   updateLoader(id, analysisType);
 
   //If the file has not be analysed before, create group to store its data
   if (document.querySelector("#gr" + id) === null) createGroup(id, file);
 
-  var terminal = Terminal.createAPTerminal([
-    analysisType,
-    file,
-    configFiles[outputConfig].getFilePath(),
-    outputOutputFolder + "/" + filename,
-    "-p"
-  ]);
+  //Get terminal
+  var terminal = currentAnalysis.getTerminal();
 
   terminal.on("error", function(err) {
     console.error(err);
-    finishLoader(generateID(fileQueue[analysis[0]]), false);
+    finishLoader(generateID(currentAnalysis.getSource()), false);
   });
 
   terminal.on("close", function(code) {
-    finishLoader(generateID(fileQueue[analysis[0]]), code === 0);
+    finishLoader(generateID(currentAnalysis.getSource()), code === 0);
     updateGroup(
-      generateID(fileQueue[analysis[0]]),
-      fileQueue[analysis[0]],
+      generateID(currentAnalysis.getSource()),
+      currentAnalysis.getSource(),
       code === 0,
-      terminalOutputFolder
+      currentAnalysis.getTerminalOutput()
     );
     analyse();
   });
@@ -185,7 +181,7 @@ function getTerminalOutputFolder(data) {
 
   var res = match.exec(data.toString());
   if (res !== null && res.length == 2) {
-    terminalOutputFolder = res[1];
+    currentAnalysis.setTerminalOutput(res[1]);
   }
 }
 
@@ -195,7 +191,7 @@ function getTerminalOutputFolder(data) {
  */
 function updateTerminalOutput(data) {
   var terminalOutput = document.querySelector(
-    "#gr" + generateID(fileQueue[analysis[0]]) + " pre"
+    "#gr" + generateID(currentAnalysis.getSource()) + " pre"
   );
 
   terminalOutput.innerHTML += data;
@@ -213,7 +209,7 @@ function updateProgressBar(data) {
     const PARALLEL_REGEX = /INFO.+\/(\d+).+ (\d+) /;
     const SERIAL_REGEX = /INFO.+(\d+)\/(\d+)$/;
     var progress = document.querySelector(
-      "#pb" + generateID(fileQueue[analysis[0]])
+      "#pb" + generateID(currentAnalysis.getSource())
     );
     var res = PARALLEL_REGEX.exec(data.toString());
     if (res !== null && res.length == PARALLEL_MATCH_LENGTH) {
@@ -384,55 +380,57 @@ function updateGroup(id, fullFilename, success, folder) {
 
 /**
  * Creates loading bars in batches of 1000
- * @param {[]} fileQueue Queue of files to build loading bars for
  */
-function createLoaders(fileQueue) {
+function createLoaders() {
   var progressList = [];
-  for (let i = 0; i < fileQueue.length; i++) {
-    let id = generateID(fileQueue[i]);
+  var processedIDs = [];
+  console.log("CreateLoaders");
+  console.log(analysisQueue);
+  for (let i = analysisQueue.length - 1; i >= 0; i--) {
+    let id = generateID(analysisQueue[i].getSource());
+
+    //Check if the file already has a group
+    processedIDs.some(function(usedID) {
+      return usedID === id;
+    });
+    processedIDs.push(id);
+
     progressList.push([
-      "<div class='filename-container'>" + getFilename(fileQueue[i]) + "</div>",
-      "<div class='filename-analysis' align='center' id='an" +
-        id +
-        "'>???</div>",
-      "<div class='progress3' id='pb" +
-        id +
-        "'> <div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'> <span class='cssProgress-label'>0%</span> </div> </div>"
+      `<div class='filename-container'>
+				${getFilename(analysisQueue[i].getSource())}
+			</div>`,
+      `<div class='filename-analysis' align='center' id='an${id}'>
+				${analysisQueue[i].getType()}
+			</div>`,
+      `<div class='progress3' id='pb${id}'>
+				<div class='cssProgress-bar cssProgress-active-right' style='width: 0%;'>
+					<span class='cssProgress-label'>0%</span>
+				</div>
+			</div>`
     ]);
 
     if (i % 1000 == 0) {
-      var row1 = "";
-      var row2 = "";
-      var row3 = "";
-
-      progressList.forEach(item => {
-        row1 += item[0];
-        row2 += item[1];
-        row3 += item[2];
-      });
-      progressList = [];
-
-      document.querySelector("#filename").innerHTML += row1;
-      document.querySelector("#filename-analysis").innerHTML += row2;
-      document.querySelector("#filename-loader").innerHTML += row3;
+      createLoaderBatch();
     }
   }
 
   //Final push to html
-  var row1 = "";
-  var row2 = "";
-  var row3 = "";
+  createLoaderBatch();
 
-  progressList.forEach(item => {
-    row1 += item[0];
-    row2 += item[1];
-    row3 += item[2];
-  });
-  progressList = [];
-
-  document.querySelector("#filename").innerHTML += row1;
-  document.querySelector("#filename-analysis").innerHTML += row2;
-  document.querySelector("#filename-loader").innerHTML += row3;
+  function createLoaderBatch() {
+    var row1 = "";
+    var row2 = "";
+    var row3 = "";
+    progressList.forEach(item => {
+      row1 += item[0];
+      row2 += item[1];
+      row3 += item[2];
+    });
+    progressList = [];
+    document.querySelector("#filename").innerHTML += row1;
+    document.querySelector("#filename-analysis").innerHTML += row2;
+    document.querySelector("#filename-loader").innerHTML += row3;
+  }
 }
 
 /**
@@ -576,8 +574,6 @@ function getAudioFiles() {
             "inherit";
         }
       } else {
-        console.log(files);
-
         if (files.count == 0) {
           failure("audio");
 
@@ -676,7 +672,6 @@ function findAudioFiles(folders, extensions = [""]) {
             //Check file extension is found
             extensions.some(function(extension) {
               if (file.substr(file.length - extension.length) === extension) {
-                console.log("Extension Match: " + extension);
                 results.push(file);
                 return true;
               }
@@ -891,7 +886,7 @@ function updateConfig(el) {
  */
 let count = 0;
 function checkEnvironment() {
-  var terminal = Terminal.createAPTerminal(["CheckEnvironment"]);
+  var terminal = new CheckEnvironment().getTerminal();
 
   terminal.on("error", function(err) {
     console.log(err);
@@ -1006,4 +1001,28 @@ function success(id) {
   extra.forEach(button => {
     if (button !== null) button.setAttribute("class", "question-button");
   });
+}
+
+/**
+ * Asks the user for the temporary directory. This is an audio2csv advanced option. This function does not account for multi-
+ * @param {string} id ID of the inputs label
+ */
+function getTemporaryOutputFolder(id) {
+  let checkbox = document.getElementById(id);
+
+  //If checkbox is checked, repond. Otherwise drop onclick function
+  if (checkbox.checked) {
+    dialog.showOpenDialog(
+      {
+        properties: ["openDirectory", "createDirectory"],
+        title: "Select Temporary Output Folder"
+      },
+      function(folder) {
+        //Check folder detected
+        if (folder !== undefined) {
+          document.getElementById(id + "-input").value = folder[0];
+        }
+      }
+    );
+  }
 }

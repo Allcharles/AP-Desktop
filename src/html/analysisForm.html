@@ -1,4 +1,4 @@
-<form id="AnalysisForm">
+<form name="AnalysisForm" id="AnalysisForm">
   <div class="group" id="select">
     <div class="question">
       <p class="question-text">Select Analysis Types</p>
@@ -29,6 +29,11 @@
         />
         <label for="audio2csv" class="checkbox-custom-label">
           Audio to CSV
+          <i
+            class="fa fa-info-circle grey"
+            aria-hidden="true"
+            title="Analyses long recordings using the analysis specified in the config file."
+          ></i>
         </label>
       </li>
       <li>
@@ -177,91 +182,69 @@
         <tr>
           <td>
             <input
-              id="analysis-identifier"
-              value="-a"
-              class="checkbox-custom"
-              name="audio2csv"
-              type="checkbox"
-              disabled
-            />
-            <label for="analysis-identifier" class="checkbox-custom-label">
-              Analysis Identifier
-            </label>
-          </td>
-          <td>
-            <input
-              id="analysis-identifier-input"
-              name="audio2csv"
-              type="text"
-              disabled
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <input
               id="temp-dir"
               value="-t"
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
-              disabled
+              onchange="toggleInput(this);"
             />
             <label for="temp-dir" class="checkbox-custom-label">
               Temporary Directory
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="A TEMP directory where cut files will be stored. Use this
+                  option for efficiency (eg. write to a RAM Disk)."
+              ></i>
             </label>
           </td>
-          <td>
-            <input
-              id="analysis-identifier-input"
-              name="audio2csv"
-              type="text"
-              disabled
-            />
+          <td class="multi_input_container">
+            <input id="temp-dir-input" name="audio2csv" type="text" disabled />
+            <a
+              class="simpleLink"
+              style="margin-left: 3px;"
+              onclick="getTemporaryOutputFolder('temp-dir');"
+            >
+              <div>
+                Select Folder
+              </div>
+            </a>
           </td>
         </tr>
         <tr>
           <td>
             <input
-              id="start-offset"
-              value="-s"
+              id="offset"
+              value="-s:-e"
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
-              disabled
+              onchange="toggleInput(this);"
             />
-            <label for="start-offset" class="checkbox-custom-label">
-              Start Offset (s)
+            <label for="offset" class="checkbox-custom-label">
+              Start and End Offset (seconds)
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="Start Offset: The start offset to start analyzing from (in seconds). End Offset: The end offset to stop analyzing (in seconds)."
+              ></i>
             </label>
           </td>
-          <td>
+          <td class="multi_input_container">
             <input
-              id="start-offset-input"
+              id="offset-input-s"
               name="audio2csv"
               type="number"
+              placeholder="Start Offset (seconds)"
               disabled
             />
-          </td>
-        </tr>
-        <tr>
-          <td>
+            <div style="align-self: center">&nbsptill&nbsp</div>
             <input
-              id="end-offset"
-              value="-e"
-              class="checkbox-custom"
-              name="audio2csv"
-              type="checkbox"
-              disabled
-            />
-            <label for="end-offset" class="checkbox-custom-label">
-              End Offset (s)
-            </label>
-          </td>
-          <td>
-            <input
-              id="end-offset-input"
+              id="offset-input-e"
               name="audio2csv"
               type="number"
+              placeholder="End Offset (seconds)"
               disabled
             />
           </td>
@@ -274,15 +257,20 @@
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
-              disabled
+              onchange="toggleInput(this);"
             />
             <label for="align-to-minute" class="checkbox-custom-label">
               Align to Minute
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="Allow advancing the start of the analysis to the nearest
+                  minute. A valid datetime must be available in the file name."
+              ></i>
             </label>
           </td>
           <td>
             <select id="align-to-minute-input" disabled>
-              <option value="" selected></option>
               <option value="None">No alignment</option>
               <option value="TrimBoth">Remove fractional sections</option>
               <option value="TrimNeither">Keep fractional sections</option>
@@ -301,10 +289,15 @@
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
-              disabled
+              onchange="toggleInput(this);"
             />
             <label for="channels" class="checkbox-custom-label">
               Channels
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="An array of channels to select. Default is all channels."
+              ></i>
             </label>
           </td>
           <td>
@@ -313,25 +306,24 @@
         </tr>
         <tr>
           <td>
+            <!-- Use flagsWithValue class to specify this is a flagWithValue option -->
             <input
               id="mix-down-to-mono"
               value="-m"
-              class="checkbox-custom"
+              class="checkbox-custom flagsWithValues"
               name="audio2csv"
               type="checkbox"
-              disabled
+              checked
             />
             <label for="mix-down-to-mono" class="checkbox-custom-label">
               Mono Channel
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="Mix all selected input channels down into one mono channel.
+                  Default is to mixdown."
+              ></i>
             </label>
-          </td>
-          <td>
-            <input
-              id="mix-down-to-mono-input"
-              name="audio2csv"
-              type="text"
-              disabled
-            />
           </td>
         </tr>
         <tr>
@@ -342,10 +334,16 @@
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
-              disabled
+              checked
             />
             <label for="parallel" class="checkbox-custom-label">
               Parallel
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="Whether or not run this analysis in parallel - multiple
+                  segents can be analyzed at the same time."
+              ></i>
             </label>
           </td>
         </tr>
@@ -357,10 +355,16 @@
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
-              disabled
             />
             <label for="when-exit-copy-log" class="checkbox-custom-label">
               Output Log
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="If true, attempts to copy the executable's log file to output
+                  directory. If it can't determine an output directory, it
+                  copies to the working directory."
+              ></i>
             </label>
           </td>
         </tr>
@@ -372,10 +376,17 @@
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
-              disabled
             />
             <label for="when-exit-copy-config" class="checkbox-custom-label">
               Output Config
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="If true, attempts to copy the executable's log file to output
+                  directory. If it can't determine an output directory, it
+                  copies to the working directory. If it can't find a config
+                  file, nothing is copied."
+              ></i>
             </label>
           </td>
         </tr>
@@ -387,19 +398,23 @@
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
-              disabled
+              onchange="toggleInput(this);"
             />
             <label for="log-level" class="checkbox-custom-label">
               Log Level
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="Set the log verbosity level."
+              ></i>
             </label>
           </td>
           <td>
             <select id="log-level-input" disabled>
-              <option value="" selected></option>
               <option value="0">None</option>
               <option value="1">Error</option>
               <option value="2">Warn</option>
-              <option value="3">Info</option>
+              <option value="3" selected>Info</option>
               <option value="4">Debug</option>
               <option value="5">Trace</option>
               <option value="6">Verbose</option>

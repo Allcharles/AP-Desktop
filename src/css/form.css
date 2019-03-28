@@ -126,22 +126,29 @@ table.output td {
 }
 
 .configEditor {
-  width: 100%;
+  box-sizing: border-box;
   height: 500px;
-  margin: 0px;
   margin-right: -10px;
+  margin: 0px;
   padding: 5px;
   resize: vertical;
-  box-sizing: border-box;
+  width: 100%;
 }
 
-a.button {
-  appearance: button;
-  -moz-appearance: button;
-  -webkit-appearance: button;
-  text-decoration: none;
-  font: menu;
-  color: ButtonText;
-  display: inline-block;
-  padding: 2px 8px;
+.grey {
+  color: gray;
+}
+
+a.simpleLink {
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 16px;
+  height: 26px;
+  justify-content: center;
+  width: auto;
+}
+
+a.simpleLink div {
+  align-self: center;
+  padding: 0 5px;
 }
