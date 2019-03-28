@@ -188,11 +188,11 @@ class Audio2CSVAnalysis extends APAnalysis {
     const form = document.getElementById("AnalysisForm");
     const SWITCH = 0,
       INPUT = 1,
-      SELECT = 2;
+      SELECT = 2,
+      MULTI = 3;
     const AUDIO2CSV_ADVANCED = [
       ["temp-dir", INPUT],
-      ["start-offset", INPUT],
-      ["end-offset", INPUT],
+      ["offset", MULTI],
       ["align-to-minute", SELECT],
       ["channels", INPUT],
       ["mix-down-to-mono", SWITCH],
@@ -222,8 +222,17 @@ class Audio2CSVAnalysis extends APAnalysis {
           finalOptions.push(new AnalysisOption(item.value));
         }
       } else if (item.checked) {
-        let input = form.querySelector(`#${checkbox[0]}-input`);
-        finalOptions.push(new AnalysisOption(item.value, input.value));
+        //Check if value has multiple inputs
+        if (checkbox[1] === MULTI) {
+          //For each input, add AnalysisOption
+          item.value.split(":").map(option => {
+            let input = form.querySelector(`#${checkbox[0]}-input${option}`);
+            finalOptions.push(new AnalysisOption(option, input.value));
+          });
+        } else {
+          let input = form.querySelector(`#${checkbox[0]}-input`);
+          finalOptions.push(new AnalysisOption(item.value, input.value));
+        }
       }
     });
 
