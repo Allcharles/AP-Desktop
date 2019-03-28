@@ -11,7 +11,6 @@
     "dependencies": "chmod +x ./linux_dependencies.sh && ./linux_dependencies.sh",
     "ap_download:windows": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& powershell [System.Environment]::SetEnvironmentVariable('LANG', 'en_US.UTF-8') && powershell -ExecutionPolicy ByPass -File ./script_ap.ps1",
     "ap_download:linux": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& export LANG=en_US.UTF-8 && pwsh -ExecutionPolicy ByPass -File ./script_ap.ps1",
-    "install": "npm run ap_download:windows",
     "release": "electron-forge make",
     "publish": "electron-forge publish"
   },

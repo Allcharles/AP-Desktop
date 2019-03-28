@@ -29,8 +29,11 @@
         />
         <label for="audio2csv" class="checkbox-custom-label">
           Audio to CSV
-          <i class="fa fa-info-circle grey" aria-hidden="true"
-            title="Analyses long recordings using the analysis specified in the config file."></i>
+          <i
+            class="fa fa-info-circle grey"
+            aria-hidden="true"
+            title="Analyses long recordings using the analysis specified in the config file."
+          ></i>
         </label>
       </li>
       <li>
@@ -179,54 +182,6 @@
         <tr>
           <td>
             <input
-              id="analysis-identifier"
-              value="-a"
-              class="checkbox-custom"
-              name="audio2csv"
-              type="checkbox"
-              onchange="toggleInput(this);"
-            />
-            <label for="analysis-identifier" class="checkbox-custom-label">
-              Analysis Identifier
-              <i
-                class="fa fa-info-circle grey"
-                aria-hidden="true"
-                title="Sets the name of the analysis to run. If not set, analysis identifier is parsed from the config file name."
-              ></i>
-            </label>
-          </td>
-          <td>
-            <select id="analysis-identifier-input" disabled>
-              <option
-                value="Ecosounds.AED"
-                title="[BETA] Acoustic event detection, for short files (~ 1 min)"
-              >
-                Ecosounds.AED
-              </option>
-              <option
-                value="Ecosounds.EventStatistics"
-                title="[BETA] Calculates useful statistics (features) from an acoustic event"
-              >
-                Ecosounds.EventStatistics
-              </option>
-              <option
-                value="Ecosounds.GroundParrot"
-                title="[UNMAINTAINED] Uses event pattern recognition for ground-parrots"
-              >
-                Ecosounds.GroundParrot
-              </option>
-              <option
-                value="Ecosounds.MultiRecognizer"
-                title="[BETA] A method to run multiple event/species recognisers, depending on entries in config file."
-              >
-                Ecosounds.MultiRecognizer
-              </option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <input
               id="temp-dir"
               value="-t"
               class="checkbox-custom"
@@ -251,55 +206,36 @@
         <tr>
           <td>
             <input
-              id="start-offset"
-              value="-s"
+              id="offset"
+              value="-s:-e"
               class="checkbox-custom"
               name="audio2csv"
               type="checkbox"
               onchange="toggleInput(this);"
             />
-            <label for="start-offset" class="checkbox-custom-label">
-              Start Offset (s)
+            <label for="offset" class="checkbox-custom-label">
+              Start and End Offset (seconds)
               <i
                 class="fa fa-info-circle grey"
                 aria-hidden="true"
-                title="The start offset to start analyzing from (in seconds)."
+                title="Start Offset: The start offset to start analyzing from (in seconds). End Offset: The end offset to stop analyzing (in seconds)."
               ></i>
             </label>
           </td>
-          <td>
+          <td class="multi_input_container">
             <input
-              id="start-offset-input"
+              id="offset-input-s"
               name="audio2csv"
               type="number"
+              placeholder="Start Offset (seconds)"
               disabled
             />
-          </td>
-        </tr>
-        <tr>
-          <td>
+            <div style="align-self: center">&nbsptill&nbsp</div>
             <input
-              id="end-offset"
-              value="-e"
-              class="checkbox-custom"
-              name="audio2csv"
-              type="checkbox"
-              onchange="toggleInput(this);"
-            />
-            <label for="end-offset" class="checkbox-custom-label">
-              End Offset (s)
-              <i
-                class="fa fa-info-circle grey"
-                aria-hidden="true"
-                title="The end offset to start analyzing from (in seconds)."
-              ></i>
-            </label>
-          </td>
-          <td>
-            <input
-              id="end-offset-input"
+              id="offset-input-e"
               name="audio2csv"
               type="number"
+              placeholder="End Offset (seconds)"
               disabled
             />
           </td>
@@ -361,13 +297,13 @@
         </tr>
         <tr>
           <td>
-						<!-- Use flagsWithValue class to specify this is a flagWithValue option -->
+            <!-- Use flagsWithValue class to specify this is a flagWithValue option -->
             <input
               id="mix-down-to-mono"
               value="-m"
-							class="checkbox-custom flagsWithValues"
+              class="checkbox-custom flagsWithValues"
               name="audio2csv"
-							type="checkbox"
+              type="checkbox"
               checked
             />
             <label for="mix-down-to-mono" class="checkbox-custom-label">
@@ -411,10 +347,7 @@
               name="audio2csv"
               type="checkbox"
             />
-            <label
-              for="when-exit-copy-log"
-              class="checkbox-custom-label"
-            >
+            <label for="when-exit-copy-log" class="checkbox-custom-label">
               Output Log
               <i
                 class="fa fa-info-circle grey"
@@ -433,12 +366,9 @@
               value="--when-exit-copy-config"
               class="checkbox-custom"
               name="audio2csv"
-							type="checkbox"
+              type="checkbox"
             />
-            <label
-              for="when-exit-copy-config"
-              class="checkbox-custom-label"
-            >
+            <label for="when-exit-copy-config" class="checkbox-custom-label">
               Output Config
               <i
                 class="fa fa-info-circle grey"
@@ -463,8 +393,11 @@
             />
             <label for="log-level" class="checkbox-custom-label">
               Log Level
-              <i class="fa fa-info-circle grey" aria-hidden="true" title="Set the log verbosity level."></i>
-              </span>
+              <i
+                class="fa fa-info-circle grey"
+                aria-hidden="true"
+                title="Set the log verbosity level."
+              ></i>
             </label>
           </td>
           <td>
