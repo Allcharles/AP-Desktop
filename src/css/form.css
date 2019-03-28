@@ -135,17 +135,20 @@ table.output td {
   width: 100%;
 }
 
-a.button {
-  -moz-appearance: button;
-  -webkit-appearance: button;
-  appearance: button;
-  color: ButtonText;
-  display: inline-block;
-  font: menu;
-  padding: 2px 8px;
-  text-decoration: none;
-}
-
 .grey {
   color: gray;
+}
+
+a.simpleLink {
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 16px;
+  height: 26px;
+  justify-content: center;
+  width: auto;
+}
+
+a.simpleLink div {
+  align-self: center;
+  padding: 0 5px;
 }
