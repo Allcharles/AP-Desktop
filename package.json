@@ -1,76 +1,76 @@
 {
-	"name": "ap_desktop",
-	"productName": "AP Desktop",
-	"version": "1.3.0",
-	"description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe).",
-	"main": "src/index.js",
-	"scripts": {
-		"start": "electron-forge start",
-		"package": "electron-packager . AP-Desktop --all --out=out/",
-		"make": "electron-forge make",
-		"dependencies": "chmod +x ./linux_dependencies.sh && ./linux_dependencies.sh",
-		"ap_download:windows": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& powershell [System.Environment]::SetEnvironmentVariable('LANG', 'en_US.UTF-8') && powershell -ExecutionPolicy ByPass -File ./script_ap.ps1",
-		"ap_download:linux": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& export LANG=en_US.UTF-8 && pwsh -ExecutionPolicy ByPass -File ./script_ap.ps1",
-		"install": "npm run ap_download:windows",
-		"release": "electron-forge make",
-		"publish": "electron-forge publish",
-		"test": "mocha tests/test.js"
-	},
-	"keywords": [],
-	"author": "Charles Alleman",
-	"license": "MIT",
-	"config": {
-		"forge": {
-			"make_targets": {
-				"win32": [
-					"squirrel"
-				],
-				"darwin": [
-					"zip"
-				],
-				"linux": [
-					"snap",
-					"deb"
-				]
-			},
-			"electronPackagerConfig": {
-				"packageManager": "npm"
-			},
-			"electronWinstallerConfig": {
-				"name": "ap_desktop"
-			},
-			"electronInstallerDebian": {},
-			"electronInstallerRedhat": {},
-			"windowsStoreConfig": {
-				"packageName": "",
-				"name": "ap_desktop"
-			}
-		}
-	},
-	"dependencies": {
-		"csv-parser": "^2.1.0",
-		"electron": "^4.0.1",
-		"electron-compile": "^6.4.4",
-		"electron-squirrel-startup": "^1.0.0",
-		"json2csv": "^4.3.3"
-	},
-	"devDependencies": {
-		"babel-plugin-transform-async-to-generator": "^6.24.1",
-		"babel-preset-env": "^1.7.0",
-		"babel-preset-react": "^6.24.1",
-		"chai": "^4.2.0",
-		"chai-as-promised": "^7.1.1",
-		"electron-forge": "^5.2.4",
-		"electron-packager": "^13.1.1",
-		"electron-prebuilt-compile": "4.0.0",
-		"eslint": "^3",
-		"eslint-config-airbnb": "^15",
-		"eslint-plugin-import": "^2",
-		"eslint-plugin-jsx-a11y": "^5",
-		"eslint-plugin-react": "^7",
-		"git": "^0.1.5",
-		"mocha": "^6.0.2",
-		"pwsh": "^0.2.0",
-		"spectron": "^5.0.0"
-	}
+  "name": "ap_desktop",
+  "productName": "AP Desktop",
+  "version": "1.3.0",
+  "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe).",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-packager . AP-Desktop --all --out=out/",
+    "make": "electron-forge make",
+    "dependencies": "chmod +x ./linux_dependencies.sh && ./linux_dependencies.sh",
+    "ap_download:windows": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& powershell [System.Environment]::SetEnvironmentVariable('LANG', 'en_US.UTF-8') && powershell -ExecutionPolicy ByPass -File ./script_ap.ps1",
+    "ap_download:linux": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& export LANG=en_US.UTF-8 && pwsh -ExecutionPolicy ByPass -File ./script_ap.ps1",
+    "install": "npm run ap_download:windows",
+    "release": "electron-forge make",
+    "publish": "electron-forge publish",
+    "test": "mocha tests/test.js"
+  },
+  "keywords": [],
+  "author": "Charles Alleman",
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "snap",
+          "deb"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "npm"
+      },
+      "electronWinstallerConfig": {
+        "name": "ap_desktop"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "ap_desktop"
+      }
+    }
+  },
+  "dependencies": {
+    "csv-parser": "^2.1.0",
+    "electron": "^4.0.1",
+    "electron-compile": "^6.4.4",
+    "electron-squirrel-startup": "^1.0.0",
+    "json2csv": "^4.3.3"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "electron-forge": "^5.2.4",
+    "electron-packager": "^13.1.1",
+    "electron-prebuilt-compile": "4.0.0",
+    "eslint": "^3",
+    "eslint-config-airbnb": "^15",
+    "eslint-plugin-import": "^2",
+    "eslint-plugin-jsx-a11y": "^5",
+    "eslint-plugin-react": "^7",
+    "git": "^0.1.5",
+    "mocha": "^6.0.2",
+    "pwsh": "^0.2.0",
+    "spectron": "^5.0.0"
+  }
 }
