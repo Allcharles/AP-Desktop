@@ -227,11 +227,19 @@ class Audio2CSVAnalysis extends APAnalysis {
           //For each input, add AnalysisOption
           item.value.split(":").map(option => {
             let input = form.querySelector(`#${checkbox[0]}-input${option}`);
-            finalOptions.push(new AnalysisOption(option, input.value));
+
+            //If value is empty, skip adding it to analysis option
+            if (input.value !== "") {
+              finalOptions.push(new AnalysisOption(option, input.value));
+            }
           });
         } else {
           let input = form.querySelector(`#${checkbox[0]}-input`);
-          finalOptions.push(new AnalysisOption(item.value, input.value));
+
+          //If value is empty, skip adding it to analysis option
+          if (input.value !== "") {
+            finalOptions.push(new AnalysisOption(item.value, input.value));
+          }
         }
       }
     });
