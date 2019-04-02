@@ -1,5 +1,28 @@
+var electron = require("electron");
+var { app } = electron.remote;
+var dialog = electron.remote.dialog;
+var fs = require("fs");
+
+var lastIndex = __dirname.lastIndexOf("src/");
+if (lastIndex == -1) {
+  lastIndex = __dirname.lastIndexOf("src\\");
+}
+var __rootFolder = __dirname.substr(0, lastIndex);
+
+/**
+ * Default variables used throughout the system
+ */
+var Defaults = {
+  AP_DIRECTORY: `${__rootFolder}ap`,
+  CONFIG_DIRECTORY: `${__rootFolder}/ap/ConfigFiles`,
+  DEFAULT_OUTPUT_DIRECTORY: app.getPath("documents") + "/AP Desktop",
+  DEFAULT_CONFIG_FILE: "Towsey.Acoustic",
+  WINDOWS: process.platform === "win32"
+};
+Object.freeze(Defaults);
+
 /** All ffmpeg supported audio formats */
-const SUPPORTED_AUDIO_FORMATS = [
+var SUPPORTED_AUDIO_FORMATS = [
   "wav",
   "mp3",
   "pcm",
@@ -11,7 +34,6 @@ const SUPPORTED_AUDIO_FORMATS = [
   "alac",
   "mwa"
 ];
-const IS_WINDOWS = process.platform === "win32";
 
 /** Used in the form to determine inputs */
 var analysisList = [];
@@ -287,7 +309,7 @@ function getFilenameIndex(filePath) {
  * @returns {string} Sanitised file path
  */
 function sanitiseFilePath(filePath) {
-  if (IS_WINDOWS) {
+  if (Defaults.WINDOWS) {
     return filePath.replace(new RegExp("/", "g"), "\\");
   } else {
     return filePath.replace(new RegExp("\\", "g"), "/");

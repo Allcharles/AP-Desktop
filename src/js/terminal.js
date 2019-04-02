@@ -1,3 +1,5 @@
+var childProcess = require("child_process");
+
 /**
  * Used to abstract terminal spawning, handles the division of terminal commands on Linux and Windows.
  * Defaults must be imported into the the html file before this script.
@@ -10,7 +12,7 @@ class Terminal {
    * @returns {spawn} Returns childProcess.spawn of terminal running command
    */
   static createTerminal(func, args) {
-    return this.childProcess.spawn(func, args);
+    return childProcess.spawn(func, args);
   }
 
   /**
@@ -19,10 +21,11 @@ class Terminal {
    * @returns {spawn} Returns childProcess.spawn of terminal running AP command
    */
   static createAPTerminal(args) {
-    var AP = Defaults.AP_DIRECTORY + "/AnalysisPrograms.exe";
+    var AP = `${__rootFolder}ap/AnalysisPrograms.exe`;
     var terminal;
 
-    if (Defaults.WINDOWS) {
+    //Check if windows
+    if (process.platform === "win32") {
       terminal = childProcess.spawn(AP, args);
     } else {
       //Prepend AP to start of command
@@ -33,3 +36,5 @@ class Terminal {
     return terminal;
   }
 }
+
+module.exports = Terminal;
