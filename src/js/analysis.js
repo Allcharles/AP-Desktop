@@ -1,3 +1,5 @@
+var Terminal = require("./terminal.js");
+
 /**
  * Command object for abstracting the creation of terminal commands using AP.
  */
@@ -55,7 +57,7 @@ class AnalysisOption {
     };
   }
 }
-
+Terminal.
 /**
  * Analysis object for abstracting the creation of AP analyses.
  */

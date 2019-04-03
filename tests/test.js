@@ -3,6 +3,8 @@ const path = require("path");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 
+console.log("Dirname: " + __dirname);
+
 /* Boilerplate start */
 var electronPath = path.join(
   __dirname,
@@ -89,19 +91,74 @@ describe("Basic Functionality", function() {
 */
 
 describe("Terminal Check", function() {
-  this.timeout(5000);
-  beforeEach(function() {
-    return app.start();
-  });
-
-  afterEach(function() {
-    return app.stop();
-  });
-
-  it("Check terminal access", () => {
-    app.client.waitUntilWindowLoaded();
+  it("Check default Commands", () => {
     const Terminal = require("../src/js/terminal.js");
-    Terminal.createTerminal("ls");
+    let terminal;
+    if (process.platform === "win32") {
+      terminal = Terminal.createTerminal("dir");
+      return terminal.spawnfile === "dir";
+    } else {
+      terminal = Terminal.createTerminal("ls");
+      return terminal.spawnfile === "ls";
+    }
+  });
+
+  it("Check AP Commands", () => {
+    const Terminal = require("../src/js/terminal.js");
+    const AP_NAME = "AnaysisPrograms.exe";
+    let terminal = Terminal.createAPTerminal(["list"]);
+
+    if (process.platform === "win32") {
+      let command = terminal.spawnfile.substr(
+        terminal.spawnfile.length - AP_NAME.length,
+        AP_NAME.length
+      );
+      return (
+        command === AP_NAME &&
+        terminal.spawnargs.length === 1 &&
+        terminal.spawnargs[0] === "list"
+      );
+    } else {
+      let ap = terminal.spawnargs[0].substr(
+        terminal.spawnfile.length - AP_NAME.length,
+        AP_NAME.length
+      );
+      return (
+        terminal.spawnfile === "mono" &&
+        terminal.spawnargs.length === 2 &&
+        ap === AP_NAME &&
+        terminal.spawnargs[1] === "list"
+      );
+    }
+  });
+
+  it("Check Environment", () => {
+    const Terminal = require("../src/js/terminal.js");
+    let terminal = Terminal.createAPTerminal(["CheckEnvironment"]);
+
+    terminal.on("error", function(err) {
+      console.log(err);
+      return false;
+    });
+
+    //Check for valid environment
+    terminal.stdout.on("data", function(data) {
+      //Third message from terminal contains the success message
+      var match = "SUCCESS - Valid environment";
+
+      //Check terminal output for successful environment
+      if (data.includes(match)) {
+        return true;
+      }
+    });
+
+    //If terminal close is given before finding valid environment, return false
+    terminal.on("close", function(code) {
+      return false;
+    });
+  });
+
+  it("Check basic audio2csv analysis", () => {
     return true;
   });
 });

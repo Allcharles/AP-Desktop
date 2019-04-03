@@ -906,7 +906,6 @@ function updateConfig(el) {
 /**
  * Check the computers environment, if the system is not setup this will provide details.
  */
-let count = 0;
 function checkEnvironment() {
   var terminal = new CheckEnvironment().getTerminal();
 
@@ -915,9 +914,8 @@ function checkEnvironment() {
     document.querySelector("#environment").style.display = "inherit";
   });
 
+  //Check for valid environment
   terminal.stdout.on("data", function(data) {
-    const MAX_ENVIRONMENT_OUTPUT = 3;
-    count++;
     document.querySelector("#environment .group-content pre").innerHTML +=
       "\n" + data;
 
@@ -927,9 +925,14 @@ function checkEnvironment() {
     //Check terminal output for successful environment
     if (data.includes(match)) {
       document.querySelector("#environment").style.display = "none";
-    } else {
-      if (count >= MAX_ENVIRONMENT_OUTPUT)
-        document.querySelector("#environment").style.display = "inherit";
+    }
+  });
+
+  //On close, check if valid environment found. If not, display invalid environment.
+  terminal.on("close", function(code) {
+    let errorForm = document.querySelector("#environment");
+    if (errorForm.style.display !== "none") {
+      errorForm.style.display = "inherit";
     }
   });
 }
