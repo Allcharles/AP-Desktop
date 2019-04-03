@@ -5,17 +5,18 @@
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe).",
   "main": "src/index.js",
   "scripts": {
-    "start": "npm run babel & electron-forge start",
+    "start": "npm run babel:async & electron-forge start",
     "package": "electron-packager . AP-Desktop --all --out=out/",
     "make": "electron-forge make",
     "dependencies": "chmod +x ./linux_dependencies.sh && ./linux_dependencies.sh",
     "ap_download:windows": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& powershell [System.Environment]::SetEnvironmentVariable('LANG', 'en_US.UTF-8') && powershell -ExecutionPolicy ByPass -File ./script_ap.ps1",
     "ap_download:linux": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& export LANG=en_US.UTF-8 && pwsh -ExecutionPolicy ByPass -File ./script_ap.ps1",
-    "install": "npm run ap_download:linux",
+    "install": "npm run ap_download:linux && npm run babel",
     "release": "electron-forge make",
     "publish": "electron-forge publish",
     "test": "npx babel ./tests/tests.js -o ./tests/test-compiled/tests.js && mocha tests/test-compiled/tests.js",
-    "babel": "npx babel ./src/js/ --out-dir ./src/js-compiled/ -w"
+    "babel": "npx babel ./src/js/ --out-dir ./src/js-compiled/",
+    "babel:async": "npx babel ./src/js/ --out-dir ./src/js-compiled/ -w"
   },
   "keywords": [],
   "author": "Charles Alleman",
