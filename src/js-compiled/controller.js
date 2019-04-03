@@ -218,9 +218,8 @@ function generateID(filePath) {
   if (filePath.length == 0) return hash;
 
   for (var i = 0; i < filePath.length; i++) {
-    var _char = filePath.charCodeAt(i);
-
-    hash = (hash << 5) - hash + _char;
+    var char = filePath.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; //Converts output to 32bit integer
   }
 

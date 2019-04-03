@@ -27,7 +27,11 @@
           type="checkbox"
           onchange="selectAnalysis(this)"
         />
-        <label for="audio2csv" class="checkbox-custom-label">
+        <label
+          id="audio2csv-label"
+          for="audio2csv"
+          class="checkbox-custom-label"
+        >
           Audio to CSV
           <i
             class="fa fa-info-circle grey"
@@ -98,10 +102,10 @@
   <div class="group" id="audio" style="display: none">
     <div class="question-fail">
       <p class="question-text">Select Recordings Folder</p>
-      <a onclick="getAudioFolder()">
+      <a id="audio-select-folder" onclick="getAudioFolder()">
         <div class="question-button-fail">Select Folder</div>
       </a>
-      <a onclick="getAudioFiles()">
+      <a id="audio-select-files" onclick="getAudioFiles()">
         <div class="question-button-fail">Select Files</div>
       </a>
     </div>

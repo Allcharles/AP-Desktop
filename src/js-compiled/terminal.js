@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -58,11 +58,11 @@ function () {
       var terminal; //Check if windows
 
       if (process.platform === "win32") {
-        terminal = childProcess.spawn(AP, args);
+        terminal = this.createTerminal(AP, args);
       } else {
         //Prepend AP to start of command
         args.unshift(AP);
-        terminal = childProcess.spawn("mono", args);
+        terminal = this.createTerminal("mono", args);
       }
 
       return terminal;
@@ -72,4 +72,4 @@ function () {
   return Terminal;
 }();
 
-exports["default"] = Terminal;
+exports.default = Terminal;
