@@ -14,13 +14,13 @@ var chaiAsPromised = require("chai-as-promised");
 /* Boilerplate start */
 
 
-var electronPath = path.join(__dirname, "..", "node_modules", ".bin", "electron");
+var electronPath = path.join(__dirname, "../..", "node_modules", ".bin", "electron");
 
 if (process.platform === "win32") {
   electronPath += ".cmd";
 }
 
-var appPath = path.join(__dirname, "..");
+var appPath = path.join(__dirname, "../..");
 var app = new Application({
   path: electronPath,
   args: [appPath]
@@ -31,65 +31,37 @@ global.before(function () {
 });
 /* Boilerplate End */
 
-/*
-describe("Basic Functionality", function() {
-  beforeEach(function() {
+describe("Basic Functionality", function () {
+  this.timeout(5000);
+  beforeEach(function () {
     return app.start();
   });
-
-  afterEach(function() {
+  afterEach(function () {
     return app.stop();
-  });
+  }); //Checks initial window is opening correctly
 
-  //Checks initial window is opening correctly
-  it("Check window opens", function() {
-    return app.client
-      .waitUntilWindowLoaded()
-      .getWindowCount()
-      .should.eventually.have.at.least(1);
-  });
+  it("Check window opens", function () {
+    return app.client.waitUntilWindowLoaded().getWindowCount().should.eventually.have.at.least(1);
+  }); //Checks title of App if AP Desktop
 
-  //Checks title of App if AP Desktop
-  it("Check for correct title", function() {
-    return app.client
-      .waitUntilWindowLoaded()
-      .getTitle()
-      .should.eventually.equal("AP Desktop");
-  });
+  it("Check for correct title", function () {
+    return app.client.waitUntilWindowLoaded().getTitle().should.eventually.equal("AP Desktop");
+  }); //Check initial tab is the analysis tab
 
-  //Check initial tab is the analysis tab
-  it("Check initial tab is Analysis", function() {
-    return (
-      app.client.waitUntilWindowLoaded().element("#page").innerHTML ===
-      "Analysis"
-    );
-  });
+  it("Check initial tab is Analysis", function () {
+    return app.client.waitUntilWindowLoaded().element("#page").innerHTML === "Analysis";
+  }); //Check output tab is the middle tab and navigatable
 
-  //Check output tab is the middle tab and navigatable
-  it("Check output tab navigation", function() {
-    app.client
-      .waitUntilWindowLoaded()
-      .element("#output")
-      .click();
-    return (
-      app.client.waitUntilWindowLoaded().element("#page").innerHTML === "Output"
-    );
-  });
+  it("Check output tab navigation", function () {
+    app.client.waitUntilWindowLoaded().element("#output").click();
+    return app.client.waitUntilWindowLoaded().element("#page").innerHTML === "Output";
+  }); //Check output tab is the middle tab and navigatable
 
-  //Check output tab is the middle tab and navigatable
-  it("Check utilities tab navigation", function() {
-    app.client
-      .waitUntilWindowLoaded()
-      .element("#utilities")
-      .click();
-    return (
-      app.client.waitUntilWindowLoaded().element("#page").innerHTML ===
-      "Utilities"
-    );
+  it("Check utilities tab navigation", function () {
+    app.client.waitUntilWindowLoaded().element("#utilities").click();
+    return app.client.waitUntilWindowLoaded().element("#page").innerHTML === "Utilities";
   });
 });
-*/
-
 describe("Terminal Check", function () {
   it("Check default Commands", function () {
     var terminal;
@@ -115,6 +87,11 @@ describe("Terminal Check", function () {
       return terminal.spawnfile === "mono" && terminal.spawnargs.length === 2 && ap === AP_NAME && terminal.spawnargs[1] === "list";
     }
   });
+  it("Check basic audio2csv analysis", function () {
+    return true;
+  });
+});
+describe("AP Check", function () {
   it("Check Environment", function () {
     var terminal = _terminal["default"].createAPTerminal(["CheckEnvironment"]);
 
@@ -135,8 +112,5 @@ describe("Terminal Check", function () {
     terminal.on("close", function (code) {
       return false;
     });
-  });
-  it("Check basic audio2csv analysis", function () {
-    return true;
   });
 });

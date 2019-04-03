@@ -7,7 +7,7 @@ const chaiAsPromised = require("chai-as-promised");
 /* Boilerplate start */
 var electronPath = path.join(
   __dirname,
-  "..",
+  "../..",
   "node_modules",
   ".bin",
   "electron"
@@ -17,7 +17,7 @@ if (process.platform === "win32") {
   electronPath += ".cmd";
 }
 
-var appPath = path.join(__dirname, "..");
+var appPath = path.join(__dirname, "../..");
 
 var app = new Application({
   path: electronPath,
@@ -30,8 +30,8 @@ global.before(function() {
 });
 /* Boilerplate End */
 
-/*
 describe("Basic Functionality", function() {
+  this.timeout(5000);
   beforeEach(function() {
     return app.start();
   });
@@ -87,9 +87,8 @@ describe("Basic Functionality", function() {
     );
   });
 });
-*/
 
-describe("Terminal Check", function() {
+describe("Terminal Check", () => {
   it("Check default Commands", () => {
     let terminal;
     if (process.platform === "win32") {
@@ -129,6 +128,12 @@ describe("Terminal Check", function() {
     }
   });
 
+  it("Check basic audio2csv analysis", () => {
+    return true;
+  });
+});
+
+describe("AP Check", () => {
   it("Check Environment", () => {
     let terminal = Terminal.createAPTerminal(["CheckEnvironment"]);
 
@@ -152,9 +157,5 @@ describe("Terminal Check", function() {
     terminal.on("close", function(code) {
       return false;
     });
-  });
-
-  it("Check basic audio2csv analysis", () => {
-    return true;
   });
 });
