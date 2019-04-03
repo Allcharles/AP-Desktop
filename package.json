@@ -5,7 +5,7 @@
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe).",
   "main": "src/index.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "npm run babel & electron-forge start",
     "package": "electron-packager . AP-Desktop --all --out=out/",
     "make": "electron-forge make",
     "dependencies": "chmod +x ./linux_dependencies.sh && ./linux_dependencies.sh",
@@ -14,7 +14,8 @@
     "install": "npm run ap_download:linux",
     "release": "electron-forge make",
     "publish": "electron-forge publish",
-    "test": "mocha tests/test.js"
+    "test": "npx babel ./tests/tests.js -o ./tests/test-compiled/tests.js && mocha tests/test-compiled/tests.js",
+    "babel": "npx babel ./src/js/ --out-dir ./src/js-compiled/ -w"
   },
   "keywords": [],
   "author": "Charles Alleman",
@@ -48,6 +49,7 @@
     }
   },
   "dependencies": {
+    "@babel/polyfill": "^7.4.3",
     "csv-parser": "^2.1.0",
     "electron": "^4.0.1",
     "electron-compile": "^6.4.4",
@@ -55,6 +57,10 @@
     "json2csv": "^4.3.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-flow": "^7.0.0",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
