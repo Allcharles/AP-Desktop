@@ -63,18 +63,42 @@ describe("Basic Functionality", function () {
   });
 });
 describe("Terminal Check", function () {
-  it("Check default Commands", function () {
-    var terminal;
+  //Checks a terminal can be created
+  it("Check no argument terminal", function () {
+    var terminal = _terminal["default"].createTerminal("whoami");
 
-    if (process.platform === "win32") {
-      terminal = _terminal["default"].createTerminal("dir");
-      return terminal.spawnfile === "dir";
-    } else {
-      terminal = _terminal["default"].createTerminal("ls");
-      return terminal.spawnfile === "ls";
+    return terminal.spawnfile === "whoami";
+  }); //Checks a terminal with a single argument can be created
+
+  it("Check single arguement terminal", function () {
+    var args = ["-option1"];
+
+    var terminal = _terminal["default"].createTerminal("whoami", args);
+
+    if (terminal.spawnfile !== "whoami") return false;
+
+    for (var i = 0; i < args.length; i++) {
+      if (terminal.spawnargs[i] !== args[i]) return false;
     }
-  });
-  it("Check AP Commands", function () {
+
+    return true;
+  }); //Checks a terminal with multiple arguements can be created
+
+  it("Check multi arguement terminal", function () {
+    var args = ["-option1", "-option2"];
+
+    var terminal = _terminal["default"].createTerminal("whoami", args);
+
+    if (terminal.spawnfile !== "whoami") return false;
+
+    for (var i = 0; i < args.length; i++) {
+      if (terminal.spawnargs[i] !== args[i]) return false;
+    }
+
+    return true;
+  }); //Checks an AP specific command can be created
+
+  it("Check single arguement AP command", function () {
     var AP_NAME = "AnaysisPrograms.exe";
 
     var terminal = _terminal["default"].createAPTerminal(["list"]);
@@ -86,9 +110,21 @@ describe("Terminal Check", function () {
       var ap = terminal.spawnargs[0].substr(terminal.spawnfile.length - AP_NAME.length, AP_NAME.length);
       return terminal.spawnfile === "mono" && terminal.spawnargs.length === 2 && ap === AP_NAME && terminal.spawnargs[1] === "list";
     }
-  });
-  it("Check basic audio2csv analysis", function () {
-    return true;
+  }); //Checks an AP specific command with multiple arguements can be created
+
+  it("Check multi arguement AP command", function () {
+    var AP_NAME = "AnaysisPrograms.exe";
+    var args = ["audio2csv", "help"];
+
+    var terminal = _terminal["default"].createAPTerminal(args);
+
+    if (process.platform === "win32") {
+      var command = terminal.spawnfile.substr(terminal.spawnfile.length - AP_NAME.length, AP_NAME.length);
+      return command === AP_NAME && terminal.spawnargs.length === args.length && terminal.spawnargs[0] === args[0] && terminal.spawnargs[1] === args[1];
+    } else {
+      var ap = terminal.spawnargs[0].substr(terminal.spawnfile.length - AP_NAME.length, AP_NAME.length);
+      return terminal.spawnfile === "mono" && terminal.spawnargs.length === args.length + 1 && ap === AP_NAME && terminal.spawnargs[1] === args[0] && terminal.spawnargs[2] === args[1];
+    }
   });
 });
 describe("AP Check", function () {

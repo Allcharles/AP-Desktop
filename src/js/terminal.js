@@ -31,11 +31,11 @@ export default class Terminal {
 
     //Check if windows
     if (process.platform === "win32") {
-      terminal = childProcess.spawn(AP, args);
+      terminal = this.createTerminal(AP, args);
     } else {
       //Prepend AP to start of command
       args.unshift(AP);
-      terminal = childProcess.spawn("mono", args);
+      terminal = this.createTerminal("mono", args);
     }
 
     return terminal;

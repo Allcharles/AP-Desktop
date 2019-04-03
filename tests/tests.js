@@ -89,18 +89,38 @@ describe("Basic Functionality", function() {
 });
 
 describe("Terminal Check", () => {
-  it("Check default Commands", () => {
-    let terminal;
-    if (process.platform === "win32") {
-      terminal = Terminal.createTerminal("dir");
-      return terminal.spawnfile === "dir";
-    } else {
-      terminal = Terminal.createTerminal("ls");
-      return terminal.spawnfile === "ls";
-    }
+  //Checks a terminal can be created
+  it("Check no argument terminal", () => {
+    let terminal = Terminal.createTerminal("whoami");
+    return terminal.spawnfile === "whoami";
   });
 
-  it("Check AP Commands", () => {
+  //Checks a terminal with a single argument can be created
+  it("Check single arguement terminal", () => {
+    let args = ["-option1"];
+    let terminal = Terminal.createTerminal("whoami", args);
+
+    if (terminal.spawnfile !== "whoami") return false;
+    for (let i = 0; i < args.length; i++) {
+      if (terminal.spawnargs[i] !== args[i]) return false;
+    }
+    return true;
+  });
+
+  //Checks a terminal with multiple arguements can be created
+  it("Check multi arguement terminal", () => {
+    let args = ["-option1", "-option2"];
+    let terminal = Terminal.createTerminal("whoami", args);
+
+    if (terminal.spawnfile !== "whoami") return false;
+    for (let i = 0; i < args.length; i++) {
+      if (terminal.spawnargs[i] !== args[i]) return false;
+    }
+    return true;
+  });
+
+  //Checks an AP specific command can be created
+  it("Check single arguement AP command", () => {
     const AP_NAME = "AnaysisPrograms.exe";
     let terminal = Terminal.createAPTerminal(["list"]);
 
@@ -128,8 +148,36 @@ describe("Terminal Check", () => {
     }
   });
 
-  it("Check basic audio2csv analysis", () => {
-    return true;
+  //Checks an AP specific command with multiple arguements can be created
+  it("Check multi arguement AP command", () => {
+    const AP_NAME = "AnaysisPrograms.exe";
+    let args = ["audio2csv", "help"];
+    let terminal = Terminal.createAPTerminal(args);
+
+    if (process.platform === "win32") {
+      let command = terminal.spawnfile.substr(
+        terminal.spawnfile.length - AP_NAME.length,
+        AP_NAME.length
+      );
+      return (
+        command === AP_NAME &&
+        terminal.spawnargs.length === args.length &&
+        terminal.spawnargs[0] === args[0] &&
+        terminal.spawnargs[1] === args[1]
+      );
+    } else {
+      let ap = terminal.spawnargs[0].substr(
+        terminal.spawnfile.length - AP_NAME.length,
+        AP_NAME.length
+      );
+      return (
+        terminal.spawnfile === "mono" &&
+        terminal.spawnargs.length === args.length + 1 &&
+        ap === AP_NAME &&
+        terminal.spawnargs[1] === args[0] &&
+        terminal.spawnargs[2] === args[1]
+      );
+    }
   });
 });
 
