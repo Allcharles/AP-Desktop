@@ -2,7 +2,6 @@ const electron = require("electron");
 const { app } = electron.remote;
 const dialog = electron.remote.dialog;
 const fs = require("fs");
-const childProcess = require("child_process");
 
 var lastIndex = __dirname.lastIndexOf("src/");
 if (lastIndex == -1) {
@@ -22,3 +21,5 @@ var Defaults = {
 };
 
 Object.freeze(Defaults);
+
+module.exports = Defaults;

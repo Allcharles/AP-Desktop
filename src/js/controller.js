@@ -1,5 +1,34 @@
+var electron = require("electron");
+var { app } = electron.remote;
+var dialog = electron.remote.dialog;
+var fs = require("fs");
+
+var lastIndex = __dirname.lastIndexOf("src/");
+if (lastIndex == -1) {
+  lastIndex = __dirname.lastIndexOf("src\\");
+}
+var __rootFolder = __dirname.substr(0, lastIndex);
+
+import {
+  CheckEnvironment,
+  Audio2CSVAnalysis,
+  APAnalysis
+} from "../js-compiled/analysis.js";
+
+/**
+ * Default variables used throughout the system
+ */
+var Defaults = {
+  AP_DIRECTORY: `${__rootFolder}ap`,
+  CONFIG_DIRECTORY: `${__rootFolder}/ap/ConfigFiles`,
+  DEFAULT_OUTPUT_DIRECTORY: app.getPath("documents") + "/AP Desktop",
+  DEFAULT_CONFIG_FILE: "Towsey.Acoustic",
+  WINDOWS: process.platform === "win32"
+};
+Object.freeze(Defaults);
+
 /** All ffmpeg supported audio formats */
-const SUPPORTED_AUDIO_FORMATS = [
+var SUPPORTED_AUDIO_FORMATS = [
   "wav",
   "mp3",
   "pcm",
@@ -11,7 +40,6 @@ const SUPPORTED_AUDIO_FORMATS = [
   "alac",
   "mwa"
 ];
-const IS_WINDOWS = process.platform === "win32";
 
 /** Used in the form to determine inputs */
 var analysisList = [];
@@ -287,7 +315,7 @@ function getFilenameIndex(filePath) {
  * @returns {string} Sanitised file path
  */
 function sanitiseFilePath(filePath) {
-  if (IS_WINDOWS) {
+  if (Defaults.WINDOWS) {
     return filePath.replace(new RegExp("/", "g"), "\\");
   } else {
     return filePath.replace(new RegExp("\\", "g"), "/");
@@ -884,7 +912,6 @@ function updateConfig(el) {
 /**
  * Check the computers environment, if the system is not setup this will provide details.
  */
-let count = 0;
 function checkEnvironment() {
   var terminal = new CheckEnvironment().getTerminal();
 
@@ -893,9 +920,8 @@ function checkEnvironment() {
     document.querySelector("#environment").style.display = "inherit";
   });
 
+  //Check for valid environment
   terminal.stdout.on("data", function(data) {
-    const MAX_ENVIRONMENT_OUTPUT = 3;
-    count++;
     document.querySelector("#environment .group-content pre").innerHTML +=
       "\n" + data;
 
@@ -905,9 +931,14 @@ function checkEnvironment() {
     //Check terminal output for successful environment
     if (data.includes(match)) {
       document.querySelector("#environment").style.display = "none";
-    } else {
-      if (count >= MAX_ENVIRONMENT_OUTPUT)
-        document.querySelector("#environment").style.display = "inherit";
+    }
+  });
+
+  //On close, check if valid environment found. If not, display invalid environment.
+  terminal.on("close", function(code) {
+    let errorForm = document.querySelector("#environment");
+    if (errorForm.style.display !== "none") {
+      errorForm.style.display = "inherit";
     }
   });
 }

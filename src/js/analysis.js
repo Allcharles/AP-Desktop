@@ -1,3 +1,5 @@
+import Terminal from "../js-compiled/terminal.js";
+
 /**
  * Command object for abstracting the creation of terminal commands using AP.
  */
@@ -5,7 +7,7 @@ class APCommand {
   /**
    * Constructor for the command. This generates a terminal command using AP
    * @param {string} type Command type to run
-   * @param {[AnalysisOption]} options List of AP command options (Optional)
+   * @param {AnalysisOption[]} options List of AP command options (Optional)
    */
   constructor(type, options = null) {
     this.type = type;
@@ -18,7 +20,7 @@ class APCommand {
 
   /**
    * Returns a terminal from the Terminal class runniig the AP command
-   * @returns Spawn
+   * @returns {object} Returns childProcess.spawn of terminal running AP command
    */
   getTerminal() {
     //Create args and append command
@@ -66,7 +68,7 @@ class APAnalysis extends APCommand {
    * @param {string} source Audio file path
    * @param {string} config Config file path
    * @param {string} output Output folder path
-   * @param {[AnalysisOption]} options List of AP command options (Optional)
+   * @param {AnalysisOption[]} options List of AP command options (Optional)
    */
   constructor(type, source, config, output, options = null) {
     //Append options to new array
@@ -106,7 +108,7 @@ class APAnalysis extends APCommand {
 
   /**
    * Returns the analysis type to run
-   * @returns {String} Analysis type to run
+   * @returns {string} Analysis type to run
    */
   getType() {
     return this.type;
@@ -174,7 +176,7 @@ class Audio2CSVAnalysis extends APAnalysis {
    * @param {string} source Audio file path
    * @param {string} config Config file path
    * @param {string} output Output file path
-   * @param {[AnalysisOption]} options List of AP command options
+   * @param {AnalysisOption[]} options List of AP command options
    */
   constructor(source, config, output, options = null) {
     super("audio2csv", source, config, output, options);
@@ -182,7 +184,7 @@ class Audio2CSVAnalysis extends APAnalysis {
 
   /**
    * Takes in an empty list of analysis options, searches the form for selected advanced options, and adds the options to the list.
-   * @param {[AnalysisOption]} finalOptions Empty list of analysis options
+   * @param {AnalysisOption[]} finalOptions Empty list of analysis options
    */
   static getOptions() {
     const form = document.getElementById("AnalysisForm");
@@ -252,3 +254,11 @@ class Audio2CSVAnalysis extends APAnalysis {
     return finalOptions;
   }
 }
+
+export {
+  Audio2CSVAnalysis,
+  CheckEnvironment,
+  APAnalysis,
+  APCommand,
+  AnalysisOption
+};
