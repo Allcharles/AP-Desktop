@@ -1,3 +1,4 @@
+import ConfigFile from "../js-compiled/configFile.js";
 /** Tracks any unsaved changes to the editor. If a person
  * tries to run an analysis with unsaved changes, this
  * should prompt them to save the changes.
@@ -140,6 +141,9 @@ function saveConfigOnClick() {
     reset.style.display = "none";
     document.getElementById("editTemplateInput").style.display = "inherit";
     document.getElementById("editTemplateCancel").style.display = "inline-flex";
+
+    //Remove old save value
+    document.getElementById("editTemplateInput").value = "";
   }
 }
 

@@ -1,0 +1,1 @@
+log4net:ERROR RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile [/home/charles/Documents/GitHub/ap-desktop/ap/Logs/log_20190404T044409Z.txt] already exists.

@@ -14,6 +14,7 @@ import {
   Audio2CSVAnalysis,
   APAnalysis
 } from "../js-compiled/analysis.js";
+import ConfigFile from "../js-compiled/configFile.js";
 
 /**
  * Default variables used throughout the system

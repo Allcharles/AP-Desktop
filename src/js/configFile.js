@@ -1,7 +1,7 @@
 /**
  * Config File Object
  */
-class ConfigFile {
+export default class ConfigFile {
   /**
    * Creates a config file object.
    * @param {int} id ID of the config file

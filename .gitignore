@@ -3,3 +3,6 @@ out
 ap
 dist
 .vscode
+src/js-compiled
+tests/test-compiled
+Logs/log4net-debug.log
