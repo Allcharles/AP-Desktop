@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.APAnalysis = exports.CheckEnvironment = exports.Audio2CSVAnalysis = void 0;
+exports.AnalysisOption = exports.APCommand = exports.APAnalysis = exports.CheckEnvironment = exports.Audio2CSVAnalysis = void 0;
 
 var _terminal = _interopRequireDefault(require("../js-compiled/terminal.js"));
 
@@ -80,6 +80,8 @@ function () {
  */
 
 
+exports.APCommand = APCommand;
+
 var AnalysisOption =
 /**
  * Object class for analysis options including flags, values, and flag values.
@@ -102,6 +104,8 @@ function AnalysisOption(option) {
  * Analysis object for abstracting the creation of AP analyses.
  */
 
+
+exports.AnalysisOption = AnalysisOption;
 
 var APAnalysis =
 /*#__PURE__*/

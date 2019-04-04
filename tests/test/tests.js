@@ -1,4 +1,5 @@
 import Terminal from "../../src/js-compiled/terminal.js";
+import * as Analysis from "../../src/js-compiled/analysis.js";
 const Application = require("spectron").Application;
 const path = require("path");
 const chai = require("chai");
@@ -30,7 +31,7 @@ global.before(function() {
 });
 /* Boilerplate End */
 
-describe("Terminal Check", () => {
+describe("Terminal Class Check", () => {
   //Checks a terminal can be created
   it("Check no argument terminal", () => {
     let terminal = Terminal.createTerminal("whoami");
@@ -147,6 +148,157 @@ describe("AP Check", () => {
     terminal.on("close", function(code) {
       return false;
     });
+  });
+});
+
+describe("Analysis Classes Check", () => {
+  //Check single value AnalysisOption
+  it("Check single value AnalysisOption", () => {
+    return new Analysis.AnalysisOption("-p").toString() === "-p";
+  });
+
+  //Check multi-value AnalysisOption
+  it("Check multi-value AnalysisOption", () => {
+    return new Analysis.AnalysisOption("-p", "true").toString() === "-p=true";
+  });
+
+  //Check multi-value unsanitised AnalysisOption
+  it("Check multi-value unsanitised AnalysisOption", () => {
+    return new Analysis.AnalysisOption("-p", true).toString() === "-p=true";
+  });
+
+  //Check basic AP commands are generating correctly
+  it("Check basic APCommand", () => {
+    let ap = new Analysis.APCommand("list");
+    let ap_terminal = Terminal.createAPTerminal(["list"]);
+    let analysis_terminal = ap.getTerminal();
+
+    return (
+      ap_terminal.spawnfile === analysis_terminal.spawnfile &&
+      ap_terminal.spawnargs === analysis_terminal.spawnargs
+    );
+  });
+
+  //Check AP command with a single arguement
+  it("Check single arguement APCommand", () => {
+    let ap = new Analysis.APCommand("list", ["--help"]);
+    let ap_terminal = Terminal.createAPTerminal(["list", "--help"]);
+    let analysis_terminal = ap.getTerminal();
+
+    return (
+      ap_terminal.spawnfile === analysis_terminal.spawnfile &&
+      ap_terminal.spawnargs === analysis_terminal.spawnargs
+    );
+  });
+
+  //Check AP command with multiple arguements
+  it("Check multi arguement APCommand", () => {
+    let ap = new Analysis.APCommand("list", [
+      new Analysis.AnalysisOption("--op1"),
+      new Analysis.AnalysisOption("--op2")
+    ]);
+    let ap_terminal = Terminal.createAPTerminal(["list", ["--op1", "--op2"]]);
+    let analysis_terminal = ap.getTerminal();
+
+    return (
+      ap_terminal.spawnfile === analysis_terminal.spawnfile &&
+      ap_terminal.spawnargs === analysis_terminal.spawnargs
+    );
+  });
+
+  //Check basic AP analysis commands are generating correctly
+  it("Check basic APAnalysis", () => {
+    let ap = new Analysis.APAnalysis(
+      "audio2csv",
+      "source.wav",
+      "config.yml",
+      "output/"
+    );
+    let ap_terminal = Terminal.createAPTerminal([
+      "audio2csv",
+      "source.wav",
+      "config.yml",
+      "output/"
+    ]);
+    let analysis_terminal = ap.getTerminal();
+
+    return (
+      ap_terminal.spawnfile === analysis_terminal.spawnfile &&
+      ap_terminal.spawnargs === analysis_terminal.spawnargs
+    );
+  });
+
+  //Check AP analysis command with a single arguement
+  it("Check single arguement APAnalysis", () => {
+    let ap = new Analysis.APAnalysis(
+      "audio2csv",
+      "source.wav",
+      "config.yml",
+      "output/",
+      [new Analysis.AnalysisOption("-p")]
+    );
+    let ap_terminal = Terminal.createAPTerminal([
+      "audio2csv",
+      "source.wav",
+      "config.yml",
+      "output/",
+      "-p"
+    ]);
+    let analysis_terminal = ap.getTerminal();
+
+    return (
+      ap_terminal.spawnfile === analysis_terminal.spawnfile &&
+      ap_terminal.spawnargs === analysis_terminal.spawnargs
+    );
+  });
+
+  //Check AP analysis command with a single arguement
+  it("Check multi-value flag arguement APAnalysis", () => {
+    let ap = new Analysis.APAnalysis(
+      "audio2csv",
+      "source.wav",
+      "config.yml",
+      "output/",
+      [new Analysis.AnalysisOption("-p", "true")]
+    );
+    let ap_terminal = Terminal.createAPTerminal([
+      "audio2csv",
+      "source.wav",
+      "config.yml",
+      "output/",
+      new Analysis.AnalysisOption("-p", "true").toString()
+    ]);
+    let analysis_terminal = ap.getTerminal();
+
+    return (
+      ap_terminal.spawnfile === analysis_terminal.spawnfile &&
+      ap_terminal.spawnargs === analysis_terminal.spawnargs
+    );
+  });
+
+  //Check AP analysis command with multiple arguements
+  it("Check multi arguement APAnalysis", () => {
+    let ap = new Analysis.APAnalysis(
+      "audio2csv",
+      "source.wav",
+      "config.yml",
+      "output/",
+      [new Analysis.AnalysisOption("-p"), new Analysis.AnalysisOption("-o")]
+    );
+    let ap_terminal = Terminal.createAPTerminal([
+      "audio2csv",
+      "source.wav",
+      "config.yml",
+      "output/",
+      new Analysis.AnalysisOption("-p").toString(),
+      new Analysis.AnalysisOption("-o").toString()
+    ]);
+    let analysis_terminal = ap.getTerminal();
+
+    return (
+      ap_terminal.spawnfile === analysis_terminal.spawnfile &&
+      ap_terminal.spawnargs === analysis_terminal.spawnargs
+    );
   });
 });
 

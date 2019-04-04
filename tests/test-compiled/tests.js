@@ -2,6 +2,10 @@
 
 var _terminal = _interopRequireDefault(require("../../src/js-compiled/terminal.js"));
 
+var Analysis = _interopRequireWildcard(require("../../src/js-compiled/analysis.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var Application = require("spectron").Application;
@@ -31,7 +35,7 @@ global.before(function () {
 });
 /* Boilerplate End */
 
-describe("Terminal Check", function () {
+describe("Terminal Class Check", function () {
   //Checks a terminal can be created
   it("Check no argument terminal", function () {
     var terminal = _terminal["default"].createTerminal("whoami");
@@ -117,6 +121,83 @@ describe("AP Check", function () {
     terminal.on("close", function (code) {
       return false;
     });
+  });
+});
+describe("Analysis Classes Check", function () {
+  //Check single value AnalysisOption
+  it("Check single value AnalysisOption", function () {
+    return new Analysis.AnalysisOption("-p").toString() === "-p";
+  }); //Check multi-value AnalysisOption
+
+  it("Check multi-value AnalysisOption", function () {
+    return new Analysis.AnalysisOption("-p", "true").toString() === "-p=true";
+  }); //Check multi-value unsanitised AnalysisOption
+
+  it("Check multi-value unsanitised AnalysisOption", function () {
+    return new Analysis.AnalysisOption("-p", true).toString() === "-p=true";
+  }); //Check basic AP commands are generating correctly
+
+  it("Check basic APCommand", function () {
+    var ap = new Analysis.APCommand("list");
+
+    var ap_terminal = _terminal["default"].createAPTerminal(["list"]);
+
+    var analysis_terminal = ap.getTerminal();
+    return ap_terminal.spawnfile === analysis_terminal.spawnfile && ap_terminal.spawnargs === analysis_terminal.spawnargs;
+  }); //Check AP command with a single arguement
+
+  it("Check single arguement APCommand", function () {
+    var ap = new Analysis.APCommand("list", ["--help"]);
+
+    var ap_terminal = _terminal["default"].createAPTerminal(["list", "--help"]);
+
+    var analysis_terminal = ap.getTerminal();
+    return ap_terminal.spawnfile === analysis_terminal.spawnfile && ap_terminal.spawnargs === analysis_terminal.spawnargs;
+  }); //Check AP command with multiple arguements
+
+  it("Check multi arguement APCommand", function () {
+    var ap = new Analysis.APCommand("list", [new Analysis.AnalysisOption("--op1"), new Analysis.AnalysisOption("--op2")]);
+
+    var ap_terminal = _terminal["default"].createAPTerminal(["list", ["--op1", "--op2"]]);
+
+    var analysis_terminal = ap.getTerminal();
+    return ap_terminal.spawnfile === analysis_terminal.spawnfile && ap_terminal.spawnargs === analysis_terminal.spawnargs;
+  }); //Check basic AP analysis commands are generating correctly
+
+  it("Check basic APAnalysis", function () {
+    var ap = new Analysis.APAnalysis("audio2csv", "source.wav", "config.yml", "output/");
+
+    var ap_terminal = _terminal["default"].createAPTerminal(["audio2csv", "source.wav", "config.yml", "output/"]);
+
+    var analysis_terminal = ap.getTerminal();
+    return ap_terminal.spawnfile === analysis_terminal.spawnfile && ap_terminal.spawnargs === analysis_terminal.spawnargs;
+  }); //Check AP analysis command with a single arguement
+
+  it("Check single arguement APAnalysis", function () {
+    var ap = new Analysis.APAnalysis("audio2csv", "source.wav", "config.yml", "output/", [new Analysis.AnalysisOption("-p")]);
+
+    var ap_terminal = _terminal["default"].createAPTerminal(["audio2csv", "source.wav", "config.yml", "output/", "-p"]);
+
+    var analysis_terminal = ap.getTerminal();
+    return ap_terminal.spawnfile === analysis_terminal.spawnfile && ap_terminal.spawnargs === analysis_terminal.spawnargs;
+  }); //Check AP analysis command with a single arguement
+
+  it("Check multi-value flag arguement APAnalysis", function () {
+    var ap = new Analysis.APAnalysis("audio2csv", "source.wav", "config.yml", "output/", [new Analysis.AnalysisOption("-p", "true")]);
+
+    var ap_terminal = _terminal["default"].createAPTerminal(["audio2csv", "source.wav", "config.yml", "output/", new Analysis.AnalysisOption("-p", "true").toString()]);
+
+    var analysis_terminal = ap.getTerminal();
+    return ap_terminal.spawnfile === analysis_terminal.spawnfile && ap_terminal.spawnargs === analysis_terminal.spawnargs;
+  }); //Check AP analysis command with multiple arguements
+
+  it("Check multi arguement APAnalysis", function () {
+    var ap = new Analysis.APAnalysis("audio2csv", "source.wav", "config.yml", "output/", [new Analysis.AnalysisOption("-p"), new Analysis.AnalysisOption("-o")]);
+
+    var ap_terminal = _terminal["default"].createAPTerminal(["audio2csv", "source.wav", "config.yml", "output/", new Analysis.AnalysisOption("-p").toString(), new Analysis.AnalysisOption("-o").toString()]);
+
+    var analysis_terminal = ap.getTerminal();
+    return ap_terminal.spawnfile === analysis_terminal.spawnfile && ap_terminal.spawnargs === analysis_terminal.spawnargs;
   });
 });
 describe("Basic Functionality", function () {

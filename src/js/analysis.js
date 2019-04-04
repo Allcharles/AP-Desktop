@@ -247,4 +247,10 @@ class Audio2CSVAnalysis extends APAnalysis {
   }
 }
 
-export { Audio2CSVAnalysis, CheckEnvironment, APAnalysis };
+export {
+  Audio2CSVAnalysis,
+  CheckEnvironment,
+  APAnalysis,
+  APCommand,
+  AnalysisOption
+};
