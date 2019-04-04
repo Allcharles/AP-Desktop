@@ -9,6 +9,12 @@ if (lastIndex == -1) {
 }
 var __rootFolder = __dirname.substr(0, lastIndex);
 
+import {
+  CheckEnvironment,
+  Audio2CSVAnalysis,
+  APAnalysis
+} from "../js-compiled/analysis.js";
+
 /**
  * Default variables used throughout the system
  */

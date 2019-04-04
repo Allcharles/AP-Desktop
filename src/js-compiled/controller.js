@@ -1,5 +1,7 @@
 "use strict";
 
+var _analysis = require("../js-compiled/analysis.js");
+
 var electron = require("electron");
 
 var app = electron.remote.app;
@@ -14,11 +16,10 @@ if (lastIndex == -1) {
 }
 
 var __rootFolder = __dirname.substr(0, lastIndex);
+
 /**
  * Default variables used throughout the system
  */
-
-
 var Defaults = {
   AP_DIRECTORY: "".concat(__rootFolder, "ap"),
   CONFIG_DIRECTORY: "".concat(__rootFolder, "/ap/ConfigFiles"),
@@ -41,7 +42,7 @@ var outputFolder = Defaults.DEFAULT_OUTPUT_DIRECTORY;
 
 var currentAnalysis; //Tracks current position in analysis
 
-var analysisQueue = [APAnalysis]; //Queue of analysis jobs
+var analysisQueue = [_analysis.APAnalysis]; //Queue of analysis jobs
 
 var progressBarMaximum = 0; //Tracks total progress through analysis
 
@@ -96,10 +97,10 @@ function submitAnalysis(e) {
     console.log("AnalysisType: ".concat(analysisList[analysisType]));
 
     if (analysisList[analysisType] === "audio2csv") {
-      var advancedOptions = Audio2CSVAnalysis.getOptions();
+      var advancedOptions = _analysis.Audio2CSVAnalysis.getOptions();
 
       for (var audioFile = audioFiles.length - 1; audioFile >= 0; audioFile--) {
-        analysisQueue.push(new Audio2CSVAnalysis(audioFiles[audioFile], configFiles[config].getFilePath(), outputFolder + "/" + //("/home/charles/Documents/VRES/Test Data/F_014S01_20100803_130000.wav" =>
+        analysisQueue.push(new _analysis.Audio2CSVAnalysis(audioFiles[audioFile], configFiles[config].getFilePath(), outputFolder + "/" + //("/home/charles/Documents/VRES/Test Data/F_014S01_20100803_130000.wav" =>
         // "/F_014S01_20100803_130000")
         audioFiles[audioFile].substr(getFilenameIndex(audioFiles[audioFile]), audioFiles[audioFile].length - 4), advancedOptions));
       }
@@ -218,8 +219,9 @@ function generateID(filePath) {
   if (filePath.length == 0) return hash;
 
   for (var i = 0; i < filePath.length; i++) {
-    var char = filePath.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
+    var _char = filePath.charCodeAt(i);
+
+    hash = (hash << 5) - hash + _char;
     hash = hash & hash; //Converts output to 32bit integer
   }
 
@@ -788,7 +790,7 @@ function updateConfig(el) {
 
 
 function checkEnvironment() {
-  var terminal = new CheckEnvironment().getTerminal();
+  var terminal = new _analysis.CheckEnvironment().getTerminal();
   terminal.on("error", function (err) {
     console.log(err);
     document.querySelector("#environment").style.display = "inherit";
