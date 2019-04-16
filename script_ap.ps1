@@ -1,3 +1,6 @@
+# Set environment
+[System.Environment]::SetEnvironmentVariable('LANG', 'en_US.UTF-8')
+
 # Delete old AP files
 New-Item -Path ./ap -ItemType Directory -Force
 
