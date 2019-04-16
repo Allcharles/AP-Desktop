@@ -5,7 +5,7 @@
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe).",
   "main": "src/index.js",
   "scripts": {
-    "start": "npm run babel:async & electron-forge start",
+    "start": "concurrently --kill-others \"npm run babel:async\" \"electron-forge start\"",
     "package": "electron-packager . AP-Desktop --all --out=out/",
     "make": "electron-forge make",
     "dependencies": "chmod +x ./linux_dependencies.sh && ./linux_dependencies.sh",
@@ -63,11 +63,12 @@
     "@babel/preset-env": "^7.4.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "concurrently": "^4.1.0",
     "electron-forge": "^5.2.4",
     "electron-packager": "^13.1.1",
     "electron-prebuilt-compile": "4.0.0",
     "git": "^0.1.5",
-    "mocha": "^6.0.2",
+    "mocha": "^6.1.3",
     "pwsh": "^0.2.0",
     "spectron": "^5.0.0"
   }
