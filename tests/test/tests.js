@@ -4,6 +4,10 @@ const Application = require("spectron").Application;
 const path = require("path");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
+var assert = chai.assert;
+
+/** Use this to enable UI tests. Warning, this will take longer */
+const ENABLE_UI_TESTS = false;
 
 /* Boilerplate start */
 var electronPath = path.join(
@@ -19,6 +23,8 @@ if (process.platform === "win32") {
 }
 
 var appPath = path.join(__dirname, "../..");
+var apPath = `${appPath}/ap/AnalysisPrograms.exe`;
+var IS_WINDOWS = process.platform === "win32";
 
 var app = new Application({
   path: electronPath,
@@ -32,93 +38,96 @@ global.before(function() {
 /* Boilerplate End */
 
 describe("Terminal Class Check", () => {
-  //Checks a terminal can be created
-  it("Check no argument terminal", () => {
+  function testAPTerminal(testTerminal, args) {
+    //Create dereferenced array
+    let testArgs = [];
+    args.map(arg => testArgs.push(arg));
+    if (!IS_WINDOWS) {
+      testArgs.unshift("mono");
+    }
+
+    //Create test terminal
+    let terminal = Terminal.createTerminal(testArgs);
+    return (
+      assert.strictEqual(
+        terminal.spawnfile,
+        testTerminal.spawnfile,
+        "Terminal not detecting OS correctly"
+      ) &&
+      assert.strictEqual(
+        terminal.spawnargs,
+        testTerminal.spawnargs,
+        "Terminal arguements incorrect"
+      )
+    );
+  }
+
+  it("Terminal toString no arguments", () => {
+    let terminal = require("child_process").spawn("whoami");
+    return assert.strictEqual("whoami", Terminal.toString(terminal));
+  });
+
+  it("Terminal toString single argument", () => {
+    let terminal = require("child_process").spawn("whoami", ["arg2"]);
+    return assert.strictEqual("whoami arg2", Terminal.toString(terminal));
+  });
+
+  it("Terminal toString multi arguments", () => {
+    let terminal = require("child_process").spawn("whoami", ["arg2", "arg3"]);
+    return assert.strictEqual("whoami arg2 arg3", Terminal.toString(terminal));
+  });
+
+  //Checks terminal executable is set correctly
+  it("Terminal executable set correctly", () => {
     let terminal = Terminal.createTerminal("whoami");
-    return terminal.spawnfile === "whoami";
+    return assert.strictEqual("whoami", Terminal.toString(terminal));
   });
 
   //Checks a terminal with a single argument can be created
   it("Check single arguement terminal", () => {
-    let args = ["-option1"];
-    let terminal = Terminal.createTerminal("whoami", args);
-
-    if (terminal.spawnfile !== "whoami") return false;
-    for (let i = 0; i < args.length; i++) {
-      if (terminal.spawnargs[i] !== args[i]) return false;
-    }
-    return true;
+    let terminal = Terminal.createTerminal("whoami", ["--option1"]);
+    return assert.strictEqual("whoami --option1", Terminal.toString(terminal));
   });
 
   //Checks a terminal with multiple arguements can be created
   it("Check multi arguement terminal", () => {
-    let args = ["-option1", "-option2"];
-    let terminal = Terminal.createTerminal("whoami", args);
-
-    if (terminal.spawnfile !== "whoami") return false;
-    for (let i = 0; i < args.length; i++) {
-      if (terminal.spawnargs[i] !== args[i]) return false;
-    }
-    return true;
+    let terminal = Terminal.createTerminal("whoami", [
+      "--option1",
+      "--option2"
+    ]);
+    return assert.strictEqual(
+      "whoami --option1 --option2",
+      Terminal.toString(terminal)
+    );
   });
 
   //Checks an AP specific command can be created
   it("Check single arguement AP command", () => {
-    const AP_NAME = "AnaysisPrograms.exe";
     let terminal = Terminal.createAPTerminal(["list"]);
 
-    if (process.platform === "win32") {
-      let command = terminal.spawnfile.substr(
-        terminal.spawnfile.length - AP_NAME.length,
-        AP_NAME.length
-      );
-      return (
-        command === AP_NAME &&
-        terminal.spawnargs.length === 1 &&
-        terminal.spawnargs[0] === "list"
-      );
+    if (IS_WINDOWS) {
+      return assert.strictEqual(`${apPath} list`, Terminal.toString(terminal));
     } else {
-      let ap = terminal.spawnargs[0].substr(
-        terminal.spawnfile.length - AP_NAME.length,
-        AP_NAME.length
-      );
-      return (
-        terminal.spawnfile === "mono" &&
-        terminal.spawnargs.length === 2 &&
-        ap === AP_NAME &&
-        terminal.spawnargs[1] === "list"
+      return assert.strictEqual(
+        `mono ${apPath} list`,
+        Terminal.toString(terminal)
       );
     }
   });
 
   //Checks an AP specific command with multiple arguements can be created
   it("Check multi arguement AP command", () => {
-    const AP_NAME = "AnaysisPrograms.exe";
-    let args = ["audio2csv", "help"];
-    let terminal = Terminal.createAPTerminal(args);
+    let terminal = Terminal.createAPTerminal(["audio2csv", "help"]);
 
-    if (process.platform === "win32") {
-      let command = terminal.spawnfile.substr(
-        terminal.spawnfile.length - AP_NAME.length,
-        AP_NAME.length
-      );
-      return (
-        command === AP_NAME &&
-        terminal.spawnargs.length === args.length &&
-        terminal.spawnargs[0] === args[0] &&
-        terminal.spawnargs[1] === args[1]
+    if (IS_WINDOWS) {
+      return assert.strictEqual(
+        `${apPath} audio2csv help`,
+        Terminal.toString(terminal)
       );
     } else {
-      let ap = terminal.spawnargs[0].substr(
-        terminal.spawnfile.length - AP_NAME.length,
-        AP_NAME.length
-      );
-      return (
-        terminal.spawnfile === "mono" &&
-        terminal.spawnargs.length === args.length + 1 &&
-        ap === AP_NAME &&
-        terminal.spawnargs[1] === args[0] &&
-        terminal.spawnargs[2] === args[1]
+      return assert.strictEqual(
+        `mono ${apPath} audio2csv help`,
+        Terminal.toString(terminal)
       );
     }
   });
@@ -135,7 +144,6 @@ describe("AP Check", () => {
 
     //Check for valid environment
     terminal.stdout.on("data", function(data) {
-      //Third message from terminal contains the success message
       var match = "SUCCESS - Valid environment";
 
       //Check terminal output for successful environment
@@ -154,17 +162,26 @@ describe("AP Check", () => {
 describe("Analysis Classes Check", () => {
   //Check single value AnalysisOption
   it("Check single value AnalysisOption", () => {
-    return new Analysis.AnalysisOption("-p").toString() === "-p";
+    return assert.strictEqual(
+      new Analysis.AnalysisOption("-p").toString(),
+      "-p"
+    );
   });
 
   //Check multi-value AnalysisOption
   it("Check multi-value AnalysisOption", () => {
-    return new Analysis.AnalysisOption("-p", "true").toString() === "-p=true";
+    return assert.strictEqual(
+      new Analysis.AnalysisOption("-p", "true").toString(),
+      "-p=true"
+    );
   });
 
   //Check multi-value unsanitised AnalysisOption
   it("Check multi-value unsanitised AnalysisOption", () => {
-    return new Analysis.AnalysisOption("-p", true).toString() === "-p=true";
+    return assert.strictEqual(
+      new Analysis.AnalysisOption("-p", true).toString(),
+      "-p=true"
+    );
   });
 
   //Check basic AP commands are generating correctly
@@ -174,8 +191,8 @@ describe("Analysis Classes Check", () => {
     let analysis_terminal = ap.getTerminal();
 
     return (
-      ap_terminal.spawnfile === analysis_terminal.spawnfile &&
-      ap_terminal.spawnargs === analysis_terminal.spawnargs
+      assert.strictEqual(ap_terminal.spawnfile, analysis_terminal.spawnfile) &&
+      assert.strictEqual(ap_terminal.spawnfile, analysis_terminal.spawnfile)
     );
   });
 
@@ -302,110 +319,115 @@ describe("Analysis Classes Check", () => {
   });
 });
 
-describe("Basic Functionality", function() {
-  this.timeout(5000);
-  beforeEach(function() {
-    return app.start();
+if (ENABLE_UI_TESTS) {
+  describe("Basic Functionality", function() {
+    this.timeout(5000);
+    beforeEach(function() {
+      return app.start();
+    });
+
+    afterEach(function() {
+      return app.stop();
+    });
+
+    //Checks initial window is opening correctly
+    it("Check window opens", function() {
+      return app.client
+        .waitUntilWindowLoaded()
+        .getWindowCount()
+        .should.eventually.have.at.least(1);
+    });
+
+    //Checks title of App if AP Desktop
+    it("Check for correct title", function() {
+      return app.client
+        .waitUntilWindowLoaded()
+        .getTitle()
+        .should.eventually.equal("AP Desktop");
+    });
+
+    //Check initial tab is the analysis tab
+    it("Check initial tab is Analysis", function() {
+      return app.client
+        .waitUntilWindowLoaded()
+        .element("#page")
+        .innerHTML.should.eventually.equal("Analysis");
+    });
+
+    //Check output tab is the middle tab and navigatable
+    it("Check output tab navigation", function() {
+      app.client
+        .waitUntilWindowLoaded()
+        .element("#output")
+        .click();
+      return app.client
+        .waitUntilWindowLoaded()
+        .element("#page")
+        .innerHTML.should.eventually.equal("Output");
+    });
+
+    //Check output tab is the middle tab and navigatable
+    it("Check utilities tab navigation", function() {
+      app.client
+        .waitUntilWindowLoaded()
+        .element("#utilities")
+        .click();
+      return app.client
+        .waitUntilWindowLoaded()
+        .element("#page")
+        .innerHTML.should.eventually.equal("Utilities");
+    });
   });
+}
 
-  afterEach(function() {
-    return app.stop();
+if (ENABLE_UI_TESTS) {
+  describe("Analysis", function() {
+    this.timeout(5000);
+    beforeEach(function() {
+      return app.start();
+    });
+
+    afterEach(function() {
+      return app.stop();
+    });
+
+    //Checks that the system has detected AP is installed correctly
+    it("Analysis Loads", () => {
+      return app.client.waitUntilWindowLoaded().waitForVisible("#AnalysisForm");
+    });
+
+    //Check if audio2csv is selectable
+    it("Audio2csv checkbox", () => {
+      return app.client
+        .waitUntilWindowLoaded()
+        .element("#audio2csv-label")
+        .click();
+    });
+
+    // //Check if select audio files button exists
+    // it("Audio2csv select audio files", () => {
+    //   app.client
+    //     .waitUntilWindowLoaded()
+    //     .element("#audio2csv-label")
+    //     .click();
+
+    //   return app.client
+    //     .waitForVisible("#audio-select-files")
+    //     .element("#audio-select-files")
+    //     .click();
+    // });
+
+    // //Check if select audio folder button exists
+    // it("Audio2csv select audio folder", () => {
+    //   app.client
+    //     .waitUntilWindowLoaded()
+    //     .element("#audio2csv-label")
+    //     .click();
+
+    //   return app.client
+    //     .waitForVisible("#audio-select-folder")
+    //     .element("#audio-select-folder")
+    //     .click();
+    // });
   });
-
-  //Checks initial window is opening correctly
-  it("Check window opens", function() {
-    return app.client
-      .waitUntilWindowLoaded()
-      .getWindowCount()
-      .should.eventually.have.at.least(1);
-  });
-
-  //Checks title of App if AP Desktop
-  it("Check for correct title", function() {
-    return app.client
-      .waitUntilWindowLoaded()
-      .getTitle()
-      .should.eventually.equal("AP Desktop");
-  });
-
-  //Check initial tab is the analysis tab
-  it("Check initial tab is Analysis", function() {
-    return (
-      app.client.waitUntilWindowLoaded().element("#page").innerHTML ===
-      "Analysis"
-    );
-  });
-
-  //Check output tab is the middle tab and navigatable
-  it("Check output tab navigation", function() {
-    app.client
-      .waitUntilWindowLoaded()
-      .element("#output")
-      .click();
-    return (
-      app.client.waitUntilWindowLoaded().element("#page").innerHTML === "Output"
-    );
-  });
-
-  //Check output tab is the middle tab and navigatable
-  it("Check utilities tab navigation", function() {
-    app.client
-      .waitUntilWindowLoaded()
-      .element("#utilities")
-      .click();
-    return (
-      app.client.waitUntilWindowLoaded().element("#page").innerHTML ===
-      "Utilities"
-    );
-  });
-});
-
-describe("Analysis", function() {
-  this.timeout(5000);
-  beforeEach(function() {
-    return app.start();
-  });
-
-  afterEach(function() {
-    return app.stop();
-  });
-
-  //Checks that the system has detected AP is installed correctly
-  it("Analysis Loads", () => {
-    return app.client.waitUntilWindowLoaded().waitForVisible("#AnalysisForm");
-  });
-
-  //Check if audio2csv is selectable
-  it("Audio2csv checkbox", () => {
-    return app.client
-      .waitUntilWindowLoaded()
-      .element("#audio2csv-label")
-      .click();
-  });
-
-  // //Check if select audio files button exists
-  // it("Audio2csv select audio files", () => {
-  //   app.client
-  //     .waitUntilWindowLoaded()
-  //     .element("#audio2csv-label")
-  //     .click();
-
-  //   return app.client
-  //     .waitForVisible("#audio-select-files")
-  //     .element("#audio-select-files")
-  //     .click();
-  // });
-
-  // //Check if select audio folder button exists
-  // it("Audio2csv select audio folder", () => {
-  //   app.client
-  //     .waitUntilWindowLoaded()
-  //     .element("#audio2csv-label")
-  //     .click();
-
-  //   return app.client
-  //     .waitForVisible("#audio-select-folder")
-  //     .element("#audio-select-folder")
-  //     .click();
-  // });
-});
+}

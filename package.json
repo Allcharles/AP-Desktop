@@ -14,8 +14,8 @@
     "install": "npm run ap_download:linux && npm run babel",
     "release": "electron-forge make",
     "publish": "electron-forge publish",
-    "test": "npx babel ./tests/test/tests.js -o ./tests/test-compiled/tests.js && mocha tests/test-compiled/tests.js",
-    "babel": "npx babel ./src/js/ --out-dir ./src/js-compiled/",
+    "test": "npm run babel && mocha tests/test-compiled/tests.js",
+    "babel": "npx babel ./src/js/ --out-dir ./src/js-compiled/ && npx babel ./tests/test/ --out-dir ./tests/test-compiled/",
     "babel:async": "npx babel ./src/js/ --out-dir ./src/js-compiled/ -w"
   },
   "keywords": [],
