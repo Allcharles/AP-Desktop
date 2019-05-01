@@ -19,7 +19,7 @@
     "lint": "eslint src --color"
   },
   "keywords": [],
-  "author": "charles",
+  "author": "Queensland University of Technology",
   "license": "MIT",
   "config": {
     "forge": {
@@ -38,12 +38,20 @@
         "packageManager": "npm"
       },
       "electronWinstallerConfig": {
-        "name": "ap_desktop"
+        "setupExe": "setup.exe",
+        "authors": "Queensland University of Technology"
       },
       "electronInstallerDebian": {
         "options": {
           "name": "ap_desktop",
           "productName": "AP Desktop"
+        },
+        "icon": {
+          "48x48": "resources/qut-logo-48.png",
+          "64x64": "resources/qut-logo-64.png",
+          "128x128": "resources/qut-logo-128.png",
+          "256x256": "resources/qut-logo-256.png",
+          "scalable": "resources/qut-logo.svg"
         }
       },
       "electronInstallerRedhat": {},
@@ -52,7 +60,7 @@
         "name": ""
       },
       "windowsStoreConfig": {
-        "packageName": "AP Desktop",
+        "packageName": "ap_desktop",
         "name": "ap_desktop"
       }
     }

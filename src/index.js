@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+var path = require("path");
 
 //listAPCommands();
 
@@ -17,7 +18,8 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    minWidth: 650
+    minWidth: 650,
+    icon: path.join(__dirname, "res/qut-logo-64.png")
   });
 
   // and load the index.html of the app.
