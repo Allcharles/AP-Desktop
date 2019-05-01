@@ -45,13 +45,6 @@
         "options": {
           "name": "ap_desktop",
           "productName": "AP Desktop"
-        },
-        "icon": {
-          "48x48": "resources/qut-logo-48.png",
-          "64x64": "resources/qut-logo-64.png",
-          "128x128": "resources/qut-logo-128.png",
-          "256x256": "resources/qut-logo-256.png",
-          "scalable": "resources/qut-logo.svg"
         }
       },
       "electronInstallerRedhat": {},
