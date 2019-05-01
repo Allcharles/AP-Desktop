@@ -1,5 +1,6 @@
 # Set environment
 [System.Environment]::SetEnvironmentVariable('LANG', 'en_US.UTF-8')
+echo "Downloading latest version of AP for Release. This could take up to 15 minutes."
 
 # Delete old AP files
 New-Item -Path ./ap -ItemType Directory -Force

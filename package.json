@@ -1,59 +1,30 @@
 {
   "name": "ap_desktop",
-  "productName": "AP Desktop",
-  "version": "1.3.0",
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe).",
+  "version": "1.3.0",
+  "license": "MIT",
+  "author": {
+    "name": "Charles Alleman",
+    "email": "alleman@qut.edu.au",
+    "url": "https://github.com/Allcharles"
+  },
+  "private": true,
   "main": "src/index.js",
   "scripts": {
-    "start": "concurrently --kill-others \"npm run babel:async\" \"electron-forge start\"",
-    "package": "electron-packager . AP-Desktop --all --out=out/",
-    "make": "electron-forge make",
-    "dependencies": "chmod +x ./linux_dependencies.sh && ./linux_dependencies.sh",
-    "ap_download": "echo Downloading latest version of AP for Release. This could take up to 15 minutes.&& pwsh -ExecutionPolicy ByPass -File ./script_ap.ps1",
-    "install": "npm run ap_download && npm run babel",
-    "release": "electron-forge make",
-    "publish": "electron-forge publish",
-    "test": "npm run babel && mocha tests/test-compiled/tests.js",
+    "ap_download": "pwsh -ExecutionPolicy ByPass -File ./script_ap.ps1",
+    "babel:async": "npx babel ./src/js/ --out-dir ./src/js-compiled/ -w",
     "babel": "npx babel ./src/js/ --out-dir ./src/js-compiled/ && npx babel ./tests/test/ --out-dir ./tests/test-compiled/",
-    "babel:async": "npx babel ./src/js/ --out-dir ./src/js-compiled/ -w"
-  },
-  "keywords": [],
-  "author": "Charles Alleman",
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "snap",
-          "deb"
-        ]
-      },
-      "electronPackagerConfig": {
-        "packageManager": "npm"
-      },
-      "electronWinstallerConfig": {
-        "name": "ap_desktop"
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "windowsStoreConfig": {
-        "packageName": "",
-        "name": "ap_desktop"
-      }
-    }
+    "build": "npm run clean && npm run exe64 && npm run deb64",
+    "clean": "rimraf dist",
+    "deb64": "electron-installer-debian --src dist/ap_desktop-linux-x64/ --arch amd64 --config config.json",
+    "dependencies": "chmod +x ./linux_dependencies.sh && ./linux_dependencies.sh",
+    "exe64": "electron-packager . ap_desktop --platform linux --arch x64 --out dist/",
+    "install": "npm run ap_download && npm run babel",
+    "start": "concurrently --kill-others \"npm run babel:async\" \"electron-forge start\"",
+    "test": "npm run babel && mocha tests/test-compiled/tests.js"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.3",
     "csv-parser": "^2.1.0",
-    "electron": "^4.0.1",
-    "electron-compile": "^6.4.4",
-    "electron-squirrel-startup": "^1.0.0",
     "json2csv": "^4.3.3"
   },
   "devDependencies": {
@@ -63,12 +34,17 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "concurrently": "^4.1.0",
+    "electron": "^4.1.4",
+    "electron-compile": "^6.4.4",
     "electron-forge": "^5.2.4",
+    "electron-installer-debian": "^1.1.1",
     "electron-packager": "^13.1.1",
     "electron-prebuilt-compile": "4.0.0",
+    "electron-squirrel-startup": "^1.0.0",
     "git": "^0.1.5",
-    "mocha": "^6.1.3",
+    "mocha": "^6.1.4",
     "pwsh": "^0.2.0",
+    "rimraf": "^2.6.3",
     "spectron": "^5.0.0"
   }
 }
