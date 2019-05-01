@@ -23,6 +23,33 @@
     "start": "concurrently --kill-others \"npm run babel:async\" \"electron-forge start\"",
     "test": "npm run babel && mocha tests/test-compiled/tests.js"
   },
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "npm"
+      },
+      "electronWinstallerConfig": {
+        "name": "ap_desktop"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "ap_desktop"
+      }
+    }
+  },
   "dependencies": {
     "csv-parser": "^2.1.0",
     "json2csv": "^4.3.3"
