@@ -19,7 +19,10 @@
     "lint": "eslint src --color"
   },
   "keywords": [],
-  "author": "Queensland University of Technology",
+  "author": "QUT Ecoacoustics",
+  "contributors": [
+    "Charles Alleman"
+  ],
   "license": "MIT",
   "config": {
     "forge": {
@@ -39,7 +42,7 @@
       },
       "electronWinstallerConfig": {
         "setupExe": "setup.exe",
-        "authors": "Queensland University of Technology"
+        "authors": "QUT Ecoacoustics"
       },
       "electronInstallerDebian": {
         "options": {

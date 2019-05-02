@@ -8,6 +8,13 @@ addons:
     packages:
       - xvfb
       - mono-complete
+      - ffmpeg
+      - wavpack
+      - libsox-fmt-all
+      - sox
+      - shntool
+      - mp3splt
+      - libav-tools
       - fakeroot
 
 before_script:
