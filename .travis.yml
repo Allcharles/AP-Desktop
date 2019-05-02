@@ -8,6 +8,7 @@ addons:
     packages:
       - xvfb
       - mono-complete
+      - fakeroot
 
 before_script:
   - export DISPLAY=:99.0

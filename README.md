@@ -15,10 +15,6 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 - To build the project, run the following command: `npm run release`
 - You will need to run this once on each patform (Windows/Linux/Mac) to get the full suit
 
-### Linux
-
-- To package the application you will need to install wine [link](https://wiki.winehq.org/Download)
-
 ## Current Features
 
 - Basic audio2csv analysis
