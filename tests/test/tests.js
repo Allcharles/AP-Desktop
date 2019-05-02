@@ -7,7 +7,7 @@ const chaiAsPromised = require("chai-as-promised");
 var assert = chai.assert;
 
 /** Use this to enable UI tests. Warning, this will take longer */
-const ENABLE_UI_TESTS = false;
+const ENABLE_UI_TESTS = true;
 
 /* Boilerplate start */
 var electronPath = path.join(
