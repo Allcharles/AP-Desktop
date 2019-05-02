@@ -23,5 +23,6 @@ script:
 
 matrix:
   include:
-    - env: dist=xenial
-    - env: os=windows
+    - os: linux
+      dist: xenial
+    - os: windows
