@@ -18,8 +18,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    minWidth: 650,
-    icon: path.join(__dirname, "res/qut-logo-64.png")
+    minWidth: 650
   });
 
   // and load the index.html of the app.

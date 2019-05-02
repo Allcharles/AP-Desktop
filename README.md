@@ -15,9 +15,10 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 - To build the project, run the following command: `npm run release`
 - You will need to run this once on each patform (Windows/Linux/Mac) to get the full suit
 
-### Linux
+### Linux Mint 18.3 Setup
 
-- To package the application you will need to install wine [link](https://wiki.winehq.org/Download)
+- Install mono-complete
+- Run `npm run dependencies`
 
 ## Current Features
 

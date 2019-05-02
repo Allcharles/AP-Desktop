@@ -1,7 +1,7 @@
 {
   "name": "ap_desktop",
   "productName": "ap_desktop",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe) software.",
   "main": "src/index.js",
   "scripts": {
@@ -19,7 +19,10 @@
     "lint": "eslint src --color"
   },
   "keywords": [],
-  "author": "Queensland University of Technology",
+  "author": "QUT Ecoacoustics",
+  "contributors": [
+    "Charles Alleman"
+  ],
   "license": "MIT",
   "config": {
     "forge": {
@@ -39,7 +42,7 @@
       },
       "electronWinstallerConfig": {
         "setupExe": "setup.exe",
-        "authors": "Queensland University of Technology"
+        "authors": "QUT Ecoacoustics"
       },
       "electronInstallerDebian": {
         "options": {
