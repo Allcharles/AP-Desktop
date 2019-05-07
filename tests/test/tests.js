@@ -8,6 +8,7 @@ var assert = chai.assert;
 
 /** Use this to enable UI tests. Warning, this will take longer */
 const ENABLE_UI_TESTS = true;
+const UI_TIMEOUT = 300000; //30 Minutes
 
 /* Boilerplate start */
 var electronPath = path.join(
@@ -319,14 +320,17 @@ describe("Analysis Classes Check", () => {
   });
 });
 
+//Run tests sequentially, this builds the app once and runs all the tests before closing. This reduces the test time.
 if (ENABLE_UI_TESTS) {
   describe("Basic Functionality", function() {
-    this.timeout(10000);
-    beforeEach(function() {
+    this.timeout(UI_TIMEOUT);
+
+    //Build and close app before and after all tests to reduce test time
+    this.beforeAll(function() {
       return app.start();
     });
 
-    afterEach(function() {
+    this.afterAll(function() {
       return app.stop();
     });
 
@@ -373,7 +377,7 @@ if (ENABLE_UI_TESTS) {
 
 if (ENABLE_UI_TESTS) {
   describe("Analysis", function() {
-    this.timeout(10000);
+    this.timeout(UI_TIMEOUT);
     beforeEach(function() {
       return app.start();
     });
