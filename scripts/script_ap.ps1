@@ -18,7 +18,7 @@ else {
 }
 
 # Extract AP to folder
-./ap/download_ap.ps1 -package Weekly -destination ./ap
+./ap/download_ap.ps1 -package Weekly -destination ./ap -github_api_token 2dbc70b0e422fcba4af344182de8cb95635dfac0
 
 #Remove AP Downloader
 Remove-Item -Path ./ap/download_ap.ps1
