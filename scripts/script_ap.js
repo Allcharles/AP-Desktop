@@ -6,6 +6,12 @@
 var exec = require("child_process").exec;
 function puts(error, stdout, stderr) {
   console.log(stdout);
+
+  const ap = "./ap/";
+  const fs = require("fs");
+  fs.readdirSync(ap).forEach(file => {
+    console.log(file);
+  });
 }
 
 var os = require("os");
