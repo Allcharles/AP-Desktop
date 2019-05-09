@@ -5,7 +5,9 @@
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe) software.",
   "main": "src/index.js",
   "scripts": {
-    "ap_download": "pwsh -ExecutionPolicy ByPass -File ./scripts/script_ap.ps1",
+    "ap_download:linux": "pwsh -ExecutionPolicy ByPass -File ./scripts/script_ap.ps1",
+    "ap_download:windows": "powershell -ExecutionPolicy ByPass -File ./scripts/script_ap.ps1",
+    "ap_download": "node ./scripts/script_ap.js",
     "babel:async": "babel ./src/js/ --out-dir ./src/js-compiled/ -w",
     "babel": "babel ./src/js/ --out-dir ./src/js-compiled/ && babel ./tests/test/ --out-dir ./tests/test-compiled/",
     "clean": "rimraf out",
