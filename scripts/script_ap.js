@@ -5,7 +5,12 @@
 
 var exec = require("child_process").exec;
 function puts(error, stdout, stderr) {
+  console.log("~~~~~error~~~~~");
+  console.log(error);
+  console.log("~~~~~stdout~~~~~");
   console.log(stdout);
+  console.log("~~~~~stderr~~~~~");
+  console.log(stderr);
 
   const ap = "./ap/";
   const fs = require("fs");
