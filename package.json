@@ -5,14 +5,12 @@
   "description": "Graphical user interface for QUT's AnalysisPrograms.exe (AP.exe) software.",
   "main": "src/index.js",
   "scripts": {
-    "ap_download:linux": "pwsh -ExecutionPolicy ByPass -File ./scripts/script_ap.ps1",
-    "ap_download:windows": "powershell -ExecutionPolicy ByPass -File ./scripts/script_ap.ps1",
-    "ap_download": "node ./scripts/script_ap.js",
+    "ap_download": "npx pwsh -NoProfile -ExecutionPolicy ByPass -File ./scripts/script_ap.ps1",
     "babel:async": "babel ./src/js/ --out-dir ./src/js-compiled/ -w",
     "babel": "babel ./src/js/ --out-dir ./src/js-compiled/ && babel ./tests/test/ --out-dir ./tests/test-compiled/",
     "clean": "rimraf out",
     "dependencies": "chmod +x ./scripts/linux_dependencies.sh && ./scripts/linux_dependencies.sh",
-    "install": "npm run ap_download && npm run babel",
+    "install": "npm run babel",
     "start": "concurrently --kill-others \"npm run babel:async\" \"electron-forge start\"",
     "test": "npm run babel && mocha tests/test-compiled/*.js",
     "package": "electron-forge package",
@@ -88,7 +86,6 @@
     "eslint-plugin-react": "^7",
     "git": "^0.1.5",
     "mocha": "^6.1.4",
-    "pwsh": "^0.2.0",
     "rimraf": "^2.6.3",
     "spectron": "^5.0.0"
   }
