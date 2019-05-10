@@ -7,7 +7,8 @@ const chaiAsPromised = require("chai-as-promised");
 var assert = chai.assert;
 
 /** Use this to enable UI tests. Warning, this will take longer */
-const ENABLE_UI_TESTS = false;
+const ENABLE_UI_TESTS = true;
+const UI_TIMEOUT = 300000; //30 Minutes
 
 /* Boilerplate start */
 var electronPath = path.join(
@@ -319,14 +320,17 @@ describe("Analysis Classes Check", () => {
   });
 });
 
+//Run tests sequentially, this builds the app once and runs all the tests before closing. This reduces the test time.
 if (ENABLE_UI_TESTS) {
   describe("Basic Functionality", function() {
-    this.timeout(5000);
-    beforeEach(function() {
+    this.timeout(UI_TIMEOUT);
+
+    //Build and close app before and after all tests to reduce test time
+    this.beforeAll(function() {
       return app.start();
     });
 
-    afterEach(function() {
+    this.afterAll(function() {
       return app.stop();
     });
 
@@ -348,41 +352,32 @@ if (ENABLE_UI_TESTS) {
 
     //Check initial tab is the analysis tab
     it("Check initial tab is Analysis", function() {
-      return app.client
-        .waitUntilWindowLoaded()
-        .element("#page")
-        .innerHTML.should.eventually.equal("Analysis");
+      return app.client.getText("#page").should.eventually.equal("Analysis");
     });
 
     //Check output tab is the middle tab and navigatable
     it("Check output tab navigation", function() {
-      app.client
-        .waitUntilWindowLoaded()
-        .element("#output")
-        .click();
       return app.client
-        .waitUntilWindowLoaded()
-        .element("#page")
-        .innerHTML.should.eventually.equal("Output");
+        .element("#output")
+        .click()
+        .getText("#page")
+        .should.eventually.equal("Output");
     });
 
     //Check output tab is the middle tab and navigatable
     it("Check utilities tab navigation", function() {
-      app.client
-        .waitUntilWindowLoaded()
-        .element("#utilities")
-        .click();
       return app.client
-        .waitUntilWindowLoaded()
-        .element("#page")
-        .innerHTML.should.eventually.equal("Utilities");
+        .element("#utilities")
+        .click()
+        .getText("#page")
+        .should.eventually.equal("Utilities");
     });
   });
 }
 
 if (ENABLE_UI_TESTS) {
   describe("Analysis", function() {
-    this.timeout(5000);
+    this.timeout(UI_TIMEOUT);
     beforeEach(function() {
       return app.start();
     });

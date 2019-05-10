@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+var path = require("path");
 
 //listAPCommands();
 

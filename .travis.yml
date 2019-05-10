@@ -1,0 +1,34 @@
+---
+language: node_js
+node_js:
+  - "10.15"
+
+addons:
+  apt:
+    packages:
+      - xvfb
+      - mono-complete
+      - ffmpeg
+      - wavpack
+      - libsox-fmt-all
+      - sox
+      - shntool
+      - mp3splt
+      - libav-tools
+      - fakeroot
+
+before_install:
+  - npm run dependencies
+  - npm run ap_download
+before_script:
+  - export DISPLAY=:99.0
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+script:
+  - npm test
+  - npm run make
+
+matrix:
+  include:
+    - os: linux
+      dist: xenial
