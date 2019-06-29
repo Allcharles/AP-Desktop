@@ -1,5 +1,5 @@
 
-[![AP Desktop Logo](./src/favicon.png)]()
+<p align="center"><img src="./src/favicon.png" alt="AP Desktop Logo" width="64"/></p>
 
 [![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE.md)
 
