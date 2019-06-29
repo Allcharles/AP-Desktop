@@ -1,9 +1,11 @@
 
 <p align="center"><img src="./src/favicon.png" alt="AP Desktop Logo" width="64"/></p>
 
+<h1 align="center">AP Desktop</h1>
+
 [![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE.md)
 
-# Introduction
+## Introduction
 
 AP Desktop is a Graphical User Interface (GUI) for the open source program AnalysisPrograms.exe provided by QUT/EcoAcoustics. This GUI is designed to help researchers use the software without learning complicated terminal commands.
 
@@ -17,8 +19,6 @@ Supported Platforms:
 
 - Windows 10
 - Linux Mint/Ubuntu
-
-/!\ Angular 8.0 CLI needs Node 10.9 or later to work.
 
 ## Getting Started
 
