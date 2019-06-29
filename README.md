@@ -3,6 +3,7 @@
 
 <h1 align="center">AP Desktop</h1>
 
+[![Build Status](https://travis-ci.org/QutEcoacoustics/ap-desktop.svg?branch=master)](https://travis-ci.org/QutEcoacoustics/ap-desktop)
 [![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE.md)
 
 ## Introduction
