@@ -1,18 +1,19 @@
 {
-  "name": "angular-electron",
-  "version": "6.0.1",
-  "description": "Angular 8 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "ap-desktop",
+  "version": "2.0.0",
+  "description": "Graphical User Interface (GUI) for QUT EcoAcoustics Analysis Programs tool.",
+  "homepage": "https://github.com/QutEcoacoustics/ap-desktop",
   "author": {
     "name": "Charles Alleman",
     "email": "charles@alleman.com.au"
   },
   "keywords": [
-    "angular",
-    "angular 8",
-    "electron",
-    "typescript",
-    "sass"
+    "QUT",
+    "AP",
+    "Analysis Programs",
+    "EcoAcoustics",
+    "Audio",
+    "Analysis"
   ],
   "main": "main.js",
   "private": true,
