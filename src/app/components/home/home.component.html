@@ -1,5 +1,27 @@
-<div class="container">
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
-  </h1>
+<div class="container mt-3">
+  <div class="card shadow">
+    <div class="card-header text-white">
+      Analysis Types
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        <a
+          href="#"
+          class="list-group-item list-group-item-action"
+          *ngFor="let analysisOption of analysisOptions"
+          [id]="analysisOption.id"
+          [ngClass]="analysisOption.isSelected ? 'selected' : ''"
+          (click)="changeSelection(analysisOption.id)"
+        >
+          {{ analysisOption.label }}
+        </a>
+      </ul>
+    </div>
+  </div>
+
+  <div class="d-flex flex-row-reverse bd-highlight mt-3">
+    <button type="button" class="btn btn-outline-success shadow">
+      Next
+    </button>
+  </div>
 </div>

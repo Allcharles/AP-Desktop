@@ -1,7 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
-html, body {
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+/* Colour Theme */
+$lightest-green: #d1e7da;
+$light-green: #b5dac5;
+$base-green: #8fc9ab;
+$dark-green: #62ad8c;
+$darkest-green: #519b7a;
+$highlight-color: #e1d4c1;
+$background-color: ghostwhite;
+
+html,
+body {
   margin: 0;
   padding: 0;
 
   height: 100%;
+  background-color: $background-color;
 }

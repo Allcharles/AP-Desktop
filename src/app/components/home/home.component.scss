@@ -1,17 +1,33 @@
-.container {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@import "../../../styles.scss";
 
-  background: url(../../../assets/background.jpg) no-repeat center fixed;
-  -webkit-background-size: cover; /* pour anciens Chrome et Safari */
-  background-size: cover; /* version standardisée */
-
-  .title {
-    color: white;
-    margin:0;
-    padding:50px 20px;
+.card {
+  .card-header {
+    background-color: $darkest-green;
   }
+}
 
+.selected {
+  background-color: $dark-green;
+  color: white;
+}
+
+.list-group-item {
+  &:hover {
+    background-color: $lightest-green;
+    color: inherit;
+  }
+  &:active {
+    background-color: $light-green;
+    color: inherit;
+  }
+}
+
+.btn-outline-success {
+  border-color: $darkest-green;
+  color: $darkest-green;
+
+  &:hover {
+    background-color: $darkest-green;
+    color: white;
+  }
 }
