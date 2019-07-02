@@ -8,11 +8,6 @@
   }
 }
 
-.selected {
-  background-color: $dark-green;
-  color: white;
-}
-
 .list-group-item {
   &:hover {
     background-color: $lightest-green;
@@ -29,8 +24,20 @@
   border-color: $darkest-green;
   color: $darkest-green;
 
-  &:hover {
-    background-color: $darkest-green;
-    color: white;
+  &:not(:disabled) {
+    &:hover {
+      background-color: $darkest-green;
+      color: white;
+    }
   }
+}
+
+.selected {
+  //Important to overwrite hover
+  background-color: $dark-green !important;
+  color: white !important;
+}
+
+.subtext {
+  font-size: 0.85rem;
 }

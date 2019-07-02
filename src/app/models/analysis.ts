@@ -43,6 +43,7 @@ export class Analysis {
 
   private configDetails: any;
   private config: AnalysisConfig;
+  private shortDescription: string;
   private description: string;
   private label: string;
   private options: string[];
@@ -53,6 +54,7 @@ export class Analysis {
    * @param type Type of analysis
    * @param label Display label for analysis
    * @param config Configuration for analysis
+   * @param shortDescription Short description of analysis
    * @param description Description of analysis
    * @param options Advanced options for analysis
    */
@@ -60,10 +62,12 @@ export class Analysis {
     type: AnalysisType,
     label: string,
     config: AnalysisConfig,
+    shortDescription: string,
     description: string,
     options: string[]
   ) {
     this.config = config;
+    this.shortDescription = shortDescription;
     this.description = description;
     this.label = label;
     this.type = type;
@@ -104,13 +108,23 @@ export class Analysis {
 
   /**
    * Returns the label of the analysis
+   * @returns Analysis label
    */
   getLabel(): string {
     return this.label;
   }
 
   /**
+   * Get the short description of the analysis
+   * @returns Short description
+   */
+  getShortDescription(): string {
+    return this.shortDescription;
+  }
+
+  /**
    * Get the description of the analysis
+   * @returns Description
    */
   getDescription(): string {
     return this.description;
