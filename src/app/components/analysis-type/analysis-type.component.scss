@@ -1,12 +1,5 @@
 @import "../../../styles.scss";
-
-.card {
-  border-color: $darkest-green;
-
-  .card-header {
-    background-color: $darkest-green;
-  }
-}
+@import "../home/home.component.scss";
 
 .list-group-item {
   &:hover {
@@ -16,19 +9,6 @@
   &:active {
     background-color: $light-green;
     color: inherit;
-  }
-}
-
-.btn-outline-success {
-  background-color: white;
-  border-color: $darkest-green;
-  color: $darkest-green;
-
-  &:not(:disabled) {
-    &:hover {
-      background-color: $darkest-green;
-      color: white;
-    }
   }
 }
 

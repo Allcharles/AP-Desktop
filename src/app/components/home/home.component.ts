@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
 
   /**
    * Receives the analysis selected by the user through the angular EventEmitter event.
+   * This will take the user to the select audio page.
    * @param $event Analysis selected by user
    */
   receiveAnalysis($event: Analysis) {
@@ -36,10 +37,16 @@ export class HomeComponent implements OnInit {
 
   /**
    * Receives the audio files selected by the user through the angular EventEmitter event.
+   * This will take the user to the select output folder page.
    * @param $event Audio files selected by user
    */
   receiveAudio($event: string[]) {
-    this.analysisCurrent.setAudioFiles($event);
-    this.currentStage = this.SELECT_OUTPUT;
+    // If no files selected, user has hit the back button
+    if ($event.length === 0) {
+      this.currentStage = this.SELECT_TYPE;
+    } else {
+      this.analysisCurrent.setAudioFiles($event);
+      this.currentStage = this.SELECT_OUTPUT;
+    }
   }
 }

@@ -8,7 +8,6 @@ import { analysisTypes } from '../../models/AnalysisTypes';
   styleUrls: ['./analysis-type.component.scss']
 })
 export class AnalysisTypeComponent implements OnInit {
-  constructor() {}
   analysisOptions: {
     analysis: Analysis;
     isSelected: boolean;
@@ -21,6 +20,8 @@ export class AnalysisTypeComponent implements OnInit {
   backVisible: boolean;
 
   @Output() messageEvent = new EventEmitter<Analysis>();
+
+  constructor() {}
 
   ngOnInit() {
     this.nextEnabled = false;
@@ -35,6 +36,10 @@ export class AnalysisTypeComponent implements OnInit {
     });
   }
 
+  /**
+   * Highlight selected analysis type. This also saved the selected analysis type to analysisCurrent.
+   * @param id ID of analysis option
+   */
   changeSelection(id: number) {
     this.analysisCurrent = this.analysisOptions[id].analysis;
     this.nextEnabled = true;
@@ -44,6 +49,9 @@ export class AnalysisTypeComponent implements OnInit {
     });
   }
 
+  /**
+   * Submit analysis to parent element
+   */
   nextOnClick() {
     this.messageEvent.emit(this.analysisCurrent);
   }

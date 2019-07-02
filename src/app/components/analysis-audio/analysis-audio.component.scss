@@ -1,0 +1,21 @@
+@import "../home/home.component.scss";
+
+.card-header {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+
+  .header {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .btn {
+    margin-top: -1rem;
+    margin-right: 0.25rem;
+  }
+}
+
+.card-body {
+  min-height: 20rem;
+}
