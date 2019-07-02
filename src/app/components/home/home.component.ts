@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { analysisTypes } from '../../models/AnalysisTypes';
 import { Analysis } from '../../models/analysis';
 
 @Component({
@@ -8,45 +7,39 @@ import { Analysis } from '../../models/analysis';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  analysisOptions: {
-    analysis:Analysis,
-    isSelected: boolean;
-  }[];
+  SELECT_TYPE = 0;
+  SELECT_AUDIO = 1;
+  SELECT_OUTPUT = 2;
+  OPEN_ADVANCED = 3;
+  CHANGE_CONFIG = 4;
+  CHANGE_OPTIONS = 5;
+  RUN_ANALYSIS = 6;
 
-  analysisList:Analysis[];
-  analysisCurrent:Analysis;
-
-  nextEnabled:boolean;
-  backEnabled:boolean;
-  backVisible:boolean;
+  analysisList: Analysis[];
+  analysisCurrent: Analysis;
+  currentStage: number;
 
   constructor() {}
 
   ngOnInit() {
-    this.nextEnabled = false;
-    this.backEnabled = false;
-    this.backVisible = false;
-
-    this.analysisOptions = analysisTypes.map(option => {
-      return {
-        analysis: option,
-        isSelected: false
-      };
-    });
+    this.currentStage = this.SELECT_TYPE;
   }
 
-  changeSelection(id: number) {
-    this.analysisCurrent = this.analysisOptions[id].analysis;
-    this.nextEnabled = true;
-
-    this.analysisOptions.map((analysisOption, index) => {
-      analysisOption.isSelected = index === id;
-    });
+  /**
+   * Receives the analysis selected by the user through the angular EventEmitter event.
+   * @param $event Analysis selected by user
+   */
+  receiveAnalysis($event: Analysis) {
+    this.analysisCurrent = $event;
+    this.currentStage = this.SELECT_AUDIO;
   }
 
-  nextOnClick() {
-    console.debug(this.analysisOptions);
-    console.debug(this.analysisList);
-    console.debug(this.analysisCurrent);
+  /**
+   * Receives the audio files selected by the user through the angular EventEmitter event.
+   * @param $event Audio files selected by user
+   */
+  receiveAudio($event: string[]) {
+    this.analysisCurrent.setAudioFiles($event);
+    this.currentStage = this.SELECT_OUTPUT;
   }
 }

@@ -41,6 +41,7 @@ export class Analysis {
     'ConfigFiles'
   );
 
+  private audio: string[];
   private configDetails: any;
   private config: AnalysisConfig;
   private shortDescription: string;
@@ -98,6 +99,14 @@ export class Analysis {
       console.error('Failed to read config file: ' + configPath);
       console.error(e);
     }
+  }
+
+  /**
+   * Set the list of audio files for analysis
+   * @param audioFiles List of audio files
+   */
+  setAudioFiles(audioFiles: string[]) {
+    this.audio = audioFiles;
   }
 
   /**

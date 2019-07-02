@@ -21,6 +21,8 @@ import { MaterialModule } from './modules/material.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { AnalysisTypeComponent } from './components/analysis-type/analysis-type.component';
+import { AnalysisAudioComponent } from './components/analysis-audio/analysis-audio.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -32,7 +34,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     HomeComponent,
     WebviewDirective,
-    NavBarComponent
+    NavBarComponent,
+    AnalysisTypeComponent,
+    AnalysisAudioComponent
   ],
   imports: [
     BrowserModule,
