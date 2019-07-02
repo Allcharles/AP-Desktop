@@ -7,19 +7,27 @@ import { analysisTypes } from '../../models/AnalysisTypes';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  analysisOptions: { id: string; label: string; isSelected: boolean }[];
+  analysisOptions: {
+    label: string;
+    description: string;
+    isSelected: boolean;
+  }[];
 
   constructor() {}
 
   ngOnInit() {
     this.analysisOptions = analysisTypes.map(option => {
-      return { ...option, isSelected: false };
+      return {
+        label: option.getLabel(),
+        description: option.getDescription(),
+        isSelected: false
+      };
     });
   }
 
-  changeSelection(id: string) {
-    this.analysisOptions.map(analysisOption => {
-      analysisOption.isSelected = analysisOption.id === id;
+  changeSelection(id: number) {
+    this.analysisOptions.map((analysisOption, index) => {
+      analysisOption.isSelected = index === id;
     });
   }
 }

@@ -1,6 +1,8 @@
 @import "../../../styles.scss";
 
 .card {
+  border-color: $darkest-green;
+
   .card-header {
     background-color: $darkest-green;
   }
@@ -23,6 +25,7 @@
 }
 
 .btn-outline-success {
+  background-color: white;
   border-color: $darkest-green;
   color: $darkest-green;
 

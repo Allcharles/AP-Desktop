@@ -8,10 +8,10 @@
         <a
           href="#"
           class="list-group-item list-group-item-action"
-          *ngFor="let analysisOption of analysisOptions"
-          [id]="analysisOption.id"
+          *ngFor="let analysisOption of analysisOptions; let i = index"
+          [id]="i"
           [ngClass]="analysisOption.isSelected ? 'selected' : ''"
-          (click)="changeSelection(analysisOption.id)"
+          (click)="changeSelection(i)"
         >
           {{ analysisOption.label }}
         </a>
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div class="d-flex flex-row-reverse bd-highlight mt-3">
+  <div class="d-flex flex-row-reverse bd-highlight mt-3 mb-2">
     <button type="button" class="btn btn-outline-success shadow">
       Next
     </button>
