@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.currentStage = this.SELECT_TYPE;
+    this.analysisList = [];
   }
 
   /**
@@ -73,7 +74,24 @@ export class HomeComponent implements OnInit {
       console.debug($event);
 
       this.analysisCurrent.setOutputFolder($event);
+
+      // TODO Update this to ask for advanced options first
+      this.analysisList.push(this.analysisCurrent);
       this.currentStage = this.RUN_ANALYSIS;
+    }
+  }
+
+  runAnalysis($event: string) {
+    if ($event === 'run') {
+      // Run Analysis
+      console.debug('Running Analysis');
+      console.debug(this.analysisList);
+    } else if ($event === 'add') {
+      // Add Analysis
+      console.debug('Adding Analysis');
+    } else if ($event === 'cancel') {
+      // Cancel analyses
+      console.debug('Cancelling Analysis');
     }
   }
 }

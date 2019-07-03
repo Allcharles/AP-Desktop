@@ -11,4 +11,9 @@
     *ngIf="currentStage === SELECT_OUTPUT"
     (messageEvent)="receiveOutput($event)"
   ></app-analysis-output>
+  <app-analysis-run
+    *ngIf="currentStage === RUN_ANALYSIS"
+    (messageEvent)="runAnalysis($event)"
+    [analysisList]="analysisList"
+  ></app-analysis-run>
 </div>

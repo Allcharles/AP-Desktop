@@ -24,6 +24,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { AnalysisTypeComponent } from './components/analysis-type/analysis-type.component';
 import { AnalysisAudioComponent } from './components/analysis-audio/analysis-audio.component';
 import { AnalysisOutputComponent } from './components/analysis-output/analysis-output.component';
+import { AnalysisRunComponent } from './components/analysis-run/analysis-run.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -38,7 +39,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     NavBarComponent,
     AnalysisTypeComponent,
     AnalysisAudioComponent,
-    AnalysisOutputComponent
+    AnalysisOutputComponent,
+    AnalysisRunComponent
   ],
   imports: [
     BrowserModule,

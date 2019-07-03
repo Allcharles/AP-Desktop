@@ -115,6 +115,14 @@ export class Analysis {
   }
 
   /**
+   * Return the list of audio files
+   * @returns List of audio files
+   */
+  getAudioFiles(): string[] {
+    return this.audio;
+  }
+
+  /**
    * Updates or appends changes to config options loaded by readConfig()
    * TODO Finish this function
    */

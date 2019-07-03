@@ -27,6 +27,9 @@ export class AnalysisOutputComponent implements OnInit {
     this.outputFolder = this.DEFAULT_FOLDER;
   }
 
+  /**
+   * Ask user to select the output folder
+   */
   selectFolder() {
     remote.dialog.showOpenDialog(
       {
