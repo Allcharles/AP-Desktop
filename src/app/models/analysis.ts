@@ -47,6 +47,7 @@ export class Analysis {
   private shortDescription: string;
   private description: string;
   private label: string;
+  private output: string;
   private options: string[];
   private type: AnalysisType;
 
@@ -99,6 +100,10 @@ export class Analysis {
       console.error('Failed to read config file: ' + configPath);
       console.error(e);
     }
+  }
+
+  setOutputFolder(outputFolder: string) {
+    this.output = outputFolder;
   }
 
   /**

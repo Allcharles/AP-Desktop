@@ -21,7 +21,7 @@
       </form>
     </div>
     <div class="card-body">
-      <p *ngIf="!audioFilesLoading && !audioFilesSelected">
+      <p class="mb-0" *ngIf="!audioFilesLoading && !audioFilesSelected">
         No files selected yet
       </p>
 
@@ -34,7 +34,7 @@
           [headerHeight]="50"
           [footerHeight]="50"
           [rowHeight]="'auto'"
-          [limit]="7"
+          [limit]="10"
           [loadingIndicator]="audioFilesLoading"
           [reorderable]="true"
         >

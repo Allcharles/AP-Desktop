@@ -31,6 +31,9 @@ export class HomeComponent implements OnInit {
    * @param $event Analysis selected by user
    */
   receiveAnalysis($event: Analysis) {
+    console.debug('Analysis Type Selected: ');
+    console.debug($event);
+
     this.analysisCurrent = $event;
     this.currentStage = this.SELECT_AUDIO;
   }
@@ -43,10 +46,34 @@ export class HomeComponent implements OnInit {
   receiveAudio($event: string[]) {
     // If no files selected, user has hit the back button
     if ($event.length === 0) {
+      console.debug('Audio Back Button Pressed');
+
       this.currentStage = this.SELECT_TYPE;
     } else {
+      console.debug('Audio Files Selected: ');
+      console.debug($event);
+
       this.analysisCurrent.setAudioFiles($event);
       this.currentStage = this.SELECT_OUTPUT;
+    }
+  }
+
+  /**
+   * Receives the output folder selected by the user through the angular EventEmitter event.
+   * @param $event Output folder selected by user
+   */
+  receiveOutput($event: string) {
+    // If no output selected, user has hit the back button
+    if ($event === '') {
+      console.debug('Output Folder Back Button Pressed');
+
+      this.currentStage = this.SELECT_AUDIO;
+    } else {
+      console.debug('Output Folder Selected: ');
+      console.debug($event);
+
+      this.analysisCurrent.setOutputFolder($event);
+      this.currentStage = this.RUN_ANALYSIS;
     }
   }
 }

@@ -6,8 +6,8 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { remote } from 'electron';
-import { readdir, stat, read } from 'fs';
-import { resolve, extname, join } from 'path';
+import { readdir, stat } from 'fs';
+import { resolve, extname } from 'path';
 
 @Component({
   selector: 'app-analysis-audio',
@@ -89,7 +89,7 @@ export class AnalysisAudioComponent implements OnInit {
 
                 // Update table values
                 this.rows = this.audioFiles.map((audioFile, index) => {
-                  return { no: index, filename: audioFile };
+                  return { no: index + 1, filename: audioFile };
                 });
 
                 // Update UI if this is the last folder to returns its containing files
@@ -152,7 +152,7 @@ export class AnalysisAudioComponent implements OnInit {
         if (files.length > 0) {
           this.audioFiles = files;
           this.rows = this.audioFiles.map((audioFile, index) => {
-            return { no: index, filename: audioFile };
+            return { no: index + 1, filename: audioFile };
           });
 
           this.nextEnabled = true;
