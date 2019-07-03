@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Analysis } from '../../models/analysis';
+import { AnalysisGroup } from '../../models/analysis';
 
 @Component({
   selector: 'app-home',
@@ -15,15 +15,15 @@ export class HomeComponent implements OnInit {
   CHANGE_OPTIONS = 5;
   RUN_ANALYSIS = 6;
 
-  analysisList: Analysis[];
-  analysisCurrent: Analysis;
+  analysisBatch: AnalysisGroup[];
+  analysisGroupCurrent: AnalysisGroup;
   currentStage: number;
 
   constructor() {}
 
   ngOnInit() {
     this.currentStage = this.SELECT_TYPE;
-    this.analysisList = [];
+    this.analysisBatch = [];
   }
 
   /**
@@ -31,11 +31,11 @@ export class HomeComponent implements OnInit {
    * This will take the user to the select audio page.
    * @param $event Analysis selected by user
    */
-  receiveAnalysis($event: Analysis) {
+  receiveAnalysis($event: AnalysisGroup) {
     console.debug('Analysis Type Selected: ');
     console.debug($event);
 
-    this.analysisCurrent = $event;
+    this.analysisGroupCurrent = $event;
     this.currentStage = this.SELECT_AUDIO;
   }
 
@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
       console.debug('Audio Files Selected: ');
       console.debug($event);
 
-      this.analysisCurrent.setAudioFiles($event);
+      this.analysisGroupCurrent.setAudioFiles($event);
       this.currentStage = this.SELECT_OUTPUT;
     }
   }
@@ -73,10 +73,10 @@ export class HomeComponent implements OnInit {
       console.debug('Output Folder Selected: ');
       console.debug($event);
 
-      this.analysisCurrent.setOutputFolder($event);
+      this.analysisGroupCurrent.setOutputFolder($event);
 
       // TODO Update this to ask for advanced options first
-      this.analysisList.push(this.analysisCurrent);
+      this.analysisBatch.push(this.analysisGroupCurrent);
       this.currentStage = this.RUN_ANALYSIS;
     }
   }
@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
     if ($event === 'run') {
       // Run Analysis
       console.debug('Running Analysis');
-      console.debug(this.analysisList);
+      console.debug(this.analysisBatch);
     } else if ($event === 'add') {
       // Add Analysis
       console.debug('Adding Analysis');

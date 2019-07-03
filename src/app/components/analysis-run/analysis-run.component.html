@@ -4,9 +4,9 @@
     Run the following analysis tasks:
   </p>
   <hr class="my-4" />
-  <li *ngFor="let analysisItem of analysisList">
-    {{ analysisItem.getLabel() }} on
-    {{ analysisItem.getAudioFiles().length }} file/s
+  <li *ngFor="let analysisGroup of analysisBatch">
+    {{ analysisGroup.getLabel() }} on
+    {{ analysisGroup.getAudioFiles().length }} file/s
   </li>
   <hr class="my-4" />
   <p class="lead d-flex flex-row justify-content-around">

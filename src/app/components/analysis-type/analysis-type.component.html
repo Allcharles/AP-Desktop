@@ -8,22 +8,22 @@
         <a
           href="#"
           class="list-group-item list-group-item-action"
-          *ngFor="let analysisOption of analysisOptions; let i = index"
+          *ngFor="let analysisType of analysisTypeOptions; let i = index"
           [id]="i"
-          [ngClass]="{ selected: analysisOption.isSelected }"
+          [ngClass]="{ selected: analysisType.isSelected }"
           (click)="changeSelection(i)"
         >
           <div class="d-flex flex-row">
-            <p class="mb-0">{{ analysisOption.analysis.getLabel() }}</p>
+            <p class="mb-0">{{ analysisType.analysis.getLabel() }}</p>
             <p class="flex-fill text-right mb-0 subtext">
-              {{ analysisOption.analysis.getShortDescription() }}
+              {{ analysisType.analysis.getShortDescription() }}
             </p>
           </div>
           <p
             class="description"
-            [ngClass]="{ 'd-none': !analysisOption.isSelected }"
+            [ngClass]="{ 'd-none': !analysisType.isSelected }"
           >
-            {{ analysisOption.analysis.getDescription() }}
+            {{ analysisType.analysis.getDescription() }}
           </p>
         </a>
       </ul>

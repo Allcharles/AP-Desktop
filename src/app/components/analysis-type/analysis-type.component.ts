@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { Analysis } from '../../models/analysis';
+import { AnalysisGroup } from '../../models/analysis';
 import { analysisTypes } from '../../models/AnalysisTypes';
 
 @Component({
@@ -8,18 +8,18 @@ import { analysisTypes } from '../../models/AnalysisTypes';
   styleUrls: ['./analysis-type.component.scss']
 })
 export class AnalysisTypeComponent implements OnInit {
-  analysisOptions: {
-    analysis: Analysis;
+  analysisTypeOptions: {
+    analysis: AnalysisGroup;
     isSelected: boolean;
   }[];
 
-  analysisCurrent: Analysis;
+  analysisGroupCurrent: AnalysisGroup;
 
   nextEnabled: boolean;
   backEnabled: boolean;
   backVisible: boolean;
 
-  @Output() messageEvent = new EventEmitter<Analysis>();
+  @Output() messageEvent = new EventEmitter<AnalysisGroup>();
 
   constructor() {}
 
@@ -28,7 +28,7 @@ export class AnalysisTypeComponent implements OnInit {
     this.backEnabled = false;
     this.backVisible = false;
 
-    this.analysisOptions = analysisTypes.map(option => {
+    this.analysisTypeOptions = analysisTypes.map(option => {
       return {
         analysis: option,
         isSelected: false
@@ -41,10 +41,10 @@ export class AnalysisTypeComponent implements OnInit {
    * @param id ID of analysis option
    */
   changeSelection(id: number) {
-    this.analysisCurrent = this.analysisOptions[id].analysis;
+    this.analysisGroupCurrent = this.analysisTypeOptions[id].analysis;
     this.nextEnabled = true;
 
-    this.analysisOptions.map((analysisOption, index) => {
+    this.analysisTypeOptions.map((analysisOption, index) => {
       analysisOption.isSelected = index === id;
     });
   }
@@ -53,6 +53,6 @@ export class AnalysisTypeComponent implements OnInit {
    * Submit analysis to parent element
    */
   nextOnClick() {
-    this.messageEvent.emit(this.analysisCurrent);
+    this.messageEvent.emit(this.analysisGroupCurrent);
   }
 }

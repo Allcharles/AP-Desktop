@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Analysis } from '../../models/analysis';
+import { AnalysisGroup } from '../../models/analysis';
 
 @Component({
   selector: 'app-analysis-run',
@@ -7,7 +7,7 @@ import { Analysis } from '../../models/analysis';
   styleUrls: ['./analysis-run.component.scss']
 })
 export class AnalysisRunComponent implements OnInit {
-  @Input() analysisList: Analysis[];
+  @Input() analysisBatch: AnalysisGroup[];
   @Output() messageEvent = new EventEmitter<string>();
 
   constructor() {}

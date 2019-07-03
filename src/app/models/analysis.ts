@@ -1,19 +1,8 @@
-/*
-{
-  type: 'audio2csv',
-  config: {
-    file: 'Towsey.Acoustic.yml',
-    changes: []
-  },
-  label: 'Basic Analysis',
-  options: [],
-  description:
-    'Creates a series of spectrograms for the analysed audio file. This is useful for analysis of large audio files.'
-}
-*/
 import { readFileSync } from 'fs';
 import { safeLoad } from 'js-yaml';
 import { dirname, join } from 'path';
+import { ChildProcess } from 'child_process';
+import APTerminal from './terminal';
 
 /**
  * Config details for Analysis Class.
@@ -25,6 +14,9 @@ interface AnalysisConfig {
   changes?: {}[];
 }
 
+/**
+ * AP analysis types
+ */
 export enum AnalysisType {
   audio2csv = 'audio2csv',
   audio2sonogram = 'Audio2Sonogram',
@@ -32,9 +24,97 @@ export enum AnalysisType {
 }
 
 /**
- * This class manages all the details required to perform an analysis using AP.
+ * AP analysis options
  */
-export class Analysis {
+export interface AnalysisOptions {
+  'temp-dir'?: string;
+  offset?: string;
+  'align-to-minute'?: AnalysisAlignToMinute;
+  channels?: string;
+  'mix-down-to-mono'?: boolean;
+  parallel?: boolean;
+  'when-exit-copy-log'?: boolean;
+  'when-exit-copy-config'?: boolean;
+  'log-level'?: AnalysisLogLevel;
+}
+
+/**
+ * AP analysis align to minute options
+ */
+export enum AnalysisAlignToMinute {
+  no_alignment = 'No Alignment',
+  trim_both = 'TrimBoth',
+  trim_neither = 'TrimNeither',
+  trim_start = 'TrimStart',
+  trim_end = 'TrimEnd'
+}
+
+/**
+ * AP analysis log level options
+ */
+export enum AnalysisLogLevel {
+  none = 0,
+  error = 1,
+  warn = 2,
+  info = 3,
+  debug = 4,
+  trace = 5,
+  verbose = 6,
+  all = 7
+}
+
+/**
+ * This class manages all the details required to perform a single analysis using AP.
+ */
+export class AnalysisItem {
+  private type: string;
+  private audio: string;
+  private config: string;
+  private output: string;
+  private options: string[];
+
+  /**
+   * Create singular analysis item
+   * @param type Analysis Type
+   * @param audio Audio file
+   * @param config Config file
+   * @param output Output folder
+   * @param options Terminal arguments
+   */
+  constructor(
+    type: string,
+    audio: string,
+    config: string,
+    output: string,
+    options?: string[]
+  ) {
+    this.type = type;
+    this.audio = audio;
+    this.config = config;
+    this.output = output;
+
+    if (this.options) {
+      this.options = options;
+    }
+  }
+
+  spawn(): ChildProcess {
+    const args: string[] = [];
+    args.push(this.audio);
+    args.push(this.config);
+    args.push(this.output);
+
+    if (this.options) {
+    }
+
+    return APTerminal.spawn(this.type);
+  }
+}
+
+/**
+ * This class manages all the details required to perform a group of analyses using AP.
+ */
+export class AnalysisGroup {
   static readonly CONFIG_DIRECTORY = join(
     dirname(__dirname),
     'ap',
@@ -48,7 +128,7 @@ export class Analysis {
   private description: string;
   private label: string;
   private output: string;
-  private options: string[];
+  private options: AnalysisOptions;
   private type: AnalysisType;
 
   /**
@@ -66,7 +146,7 @@ export class Analysis {
     config: AnalysisConfig,
     shortDescription: string,
     description: string,
-    options: string[]
+    options: AnalysisOptions
   ) {
     this.config = config;
     this.shortDescription = shortDescription;
@@ -93,7 +173,10 @@ export class Analysis {
    * TODO Check functionality
    */
   readConfig() {
-    const configPath = join(Analysis.CONFIG_DIRECTORY, this.config.template);
+    const configPath = join(
+      AnalysisGroup.CONFIG_DIRECTORY,
+      this.config.template
+    );
     try {
       this.configDetails = safeLoad(readFileSync(configPath), 'utf8');
     } catch (e) {
