@@ -1,11 +1,12 @@
 import { spawn, ChildProcess } from 'child_process';
 import { join } from 'path';
+import { remote } from 'electron';
 
 /**
  * Create AP specific terminal commands
  */
 export default class APTerminal {
-  static AP = join(__dirname, '../..', 'ap', 'AnalysisPrograms.exe');
+  static AP = join(remote.app.getAppPath(), 'ap', 'AnalysisPrograms.exe');
 
   /**
    * Creates and returns a ChildProcess terminal running AP specific commands.

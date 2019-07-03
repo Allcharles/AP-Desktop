@@ -86,6 +86,10 @@ export class HomeComponent implements OnInit {
       // Run Analysis
       console.debug('Running Analysis');
       console.debug(this.analysisBatch);
+
+      this.analysisBatch.map(analysisGroup => {
+        analysisGroup.generateBatch();
+      });
     } else if ($event === 'add') {
       // Add Analysis
       console.debug('Adding Analysis');

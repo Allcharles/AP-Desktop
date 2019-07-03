@@ -1,7 +1,9 @@
 import { readFileSync } from 'fs';
 import { safeLoad } from 'js-yaml';
-import { dirname, join } from 'path';
+import { join } from 'path';
 import { ChildProcess } from 'child_process';
+import { remote } from 'electron';
+
 import APTerminal from './terminal';
 
 /**
@@ -11,7 +13,7 @@ import APTerminal from './terminal';
  */
 interface AnalysisConfig {
   template: string;
-  changes?: {}[];
+  changes?: {};
 }
 
 /**
@@ -116,14 +118,15 @@ export class AnalysisItem {
  */
 export class AnalysisGroup {
   static readonly CONFIG_DIRECTORY = join(
-    dirname(__dirname),
+    remote.app.getAppPath(),
     'ap',
     'ConfigFiles'
   );
+  static readonly TEMP_DIRECTORY = join(remote.app.getAppPath(), 'temp');
 
   private audio: string[];
-  private configDetails: any;
-  private config: AnalysisConfig;
+  private config: any;
+  private configFile: AnalysisConfig;
   private shortDescription: string;
   private description: string;
   private label: string;
@@ -135,7 +138,7 @@ export class AnalysisGroup {
    * Manages analysis object to interface with the clients terminal
    * @param type Type of analysis
    * @param label Display label for analysis
-   * @param config Configuration for analysis
+   * @param configFile Configuration for analysis
    * @param shortDescription Short description of analysis
    * @param description Description of analysis
    * @param options Advanced options for analysis
@@ -143,48 +146,65 @@ export class AnalysisGroup {
   constructor(
     type: AnalysisType,
     label: string,
-    config: AnalysisConfig,
+    configFile: AnalysisConfig,
     shortDescription: string,
     description: string,
     options: AnalysisOptions
   ) {
-    this.config = config;
+    this.configFile = configFile;
     this.shortDescription = shortDescription;
     this.description = description;
     this.label = label;
     this.type = type;
-
-    // Options
     this.options = options;
   }
 
-  /**
-   * Creates a config file and returns the path
-   * TODO Finish this function
-   */
-  getConfig() {
-    this.readConfig();
+  generateBatch() {
+    // Read config file
+    const configFilePath = join(
+      AnalysisGroup.CONFIG_DIRECTORY,
+      this.configFile.template
+    );
+    try {
+      this.config = safeLoad(readFileSync(configFilePath), 'utf8');
+    } catch (e) {
+      console.error('Failed to read config file: ' + configFilePath);
+      console.error(e);
+      return;
+    }
 
-    return this.configDetails;
+    if (this.configFile.changes) {
+      this.updateConfigValues(this.config, this.configFile.changes);
+    }
+
+    console.debug(this.config);
+
+    // Apply changes to config
+
+    // Save temporary file
+
+    // Create array of AnalysisItems
   }
 
   /**
-   * Read config file from ConfigFiles directory
-   * TODO Check functionality
+   * Update the config values with the custom changes
+   * @param config Config values
+   * @param configChanges Changes to config
    */
-  readConfig() {
-    const configPath = join(
-      AnalysisGroup.CONFIG_DIRECTORY,
-      this.config.template
-    );
-    try {
-      this.configDetails = safeLoad(readFileSync(configPath), 'utf8');
-    } catch (e) {
-      console.error('Failed to read config file: ' + configPath);
-      console.error(e);
+  updateConfigValues(config: {}, configChanges: {}) {
+    for (const value in configChanges) {
+      if (typeof configChanges[value] === 'object') {
+        this.updateConfigValues(config[value], configChanges[value]);
+      } else {
+        config[value] = configChanges[value];
+      }
     }
   }
 
+  /**
+   * Set the output folder path for analysis
+   * @param outputFolder Output folder path
+   */
   setOutputFolder(outputFolder: string) {
     this.output = outputFolder;
   }
@@ -204,12 +224,6 @@ export class AnalysisGroup {
   getAudioFiles(): string[] {
     return this.audio;
   }
-
-  /**
-   * Updates or appends changes to config options loaded by readConfig()
-   * TODO Finish this function
-   */
-  appendConfig() {}
 
   /**
    * Returns the label of the analysis
