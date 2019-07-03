@@ -1,10 +1,11 @@
-import { readFileSync } from 'fs';
-import { safeLoad } from 'js-yaml';
+import { readFileSync, writeFileSync } from 'fs';
+import { safeLoad, safeDump } from 'js-yaml';
 import { join } from 'path';
 import { ChildProcess } from 'child_process';
 import { remote } from 'electron';
 
 import APTerminal from './terminal';
+import { throwError } from 'rxjs';
 
 /**
  * Config details for Analysis Class.
@@ -124,8 +125,8 @@ export class AnalysisGroup {
   );
   static readonly TEMP_DIRECTORY = join(remote.app.getAppPath(), 'temp');
 
-  private audio: string[];
-  private config: any;
+  private audioFiles: string[];
+  private config: {};
   private configFile: AnalysisConfig;
   private shortDescription: string;
   private description: string;
@@ -161,29 +162,60 @@ export class AnalysisGroup {
 
   generateBatch() {
     // Read config file
+    this.readConfigFile();
+
+    // Apply changes to config
+    if (this.configFile.changes) {
+      this.updateConfigValues(this.config, this.configFile.changes);
+    }
+
+    // Save to temporary file
+    const tempFilePath = this.createTemporaryConfigFile();
+
+    // Create array of AnalysisItems
+    const analysisBatch: AnalysisItem[] = [];
+    this.audioFiles.map(audioFile => {
+      analysisBatch.push(
+        new AnalysisItem(this.type, audioFile, tempFilePath, this.output, [])
+      );
+    });
+
+    return analysisBatch;
+  }
+
+  /**
+   * Read config file to an object
+   */
+  private readConfigFile() {
     const configFilePath = join(
       AnalysisGroup.CONFIG_DIRECTORY,
       this.configFile.template
     );
     try {
       this.config = safeLoad(readFileSync(configFilePath), 'utf8');
-    } catch (e) {
+    } catch (err) {
       console.error('Failed to read config file: ' + configFilePath);
-      console.error(e);
-      return;
+      console.error(err);
+      throwError(err);
     }
+  }
 
-    if (this.configFile.changes) {
-      this.updateConfigValues(this.config, this.configFile.changes);
+  /**
+   * Create a temporary config file for use by AnalyseItem
+   */
+  private createTemporaryConfigFile() {
+    const tempFilePath = join(
+      AnalysisGroup.TEMP_DIRECTORY,
+      `temp_${Date.now()}.yml`
+    );
+    try {
+      writeFileSync(tempFilePath, safeDump(this.config), { mode: 0o755 });
+    } catch (err) {
+      console.error('Failed to write temporary config file: ' + tempFilePath);
+      console.error(err);
+      throw Error(err);
     }
-
-    console.debug(this.config);
-
-    // Apply changes to config
-
-    // Save temporary file
-
-    // Create array of AnalysisItems
+    return tempFilePath;
   }
 
   /**
@@ -191,7 +223,7 @@ export class AnalysisGroup {
    * @param config Config values
    * @param configChanges Changes to config
    */
-  updateConfigValues(config: {}, configChanges: {}) {
+  private updateConfigValues(config: {}, configChanges: {}) {
     for (const value in configChanges) {
       if (typeof configChanges[value] === 'object') {
         this.updateConfigValues(config[value], configChanges[value]);
@@ -214,7 +246,7 @@ export class AnalysisGroup {
    * @param audioFiles List of audio files
    */
   setAudioFiles(audioFiles: string[]) {
-    this.audio = audioFiles;
+    this.audioFiles = audioFiles;
   }
 
   /**
@@ -222,7 +254,7 @@ export class AnalysisGroup {
    * @returns List of audio files
    */
   getAudioFiles(): string[] {
-    return this.audio;
+    return this.audioFiles;
   }
 
   /**

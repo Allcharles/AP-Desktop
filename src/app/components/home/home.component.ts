@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AnalysisGroup } from '../../models/analysis';
+import { AnalysisGroup, AnalysisItem } from '../../models/analysis';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   CHANGE_OPTIONS = 5;
   RUN_ANALYSIS = 6;
 
+  analyses: AnalysisItem[];
   analysisBatch: AnalysisGroup[];
   analysisGroupCurrent: AnalysisGroup;
   currentStage: number;
@@ -87,9 +88,13 @@ export class HomeComponent implements OnInit {
       console.debug('Running Analysis');
       console.debug(this.analysisBatch);
 
+      // List of analyses to run
+      this.analyses = [];
       this.analysisBatch.map(analysisGroup => {
-        analysisGroup.generateBatch();
+        this.analyses.push.apply(this.analyses, analysisGroup.generateBatch());
       });
+
+      console.debug(this.analyses);
     } else if ($event === 'add') {
       // Add Analysis
       console.debug('Adding Analysis');
