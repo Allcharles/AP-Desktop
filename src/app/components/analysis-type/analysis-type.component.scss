@@ -1,13 +1,18 @@
 @import "../../../styles.scss";
 @import "../home/home.component.scss";
 
+.description {
+  font-size: 0.85rem;
+}
+
 .list-group-item {
-  &:hover {
-    background-color: $lightest-green;
-    color: inherit;
-  }
   &:active {
     background-color: $light-green;
+    color: inherit;
+  }
+
+  &:hover {
+    background-color: $lightest-green;
     color: inherit;
   }
 }
@@ -19,9 +24,5 @@
 }
 
 .subtext {
-  font-size: 0.85rem;
-}
-
-.description {
   font-size: 0.85rem;
 }

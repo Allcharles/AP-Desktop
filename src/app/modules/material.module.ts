@@ -1,19 +1,21 @@
 import { NgModule } from '@angular/core';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule, MatPaginatorModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @NgModule({
   declarations: [],
   imports: [
-    MatCheckboxModule,
-    MatMenuModule,
-    MatButtonModule
+    MatTableModule,
+    MatPaginatorModule,
+    BrowserModule,
+    NgxDatatableModule
   ],
   exports: [
-    MatCheckboxModule,
-    MatMenuModule,
-    MatButtonModule
+    MatTableModule,
+    MatPaginatorModule,
+    BrowserModule,
+    NgxDatatableModule
   ]
 })
-export class MaterialModule { }
+export class MaterialModule {}

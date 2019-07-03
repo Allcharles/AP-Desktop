@@ -6,7 +6,7 @@ export const analysisTypes = [
     'Basic Analysis',
     { template: 'Towsey.Acoustic.yml', changes: [] },
     'Basic visual analysis of audio.',
-    'Calculates summary and spectral acoustic indices for audio files GREATER than 5 minutes long. The csv files of indices output by this analysis can be used to construct: long-duration, false-colour spectrograms; a focused stack of zooming false-colour spectrograms; and the tiles for zooming false-colour spectrograms.',
+    '[BETA] Generates all our default summary & spectral acoustic indices. Also generates false color spectrograms IFF IndexCalculationDuration==60.0.',
     []
   ),
   new Analysis(
