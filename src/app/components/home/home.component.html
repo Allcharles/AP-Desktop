@@ -1,4 +1,5 @@
 <div>
+  <app-nav-bar></app-nav-bar>
   <app-analysis-type
     *ngIf="currentStage === SELECT_TYPE"
     (messageEvent)="receiveAnalysis($event)"
@@ -16,4 +17,8 @@
     (messageEvent)="runAnalysis($event)"
     [analysisBatch]="analysisBatch"
   ></app-analysis-run>
+  <app-output
+    *ngIf="currentStage === DISPLAY_OUTPUT"
+    [analyses]="analyses"
+  ></app-output>
 </div>

@@ -1,8 +1,13 @@
-import { AnalysisGroup, AnalysisType, AnalysisOptions } from './analysis';
+import {
+  AnalysisGroup,
+  AnalysisType,
+  AnalysisOptions,
+  AnalysisMixDownToMono
+} from './analysis';
 
 const DEFAULT_OPTIONS: AnalysisOptions = {
-  'mix-down-to-mono': true,
-  parallel: true
+  '--mix-down-to-mono': AnalysisMixDownToMono.False,
+  '--parallel': true
 };
 
 export const analysisTypes = [

@@ -15,20 +15,22 @@ export default class APTerminal {
    * @returns ChildProces ready to run AP specific terminal commands
    */
   static spawn(func: string, args?: string[]): ChildProcess {
-    console.debug(this.AP);
+    console.debug('AP Terminal Spawned with the following parameters:');
     const inputs = [];
     inputs.push(this.AP);
     inputs.push(func);
 
     if (args) {
-      inputs.push.apply(args);
+      args.map(arg => inputs.push(arg));
     }
 
     if (process.platform === 'win32') {
+      console.debug(inputs);
       return spawn(inputs[0], inputs.slice(1, inputs.length));
     } else {
       // Add mono if linux
       inputs.unshift(this.AP);
+      console.debug(inputs);
       return spawn('mono', inputs);
     }
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { AnalysisGroup, AnalysisItem } from '../../models/analysis';
 
 @Component({
@@ -14,6 +15,7 @@ export class HomeComponent implements OnInit {
   CHANGE_CONFIG = 4;
   CHANGE_OPTIONS = 5;
   RUN_ANALYSIS = 6;
+  DISPLAY_OUTPUT = 7;
 
   analyses: AnalysisItem[];
   analysisBatch: AnalysisGroup[];
@@ -95,6 +97,8 @@ export class HomeComponent implements OnInit {
       });
 
       console.debug(this.analyses);
+
+      this.currentStage = this.DISPLAY_OUTPUT;
     } else if ($event === 'add') {
       // Add Analysis
       console.debug('Adding Analysis');

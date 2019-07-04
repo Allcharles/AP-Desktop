@@ -1,11 +1,11 @@
 import { readFileSync, writeFileSync } from 'fs';
+import { mkdir } from 'shelljs';
 import { safeLoad, safeDump } from 'js-yaml';
-import { join } from 'path';
+import { join, basename, extname } from 'path';
 import { ChildProcess } from 'child_process';
 import { remote } from 'electron';
 
 import APTerminal from './terminal';
-import { throwError } from 'rxjs';
 
 /**
  * Config details for Analysis Class.
@@ -30,15 +30,23 @@ export enum AnalysisType {
  * AP analysis options
  */
 export interface AnalysisOptions {
-  'temp-dir'?: string;
-  offset?: string;
-  'align-to-minute'?: AnalysisAlignToMinute;
-  channels?: string;
-  'mix-down-to-mono'?: boolean;
-  parallel?: boolean;
-  'when-exit-copy-log'?: boolean;
-  'when-exit-copy-config'?: boolean;
-  'log-level'?: AnalysisLogLevel;
+  '--temp-dir'?: string;
+  '--offset'?: string;
+  '--align-to-minute'?: AnalysisAlignToMinute;
+  '--channels'?: string;
+  '--mix-down-to-mono'?: AnalysisMixDownToMono;
+  '--parallel'?: boolean;
+  '--when-exit-copy-log'?: boolean;
+  '--when-exit-copy-config'?: boolean;
+  '--log-level'?: AnalysisLogLevel;
+}
+
+/**
+ * AP analysis mix down to mono option
+ */
+export enum AnalysisMixDownToMono {
+  False = 'false',
+  True = 'true'
 }
 
 /**
@@ -56,29 +64,31 @@ export enum AnalysisAlignToMinute {
  * AP analysis log level options
  */
 export enum AnalysisLogLevel {
-  none = 0,
-  error = 1,
-  warn = 2,
-  info = 3,
-  debug = 4,
-  trace = 5,
-  verbose = 6,
-  all = 7
+  none = '0',
+  error = '1',
+  warn = '2',
+  info = '3',
+  debug = '4',
+  trace = '5',
+  verbose = '6',
+  all = '7'
 }
 
 /**
  * This class manages all the details required to perform a single analysis using AP.
  */
 export class AnalysisItem {
-  private type: string;
-  private audio: string;
-  private config: string;
-  private output: string;
-  private options: string[];
+  readonly type: string;
+  readonly audio: string;
+  readonly config: string;
+  readonly output: string;
+  readonly label: string;
+  readonly options: string[];
 
   /**
    * Create singular analysis item
    * @param type Analysis Type
+   * @param label Analysis label
    * @param audio Audio file
    * @param config Config file
    * @param output Output folder
@@ -86,19 +96,22 @@ export class AnalysisItem {
    */
   constructor(
     type: string,
+    label: string,
     audio: string,
     config: string,
     output: string,
-    options?: string[]
+    options: string[]
   ) {
     this.type = type;
+    this.label = label;
     this.audio = audio;
     this.config = config;
     this.output = output;
+    this.options = options;
+  }
 
-    if (this.options) {
-      this.options = options;
-    }
+  getAudioBasename() {
+    return basename(this.audio);
   }
 
   spawn(): ChildProcess {
@@ -107,10 +120,11 @@ export class AnalysisItem {
     args.push(this.config);
     args.push(this.output);
 
-    if (this.options) {
-    }
+    this.options.map(option => {
+      args.push(option);
+    });
 
-    return APTerminal.spawn(this.type);
+    return APTerminal.spawn(this.type, args);
   }
 }
 
@@ -169,14 +183,23 @@ export class AnalysisGroup {
       this.updateConfigValues(this.config, this.configFile.changes);
     }
 
-    // Save to temporary file
-    const tempFilePath = this.createTemporaryConfigFile();
+    // Generate inputs for analysis
+    const timestamp: number = Date.now();
+    const temporaryConfig = this.createTemporaryConfigFile(timestamp);
+    const generatedOptions = this.generateOptions();
 
     // Create array of AnalysisItems
     const analysisBatch: AnalysisItem[] = [];
     this.audioFiles.map(audioFile => {
       analysisBatch.push(
-        new AnalysisItem(this.type, audioFile, tempFilePath, this.output, [])
+        new AnalysisItem(
+          this.type,
+          this.label,
+          audioFile,
+          temporaryConfig,
+          this.createOutputFolder(timestamp, audioFile),
+          generatedOptions
+        )
       );
     });
 
@@ -184,7 +207,50 @@ export class AnalysisGroup {
   }
 
   /**
+   * Generate options from option list
+   */
+  private generateOptions(): string[] {
+    const output: string[] = [];
+    for (const option in this.options) {
+      switch (typeof this.options[option]) {
+        case 'boolean':
+          output.push(option);
+          break;
+
+        default:
+          // Check if option contains a space
+          if (this.options[option].indexOf(' ') > -1) {
+            output.push(`${option}="${this.options[option]}"`);
+          } else {
+            output.push(`${option}=${this.options[option]}`);
+          }
+          break;
+      }
+    }
+
+    return output;
+  }
+
+  /**
+   * Create the output folder specific to the analysis and return the folder path
+   * @param audioFile Audio file path
+   * @returns Output folder path
+   */
+  private createOutputFolder(timestamp: number, audioFile: string): string {
+    const outputFolder: string = join(
+      this.output,
+      this.label + '(' + timestamp + ')',
+      basename(audioFile, extname(audioFile))
+    );
+
+    mkdir('-p', outputFolder);
+
+    return outputFolder;
+  }
+
+  /**
    * Read config file to an object
+   * TODO Handle error if config not found
    */
   private readConfigFile() {
     const configFilePath = join(
@@ -196,17 +262,18 @@ export class AnalysisGroup {
     } catch (err) {
       console.error('Failed to read config file: ' + configFilePath);
       console.error(err);
-      throwError(err);
+      throw Error(err);
     }
   }
 
   /**
    * Create a temporary config file for use by AnalyseItem
+   * TODO Hangle error if temporary file not created
    */
-  private createTemporaryConfigFile() {
+  private createTemporaryConfigFile(timestamp: number) {
     const tempFilePath = join(
       AnalysisGroup.TEMP_DIRECTORY,
-      `temp_${Date.now()}.yml`
+      `${basename(this.configFile.template, '.yml')}.temp_${timestamp}.yml`
     );
     try {
       writeFileSync(tempFilePath, safeDump(this.config), { mode: 0o755 });

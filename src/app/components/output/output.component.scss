@@ -1,0 +1,21 @@
+@import "../home/home.component.scss";
+
+.progress {
+  background-color: $background-color;
+  height: 1.5rem;
+
+  .progress-bar {
+    background-color: $darkest-green;
+  }
+}
+
+.analysis-header {
+  display: inline-block;
+  width: 25%;
+  max-width: 150px;
+}
+
+.analysis-value {
+  display: inline-block;
+  flex: 1;
+}

@@ -25,6 +25,7 @@ import { AnalysisTypeComponent } from './components/analysis-type/analysis-type.
 import { AnalysisAudioComponent } from './components/analysis-audio/analysis-audio.component';
 import { AnalysisOutputComponent } from './components/analysis-output/analysis-output.component';
 import { AnalysisRunComponent } from './components/analysis-run/analysis-run.component';
+import { OutputComponent } from './components/output/output.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -40,7 +41,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AnalysisTypeComponent,
     AnalysisAudioComponent,
     AnalysisOutputComponent,
-    AnalysisRunComponent
+    AnalysisRunComponent,
+    OutputComponent
   ],
   imports: [
     BrowserModule,
