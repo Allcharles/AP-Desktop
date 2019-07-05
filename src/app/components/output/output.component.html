@@ -5,7 +5,9 @@
     </div>
     <div class="card-body">
       <!-- Overall Analysis Statistics -->
-      <h4 class="mb-1">Analysis Progress</h4>
+      <h4 class="mb-1">
+        Analysis Progress {{ pause && !running ? "(Paused)" : "" }}
+      </h4>
       <div class="progress">
         <div
           class="progress-bar"
@@ -64,7 +66,25 @@
       </div>
     </div>
   </div>
-  <button class="btn btn-outline-success float-right mt-3">
+  <button
+    class="btn btn-outline-danger float-left mt-3"
+    [disabled]="completeFiles === totalFiles"
+    (click)="stopAnalysis()"
+  >
+    Stop Analysis
+  </button>
+  <button
+    class="btn btn-outline-danger float-left mt-3 ml-3"
+    [disabled]="completeFiles === totalFiles"
+    (click)="pauseAnalysis()"
+  >
+    {{ pause ? "Unpause Analysis" : "Pause Analysis" }}
+  </button>
+  <button
+    class="btn btn-outline-success float-right mt-3"
+    [disabled]="completeFiles !== totalFiles"
+    (click)="newAnalysis()"
+  >
     New Analysis
   </button>
 </div>

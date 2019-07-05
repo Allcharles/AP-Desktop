@@ -99,6 +99,11 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /**
+   * Ask user how they want to proceed with the analysis. Add a new analysis,
+   * go back and edit the previous analysis, cancel all analyses, run analyses.
+   * @param $event User action
+   */
   runAnalysis($event: string) {
     if ($event === 'run') {
       // Run Analysis
@@ -126,6 +131,18 @@ export class HomeComponent implements OnInit {
     } else if ($event === 'cancel') {
       // Cancel analyses
       console.debug('Cancelling Analysis');
+      this.analyses = [];
+      this.analysisBatch = [];
+      this.currentStage = this.SELECT_TYPE;
+    }
+  }
+
+  /**
+   * Receives message when analysis is finished running
+   * @param $event Analysis is complete if true
+   */
+  receiveAnalysisComplete($event: boolean) {
+    if ($event) {
       this.analyses = [];
       this.analysisBatch = [];
       this.currentStage = this.SELECT_TYPE;

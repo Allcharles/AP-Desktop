@@ -24,20 +24,6 @@ export const analysisTypes = [
   ),
   new AnalysisGroup(
     AnalysisType.audio2csv,
-    'Canetoad Event Detection',
-    {
-      template: 'Towsey.Canetoad.yml',
-      changes: {
-        SaveIntermediateWavFiles: 'WhenEventsDetected',
-        SaveSonogramImages: 'WhenEventsDetected'
-      }
-    },
-    'Automatic detection of canetoad sounds.',
-    'Automatic detection of canetoad sounds in audio files GREATER than 5 minutes long. This combines with the EventDetection utility under the Utilities tab.',
-    { ...DEFAULT_OPTIONS }
-  ),
-  new AnalysisGroup(
-    AnalysisType.audio2csv,
     'Crow Event Detection',
     {
       template: 'Towsey.Crow.yml',

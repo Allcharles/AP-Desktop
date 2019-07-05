@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-nav-bar',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit {
+  @Input() active: string;
+
   expandNav = false;
   outputEnabled = true;
 
@@ -15,5 +17,9 @@ export class NavBarComponent implements OnInit {
 
   toggleNav() {
     this.expandNav = !this.expandNav;
+  }
+
+  isActive(tab: string): string {
+    return this.active === tab ? 'active' : '';
   }
 }

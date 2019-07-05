@@ -20,3 +20,16 @@
     }
   }
 }
+
+.btn-outline-danger {
+  background-color: white;
+  border-color: darkred;
+  color: darkred;
+
+  &:not(:disabled) {
+    &:hover {
+      background-color: darkred;
+      color: white;
+    }
+  }
+}
