@@ -84,7 +84,7 @@ npm run electron:mac
 
 | Command                    | Description                                                                                                 |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `npm run ng:serve:web`     | Execute the app in the browser                                                                              |
+| `npm run ap_download`      | Downloads AP files required for AP Desktop to run                                                           |
 | `npm run dependencies`     | Automatically installs linux depedencies required to run AP                                                 |
 | `npm run build`            | Build the app. Your built files are in the /dist folder.                                                    |
 | `npm run build:prod`       | Build the app with Angular aot. Your built files are in the /dist folder.                                   |
@@ -95,20 +95,20 @@ npm run electron:mac
 
 ## Current Features
 
-- Basic audio2csv analysis
-- Event Detection Helper utility
-- Loading bars for file analysis
-- Analysis spectrogram display
-- Linux Support
+- Angular framework
 - AP Installer
-- Config File Editor
+- Basic analysis
+- Linux Support
+- Loading bars for file analysis
+- Pre-built analysis tools
 
 ## Features Coming Soon
 
-- Advanced audio2csv analysis
-- Pre-built analysis tools
-- Angular framework
-- Multiple analysis'
+- Advanced analysis options
+- Analysis spectrogram display
+- Config File Editor
+- Event Detection Helper utility
+- Multiple analysis
 
 ## History
 
