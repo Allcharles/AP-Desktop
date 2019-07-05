@@ -1,4 +1,3 @@
-
 <p align="center"><img src="./src/favicon.png" alt="AP Desktop Logo" width="64"/></p>
 
 <h1 align="center">AP Desktop</h1>
@@ -35,19 +34,19 @@ Linux Requirements:
 
 Clone this repository locally :
 
-``` bash
+```bash
 git clone https://github.com/QutEcoacoustics/ap-desktop.git
 ```
 
 Install dependencies with npm :
 
-``` bash
+```bash
 npm install
 ```
 
 On linux systems:
 
-``` bash
+```bash
 npm run dependencies
 ```
 
@@ -55,8 +54,7 @@ npm run dependencies
 
 ## To Build for Development
 
-
-``` bash
+```bash
 npm start
 ```
 
@@ -66,34 +64,34 @@ Built programs can be found inside the `./release` folder.
 
 ### Windows
 
-``` bash
+```bash
 npm run electron:windows
 ```
 
 ### Linux
 
-``` bash
+```bash
 npm run electron:linux
 ```
 
 ### Max (Unsupported)
 
-``` bash
+```bash
 npm run electron:mac
 ```
 
 ## Included Commands
 
-|Command|Description|
-|--|--|
-|`npm run ng:serve:web`| Execute the app in the browser |
-|`npm run dependencies`| Automatically installs linux depedencies required to run AP |
-|`npm run build`| Build the app. Your built files are in the /dist folder. |
-|`npm run build:prod`| Build the app with Angular aot. Your built files are in the /dist folder. |
-|`npm run electron:local`| Builds your application and start electron
-|`npm run electron:linux`| Builds your application and creates an app consumable on linux system |
-|`npm run electron:windows`| On a Windows OS, builds your application and creates an app consumable in windows 32/64 bit systems |
-|`npm run electron:mac`|  On a MAC OS, builds your application and generates a `.app` file of your application that can be run on Mac |
+| Command                    | Description                                                                                                 |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `npm run ng:serve:web`     | Execute the app in the browser                                                                              |
+| `npm run dependencies`     | Automatically installs linux depedencies required to run AP                                                 |
+| `npm run build`            | Build the app. Your built files are in the /dist folder.                                                    |
+| `npm run build:prod`       | Build the app with Angular aot. Your built files are in the /dist folder.                                   |
+| `npm run electron:local`   | Builds your application and start electron                                                                  |
+| `npm run electron:linux`   | Builds your application and creates an app consumable on linux system                                       |
+| `npm run electron:windows` | On a Windows OS, builds your application and creates an app consumable in windows 32/64 bit systems         |
+| `npm run electron:mac`     | On a MAC OS, builds your application and generates a `.app` file of your application that can be run on Mac |
 
 ## Current Features
 

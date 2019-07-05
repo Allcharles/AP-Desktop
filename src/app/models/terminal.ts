@@ -6,7 +6,36 @@ import { remote } from 'electron';
  * Create AP specific terminal commands
  */
 export default class APTerminal {
-  static AP = join(remote.app.getAppPath(), 'ap', 'AnalysisPrograms.exe');
+  private static AP = join(
+    remote.app.getAppPath(),
+    'ap',
+    'AnalysisPrograms.exe'
+  );
+
+  /**
+   * AP Error Codes
+   */
+  static ErrorCodes = {
+    0: 'OK',
+    2: 'ValidationException',
+    3: 'CommandLineArgumentException',
+    4: 'CommandParsingException',
+    10: 'NoData',
+    51: 'DirectoryNotFoundException',
+    52: 'FileNotFoundException',
+    66: 'AnalysisOptionDevilException',
+    100: 'InvalidDurationException',
+    101: 'InvalidStartOrEndException',
+    102: 'InvalidFileDateException',
+    103: 'ConfigFileException',
+    104: 'AudioRecordingTooShortException',
+    105: 'InvalidAudioChannelException',
+    106: 'InvalidDataSetException',
+    107: 'MissingDataException',
+    199: 'NoDeveloperMethodException',
+    200: 'UnhandledExceptionErrorCode'
+  };
+  static OK_CODE = 0;
 
   /**
    * Creates and returns a ChildProcess terminal running AP specific commands.

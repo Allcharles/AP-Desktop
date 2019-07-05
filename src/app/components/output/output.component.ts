@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { AnalysisItem } from '../../models/analysis';
+import { AnalysisItem, AnalysisGroup } from '../../models/analysis';
 import { ChildProcess } from 'child_process';
+import APTerminal from '../../models/terminal';
 
 @Component({
   selector: 'app-output',
@@ -25,12 +26,21 @@ export class OutputComponent implements OnInit {
   }
 
   /**
+   * Round the current progress value for display in the progress bar
+   * @returns Floored value of currentProgress
+   */
+  displayCurrentProgress() {
+    return Math.floor(this.currentProgress);
+  }
+
+  /**
    * Analysis files recursively until all are done.
    * TODO Add support for serial analyses
    */
   analyseFiles() {
     // If more files exist, continue analysis
     if (this.analyses.length === 0) {
+      AnalysisGroup.cleanupTemporaryFiles();
       return;
     }
 
@@ -82,7 +92,7 @@ export class OutputComponent implements OnInit {
         segNo = parseFloat(res[1]);
         segTotal = parseFloat(res[2]);
       }
-      this.currentProgress = Math.floor((segNo / segTotal) * 100);
+      this.currentProgress = (segNo / segTotal) * 100;
       this.ref.detectChanges();
     });
 
@@ -99,8 +109,10 @@ export class OutputComponent implements OnInit {
 
     terminal.on('close', code => {
       // Log any errors
-      if (code !== 0) {
-        console.error('Analysis Error Code: ' + code);
+      if (code !== APTerminal.OK_CODE) {
+        console.error(
+          'AP Terminal Error Message: ' + APTerminal.ErrorCodes[code]
+        );
       }
       this.currentProgress = 100;
       this.completeFiles++;

@@ -29,7 +29,6 @@ export const analysisTypes = [
       template: 'Towsey.Canetoad.yml',
       changes: {
         SaveIntermediateWavFiles: 'WhenEventsDetected',
-        SaveIntermediateCsvFiles: 'WhenEventsDetected',
         SaveSonogramImages: 'WhenEventsDetected'
       }
     },
@@ -44,7 +43,6 @@ export const analysisTypes = [
       template: 'Towsey.Crow.yml',
       changes: {
         SaveIntermediateWavFiles: 'WhenEventsDetected',
-        SaveIntermediateCsvFiles: 'WhenEventsDetected',
         SaveSonogramImages: 'WhenEventsDetected'
       }
     },
@@ -59,7 +57,6 @@ export const analysisTypes = [
       template: 'Towsey.Human.yml',
       changes: {
         SaveIntermediateWavFiles: 'WhenEventsDetected',
-        SaveIntermediateCsvFiles: 'WhenEventsDetected',
         SaveSonogramImages: 'WhenEventsDetected'
       }
     },
@@ -74,7 +71,6 @@ export const analysisTypes = [
       template: 'Towsey.KoalaMale.yml',
       changes: {
         SaveIntermediateWavFiles: 'WhenEventsDetected',
-        SaveIntermediateCsvFiles: 'WhenEventsDetected',
         SaveSonogramImages: 'WhenEventsDetected'
       }
     },
