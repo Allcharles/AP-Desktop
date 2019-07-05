@@ -18,6 +18,7 @@ addons:
       - fakeroot
 
 before_install:
+  - npm install
   - npm run setup:linux
 before_script:
   - export DISPLAY=:99.0

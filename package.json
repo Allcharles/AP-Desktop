@@ -23,7 +23,7 @@
     "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
     "build": "npm run postinstall:electron && npm run electron:serve-tsc && ng build",
-    "dependencies": "chmod +x ./scripts/linux_dependencies.sh && ./scripts/linux_dependencies.sh",
+    "dependencies": "chmod +x ./dev/linux_dependencies.sh && ./dev/linux_dependencies.sh",
     "e2e": "npm run build:prod && mocha --timeout 300000 --require ts-node/register e2e/**/*.spec.ts",
     "electron:linux": "ap_download:linux && npm run build:prod && electron-builder build --linux",
     "electron:local": "npm run build:prod && electron .",

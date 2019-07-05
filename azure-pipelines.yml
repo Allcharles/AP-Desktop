@@ -15,9 +15,11 @@ jobs:
           versionSpec: "10.x"
         displayName: "Install Node.js"
       - script: |
-          npm run setup:windows
           npm install
         displayName: "Installing App Dependencies"
+      - script: |
+          npm run setup:windows
+        displayName: "Running App Setup"
       - script: |
           npm run electron:windows
         displayName: "Build Release"
