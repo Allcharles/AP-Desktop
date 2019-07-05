@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { AnalysisGroup } from '../../models/analysis';
 import { analysisTypes } from '../../models/analysisTypes';
 
@@ -8,6 +8,9 @@ import { analysisTypes } from '../../models/analysisTypes';
   styleUrls: ['./analysis-type.component.scss']
 })
 export class AnalysisTypeComponent implements OnInit {
+  @Input() backButton?: boolean;
+  @Output() messageEvent = new EventEmitter<AnalysisGroup>();
+
   analysisTypeOptions: {
     analysis: AnalysisGroup;
     isSelected: boolean;
@@ -19,14 +22,18 @@ export class AnalysisTypeComponent implements OnInit {
   backEnabled: boolean;
   backVisible: boolean;
 
-  @Output() messageEvent = new EventEmitter<AnalysisGroup>();
-
   constructor() {}
 
   ngOnInit() {
     this.nextEnabled = false;
-    this.backEnabled = false;
-    this.backVisible = false;
+
+    if (this.backButton) {
+      this.backEnabled = true;
+      this.backVisible = true;
+    } else {
+      this.backEnabled = false;
+      this.backVisible = false;
+    }
 
     this.analysisTypeOptions = analysisTypes.map(option => {
       return {
@@ -47,6 +54,13 @@ export class AnalysisTypeComponent implements OnInit {
     this.analysisTypeOptions.map((analysisOption, index) => {
       analysisOption.isSelected = index === id;
     });
+  }
+
+  /**
+   * Emit back button click
+   */
+  backOnClick() {
+    this.messageEvent.emit(null);
   }
 
   /**

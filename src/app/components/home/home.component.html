@@ -1,24 +1,25 @@
 <div>
   <app-nav-bar></app-nav-bar>
   <app-analysis-type
-    *ngIf="currentStage === SELECT_TYPE"
+    *ngIf="showStage(SELECT_TYPE)"
+    [backButton]="analysisBatch.length > 0"
     (messageEvent)="receiveAnalysis($event)"
   ></app-analysis-type>
   <app-analysis-audio
-    *ngIf="currentStage === SELECT_AUDIO"
+    *ngIf="showStage(SELECT_AUDIO)"
     (messageEvent)="receiveAudio($event)"
   ></app-analysis-audio>
   <app-analysis-output
-    *ngIf="currentStage === SELECT_OUTPUT"
+    *ngIf="showStage(SELECT_OUTPUT)"
     (messageEvent)="receiveOutput($event)"
   ></app-analysis-output>
   <app-analysis-run
-    *ngIf="currentStage === RUN_ANALYSIS"
-    (messageEvent)="runAnalysis($event)"
+    *ngIf="showStage(RUN_ANALYSIS)"
     [analysisBatch]="analysisBatch"
+    (messageEvent)="runAnalysis($event)"
   ></app-analysis-run>
   <app-output
-    *ngIf="currentStage === DISPLAY_OUTPUT"
+    *ngIf="showStage(DISPLAY_OUTPUT)"
     [analyses]="analyses"
   ></app-output>
 </div>

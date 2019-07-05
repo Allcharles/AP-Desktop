@@ -27,6 +27,16 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.currentStage = this.SELECT_TYPE;
     this.analysisBatch = [];
+    this.analyses = [];
+  }
+
+  /**
+   * Display an element if it is the current stage
+   * @param expectedStage Stage to check against current stage
+   * @returns True if stage should show
+   */
+  showStage(expectedStage: number): boolean {
+    return this.currentStage === expectedStage;
   }
 
   /**
@@ -38,8 +48,13 @@ export class HomeComponent implements OnInit {
     console.debug('Analysis Type Selected: ');
     console.debug($event);
 
-    this.analysisGroupCurrent = $event;
-    this.currentStage = this.SELECT_AUDIO;
+    if ($event === null) {
+      // Back button
+      this.currentStage = this.RUN_ANALYSIS;
+    } else {
+      this.analysisGroupCurrent = $event;
+      this.currentStage = this.SELECT_AUDIO;
+    }
   }
 
   /**
@@ -77,9 +92,9 @@ export class HomeComponent implements OnInit {
       console.debug($event);
 
       this.analysisGroupCurrent.setOutputFolder($event);
+      this.analysisBatch.push(this.analysisGroupCurrent);
 
       // TODO Update this to ask for advanced options first
-      this.analysisBatch.push(this.analysisGroupCurrent);
       this.currentStage = this.RUN_ANALYSIS;
     }
   }
@@ -91,8 +106,8 @@ export class HomeComponent implements OnInit {
       console.debug(this.analysisBatch);
 
       // List of analyses to run
-      this.analyses = [];
       this.analysisBatch.map(analysisGroup => {
+        console.debug('Adding analysis to analyses');
         this.analyses.push.apply(this.analyses, analysisGroup.generateBatch());
       });
 
@@ -102,9 +117,18 @@ export class HomeComponent implements OnInit {
     } else if ($event === 'add') {
       // Add Analysis
       console.debug('Adding Analysis');
+      this.currentStage = this.SELECT_TYPE;
+    } else if ($event === 'back') {
+      // Cancel analyses
+      console.debug('Previous Page');
+      this.analysisBatch.pop();
+      this.currentStage = this.SELECT_OUTPUT;
     } else if ($event === 'cancel') {
       // Cancel analyses
       console.debug('Cancelling Analysis');
+      this.analyses = [];
+      this.analysisBatch = [];
+      this.currentStage = this.SELECT_TYPE;
     }
   }
 }

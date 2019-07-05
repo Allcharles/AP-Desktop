@@ -10,9 +10,21 @@ export class AnalysisRunComponent implements OnInit {
   @Input() analysisBatch: AnalysisGroup[];
   @Output() messageEvent = new EventEmitter<string>();
 
+  RUN = 'run';
+  ADD = 'add';
+  BACK = 'back';
+  CANCEL = 'cancel';
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.debug('Analysis Run');
+    console.debug(this.analysisBatch);
+  }
+
+  updateParent(msg: string) {
+    this.messageEvent.emit(msg);
+  }
 
   runAnalysis() {
     this.messageEvent.emit('run');

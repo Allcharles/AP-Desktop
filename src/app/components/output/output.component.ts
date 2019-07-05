@@ -19,6 +19,8 @@ export class OutputComponent implements OnInit {
   constructor(private ref: ChangeDetectorRef) {}
 
   ngOnInit() {
+    console.debug('Analyses to run');
+    console.debug(this.analyses);
     this.totalFiles = this.analyses.length;
     this.completeFiles = 0;
     this.currentProgress = 0;

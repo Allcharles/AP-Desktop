@@ -10,14 +10,32 @@
   </li>
   <hr class="my-4" />
   <p class="lead d-flex flex-row justify-content-around">
-    <a class="btn btn-danger btn-lg" href="#" role="button">Cancel</a>
-    <a class="btn btn-warning btn-lg" href="#" role="button">Back</a>
-    <a class="btn btn-warning btn-lg" href="#" role="button">Add</a>
+    <a
+      class="btn btn-danger btn-lg"
+      href="#"
+      role="button"
+      (click)="updateParent(CANCEL)"
+      >Cancel</a
+    >
+    <a
+      class="btn btn-warning btn-lg"
+      href="#"
+      role="button"
+      (click)="updateParent(BACK)"
+      >Back</a
+    >
+    <a
+      class="btn btn-warning btn-lg"
+      href="#"
+      role="button"
+      (click)="updateParent(ADD)"
+      >Add</a
+    >
     <a
       class="btn btn-success btn-lg"
       href="#"
       role="button"
-      (click)="runAnalysis()"
+      (click)="updateParent(RUN)"
       >Run</a
     >
   </p>

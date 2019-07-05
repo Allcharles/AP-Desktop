@@ -35,8 +35,6 @@
     "ng": "ng",
     "postinstall:electron": "node postinstall",
     "postinstall": "npm run postinstall:electron && electron-builder install-app-deps",
-    "setup:windows": "npm run ap_download:windows",
-    "setup:linux": "npm run dependencies && npm run ap_download:linux",
     "start": "npm run postinstall:electron && npm-run-all -p ng:serve electron:serve",
     "test": "npm run postinstall:electron && ng test",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"

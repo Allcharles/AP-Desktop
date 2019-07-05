@@ -18,8 +18,8 @@ jobs:
           npm install
         displayName: "Installing App Dependencies"
       - script: |
-          npm run setup:windows
-        displayName: "Running App Setup"
+          npm run ap_download:windows
+        displayName: "Download AP files"
       - script: |
           npm run electron:windows
         displayName: "Build Release"
