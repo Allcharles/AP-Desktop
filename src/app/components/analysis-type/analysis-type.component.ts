@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { AnalysisGroup } from '../../models/analysis';
-import { analysisTypes } from '../../models/AnalysisTypes';
+import { analysisTypes } from '../../models/analysisTypes';
 
 @Component({
   selector: 'app-analysis-type',

@@ -57,8 +57,6 @@ export default class APTerminal {
       console.debug(inputs);
       return spawn(inputs[0], inputs.slice(1, inputs.length));
     } else {
-      // Add mono if linux
-      inputs.unshift(this.AP);
       console.debug(inputs);
       return spawn('mono', inputs);
     }

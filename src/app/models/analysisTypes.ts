@@ -6,7 +6,7 @@ import {
 } from './analysis';
 
 const DEFAULT_OPTIONS: AnalysisOptions = {
-  '--mix-down-to-mono': AnalysisMixDownToMono.False,
+  '--mix-down-to-mono': AnalysisMixDownToMono.True,
   '--parallel': true
 };
 
