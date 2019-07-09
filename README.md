@@ -108,6 +108,7 @@ npm run electron:mac
 - Basic analysis
 - Linux Support
 - Loading bars for file analysis
+- Multiple analyses
 - Pre-built analysis tools
 
 ## Features Coming Soon
@@ -115,8 +116,8 @@ npm run electron:mac
 - Advanced analysis options
 - Analysis spectrogram display
 - Config File Editor
+- Link to Analysis Output
 - Event Detection Helper utility
-- Multiple analysis
 
 ## History
 
