@@ -1,0 +1,68 @@
+<div class="container mt-3">
+  <div class="card shadow">
+    <div class="card-header text-white d-flex">
+      <div class="header">Audio Files</div>
+      <div class="flex-fill"></div>
+      <form class="form-inline my-0">
+        <button
+          class="btn btn-outline-success my-0 py-1"
+          type="submit"
+          (click)="selectFiles()"
+        >
+          Select Files
+        </button>
+        <button
+          class="btn btn-outline-success my-0 py-1"
+          type="submit"
+          (click)="selectFolder()"
+        >
+          Select Folder
+        </button>
+      </form>
+    </div>
+    <div class="card-body">
+      <p class="mb-0" *ngIf="!audioFilesLoading && !audioFilesSelected">
+        No files selected yet
+      </p>
+
+      <div *ngIf="audioFilesLoading || audioFilesSelected">
+        <ngx-datatable
+          class="material"
+          [rows]="rows"
+          [columns]="columns"
+          [columnMode]="'flex'"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="'auto'"
+          [limit]="10"
+          [loadingIndicator]="audioFilesLoading"
+          [reorderable]="true"
+        >
+          <ngx-datatable-column name="No" [flexGrow]="1">
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Filename" [flexGrow]="9">
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-row bd-highlight mt-3 mb-2">
+    <button
+      type="button"
+      class="btn btn-lg btn-outline-success shadow pl-4 pr-4"
+      (click)="backOnClick()"
+    >
+      Back
+    </button>
+    <div class="flex-fill"></div>
+    <button
+      type="button"
+      class="btn btn-lg btn-outline-success shadow pl-4 pr-4"
+      [disabled]="!nextEnabled"
+      (click)="nextOnClick()"
+    >
+      Next
+    </button>
+  </div>
+</div>

@@ -1,41 +1,122 @@
-# AP Desktop
+<p align="center"><img src="./src/favicon.png" alt="AP Desktop Logo" width="64"/></p>
+
+<h1 align="center">AP Desktop</h1>
+
+[![Build Status](https://travis-ci.org/QutEcoacoustics/ap-desktop.svg?branch=master)](https://travis-ci.org/QutEcoacoustics/ap-desktop)
+[![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE.md)
+
+## Introduction
 
 AP Desktop is a Graphical User Interface (GUI) for the open source program AnalysisPrograms.exe provided by QUT/EcoAcoustics. This GUI is designed to help researchers use the software without learning complicated terminal commands.
 
-## Installing Project
+Currently runs with:
 
-- Download and install Node.js v10.13.0 or newer [link](https://nodejs.org/en/download/)
-- Check you are running NPM v6.9.0 or newer
-- Install git (Linux: `sudo apt-get install git`) [link](https://git-scm.com/download/win)
-- Open the file containing the AP Desktop code in Command Line and then execute the following commands:
-  - `npm run ap_download` (Currently this will only run once per project)
-  - `npm install`
-  - `npm start`
+- Angular v8.0.0
+- Electron v5.0.2
+- Electron Builder v20.41.0
 
-## Building Project
+Supported Platforms:
 
-- To build the project, run the following command: `npm run release`
-- You will need to run this once on each patform (Windows/Linux/Mac) to get the full suit
+- Windows 10
+- Linux Ubuntu Xenial
 
-### Linux Ubuntu 16 / Mint 18.3 Setup
+## Getting Started
 
-- Install mono-complete
-- Run `npm run dependencies`
+Requirements:
+
+- [Node](https://nodejs.org/en/download/) 10.13 or later
+- NPM 6.9 or later
+- [Git](https://git-scm.com/download/win)
+
+Linux Requirements:
+
+- [Mono-Complete](https://www.mono-project.com/download/stable/#download-lin) 5.20 or later
+
+Clone this repository locally :
+
+```bash
+git clone https://github.com/QutEcoacoustics/ap-desktop.git
+```
+
+Install dependencies with npm :
+
+```bash
+npm install
+```
+
+Windows:
+
+```bash
+npm run ap_download:windows
+```
+
+Linux:
+
+```bash
+npm run dependencies
+npm run ap_download:linux
+```
+
+**There is an issue with `yarn` and `node_modules` that are only used in electron on the backend when the application is built by the packager. Please use `npm` as dependencies manager.**
+
+## To Build for Development
+
+```bash
+npm start
+```
+
+## To Build for Production
+
+Built programs can be found inside the `./release` folder.
+
+### Windows
+
+```bash
+npm run electron:windows
+```
+
+### Linux
+
+```bash
+npm run electron:linux
+```
+
+### Max (Unsupported)
+
+```bash
+npm run electron:mac
+```
+
+## Included Commands
+
+| Command                       | Description                                                                                                 |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `npm run ap_download:linux`   | Downloads AP files required for AP Desktop to run                                                           |
+| `npm run ap_download:windows` | Downloads AP files required for AP Desktop to run                                                           |
+| `npm run build`               | Build the app. Your built files are in the /dist folder.                                                    |
+| `npm run build:prod`          | Build the app with Angular aot. Your built files are in the /dist folder.                                   |
+| `npm run electron:local`      | Builds your application and start electron                                                                  |
+| `npm run electron:linux`      | Builds your application and creates an app consumable on linux system                                       |
+| `npm run electron:windows`    | On a Windows OS, builds your application and creates an app consumable in windows 32/64 bit systems         |
+| `npm run electron:mac`        | On a MAC OS, builds your application and generates a `.app` file of your application that can be run on Mac |
+| `npm run dependencies`        | Automatically installs linux depedencies required to run AP                                                 |
 
 ## Current Features
 
-- Basic audio2csv analysis
-- Event Detection Helper utility
-- Loading bars for file analysis
-- Analysis spectrogram display
-- Linux Support
+- Angular framework
 - AP Installer
-- Config File Editor
+- Basic analysis
+- Linux Support
+- Loading bars for file analysis
+- Pre-built analysis tools
 
 ## Features Coming Soon
 
-- Advanced audio2csv analysis
-- Pre-built analysis tools
+- Advanced analysis options
+- Analysis spectrogram display
+- Config File Editor
+- Event Detection Helper utility
+- Multiple analysis
 
 ## History
 

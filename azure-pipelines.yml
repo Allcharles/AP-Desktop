@@ -15,15 +15,11 @@ jobs:
           versionSpec: "10.x"
         displayName: "Install Node.js"
       - script: |
-          npm run ap_download
-        displayName: "Download AP"
-      - script: |
           npm install
-          npm run babel
         displayName: "Installing App Dependencies"
       - script: |
-          npm test
-        displayName: "Run Test Suite"
+          npm run ap_download:windows
+        displayName: "Download AP files"
       - script: |
-          npm run make
+          npm run electron:windows
         displayName: "Build Release"
