@@ -3,7 +3,7 @@
 <h1 align="center">AP Desktop</h1>
 
 [![Build Status](https://travis-ci.org/QutEcoacoustics/ap-desktop.svg?branch=master)](https://travis-ci.org/QutEcoacoustics/ap-desktop)
-[![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/Licence-Apache%202-brightgreen.svg)](LICENSE.md)
 
 ## Introduction
 
@@ -11,7 +11,7 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 
 Currently runs with:
 
-- Angular v8.0.0
+- Angular v8.0.1
 - Electron v5.0.2
 - Electron Builder v20.41.0
 
@@ -22,17 +22,22 @@ Supported Platforms:
 
 ## Getting Started
 
-Requirements:
+### Requirements:
 
 - [Node](https://nodejs.org/en/download/) 10.13 or later
 - NPM 6.9 or later
 - [Git](https://git-scm.com/download/win)
 
-Linux Requirements:
+#### Windows Requirements:
+- [Powershell 6](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-6)
+
+#### Linux Requirements:
 
 - [Mono-Complete](https://www.mono-project.com/download/stable/#download-lin) 5.20 or later
 
 Clone this repository locally :
+
+### Running Project
 
 ```bash
 git clone https://github.com/QutEcoacoustics/ap-desktop.git
@@ -44,13 +49,13 @@ Install dependencies with npm :
 npm install
 ```
 
-Windows:
+#### Windows:
 
 ```bash
 npm run ap_download:windows
 ```
 
-Linux:
+#### Linux:
 
 ```bash
 npm run dependencies
@@ -114,8 +119,9 @@ npm run electron:mac
 ## Features Coming Soon
 
 - Advanced analysis options
+  - Config File Editor
+  - AP Options Editor
 - Analysis spectrogram display
-- Config File Editor
 - Link to Analysis Output
 - Event Detection Helper utility
 
