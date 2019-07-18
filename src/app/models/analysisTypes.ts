@@ -10,6 +10,7 @@ const DEFAULT_OPTIONS: AnalysisOptions = {
   '--parallel': true
 };
 
+// TODO Update this to read from AP's AnalysesAvailable command
 export const analysisTypes = [
   new AnalysisGroup(
     AnalysisType.audio2csv,

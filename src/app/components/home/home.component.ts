@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
       console.debug('Audio Files Selected: ');
       console.debug($event);
 
-      this.analysisGroupCurrent.setAudioFiles($event);
+      this.analysisGroupCurrent.audioFiles = $event;
       this.currentStage = this.SELECT_OUTPUT;
     }
   }
@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit {
       console.debug('Output Folder Selected: ');
       console.debug($event);
 
-      this.analysisGroupCurrent.setOutputFolder($event);
+      this.analysisGroupCurrent.outputFolder = $event;
       this.analysisBatch.push(this.analysisGroupCurrent);
 
       // TODO Update this to ask for advanced options first

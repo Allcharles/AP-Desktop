@@ -5,8 +5,7 @@
   </p>
   <hr class="my-4" />
   <li *ngFor="let analysisGroup of analysisBatch">
-    {{ analysisGroup.getLabel() }} on
-    {{ analysisGroup.getAudioFiles().length }} file/s
+    {{ analysisGroup.label }} on {{ analysisGroup.audioFiles.length }} file/s
   </li>
   <hr class="my-4" />
   <p class="lead d-flex flex-row justify-content-around">

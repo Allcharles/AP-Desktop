@@ -14,16 +14,16 @@
           (click)="changeSelection(i)"
         >
           <div class="d-flex flex-row">
-            <p class="mb-0">{{ analysisType.analysis.getLabel() }}</p>
+            <p class="mb-0">{{ analysisType.analysis.label }}</p>
             <p class="flex-fill text-right mb-0 subtext">
-              {{ analysisType.analysis.getShortDescription() }}
+              {{ analysisType.analysis.shortDescription }}
             </p>
           </div>
           <p
             class="description"
             [ngClass]="{ 'd-none': !analysisType.isSelected }"
           >
-            {{ analysisType.analysis.getDescription() }}
+            {{ analysisType.analysis.description }}
           </p>
         </a>
       </ul>
