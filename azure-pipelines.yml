@@ -8,18 +8,38 @@
 jobs:
   - job: Windows
     pool:
-      vmImage: "windows-2019"
+      vmImage: 'windows-2019'
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "10.x"
-        displayName: "Install Node.js"
+          versionSpec: '10.x'
+        displayName: 'Install Node.js'
       - script: |
           npm install
-        displayName: "Installing App Dependencies"
+        displayName: 'Installing App Dependencies'
       - script: |
           npm run ap_download:windows
-        displayName: "Download AP files"
+        displayName: 'Download AP files'
       - script: |
           npm run electron:windows
-        displayName: "Build Release"
+        displayName: 'Build Release'
+  - job: Linux
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.x'
+        displayName: 'Install Node.js'
+      - script: |
+          npm install
+        displayName: 'Installing App Dependencies'
+      - script: |
+        npm run dependencies
+        displayName: 'Installing Linux Dependencies'
+      - script: |
+          npm run ap_download:linux
+        displayName: 'Download AP files'
+      - script: |
+          npm run electron:linux
+        displayName: 'Build Releases'
