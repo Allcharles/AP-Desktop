@@ -2,7 +2,7 @@
 
 <h1 align="center">AP Desktop</h1>
 
-[![Build Status](https://travis-ci.org/QutEcoacoustics/ap-desktop.svg?branch=master)](https://travis-ci.org/QutEcoacoustics/ap-desktop)
+[![Build Status](https://dev.azure.com/QutEcoacoustics/ap-desktop/_apis/build/status/QutEcoacoustics.ap-desktop?branchName=master)](https://dev.azure.com/QutEcoacoustics/ap-desktop/_build/latest?definitionId=2&branchName=master)
 [![License](https://img.shields.io/badge/Licence-Apache%202-brightgreen.svg)](LICENSE.md)
 
 ## Introduction
@@ -29,6 +29,7 @@ Supported Platforms:
 - [Git](https://git-scm.com/download/win)
 
 #### Windows Requirements:
+
 - [Powershell 6](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-6)
 
 #### Linux Requirements:
