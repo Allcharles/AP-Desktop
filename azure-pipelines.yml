@@ -35,7 +35,7 @@ jobs:
           npm install
         displayName: 'Installing App Dependencies'
       - script: |
-        npm run dependencies
+          npm run dependencies
         displayName: 'Installing Linux Dependencies'
       - script: |
           npm run ap_download:linux
