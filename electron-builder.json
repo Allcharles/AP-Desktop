@@ -20,14 +20,17 @@
     "!tslint.json"
   ],
   "win": {
+    "artifactName": "${productName}.${ext}",
     "icon": "dist",
     "target": ["portable"]
   },
   "mac": {
+    "artifactName": "${productName}.${ext}",
     "icon": "dist",
     "target": ["dmg"]
   },
   "linux": {
+    "artifactName": "${productName}.${ext}",
     "icon": "dist",
     "category": "Utility",
     "target": ["AppImage", "deb", "rpm"]
