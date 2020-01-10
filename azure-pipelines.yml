@@ -32,7 +32,7 @@ jobs:
         inputs:
           versionSpec: "10.x"
         displayName: "Install Node.js"
-      - script: npm run dependencies
+      - script: sudo apt install mono-complete rpm ffmpeg wavpack libsox-fmt-all sox shntool mp3splt fakeroot
         displayName: "Installing Linux Dependencies"
       - script: npm install
         displayName: "Installing App Dependencies"
