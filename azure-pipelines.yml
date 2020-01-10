@@ -32,6 +32,8 @@ jobs:
         inputs:
           versionSpec: "10.x"
         displayName: "Install Node.js"
+      - script: npm run dependencies
+        displayName: "Installing Linux Dependencies"
       - script: npm install
         displayName: "Installing App Dependencies"
       - script: npm run ap_download:linux
@@ -44,3 +46,18 @@ jobs:
         displayName: "End to end tests"
       - script: npm run electron:linux
         displayName: "Build project"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: "$(Build.SourcesDirectory)/release/AP Desktop-4.0.0.AppImage"
+          artifactName: ap-desktop-linux-appimage
+        displayName: "Publish linux app image build files"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: "$(Build.SourcesDirectory)/release/ap-desktop_4.0.0_amd64.deb"
+          artifactName: ap-desktop-linux-debian
+        displayName: "Publish linux debian build files"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: "$(Build.SourcesDirectory)/release/ap-desktop-4.0.0.x86_64.rpm"
+          artifactName: ap-desktop-linux-debian
+        displayName: "Publish linux debian build files"
