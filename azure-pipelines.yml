@@ -1,45 +1,41 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
-# trigger on all branches
-
 jobs:
   - job: Windows
     pool:
-      vmImage: 'windows-2019'
+      vmImage: "windows-2019"
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: '10.x'
-        displayName: 'Install Node.js'
-      - script: |
-          npm install
-        displayName: 'Installing App Dependencies'
-      - script: |
-          npm run ap_download:windows
-        displayName: 'Download AP files'
-      - script: |
-          npm run electron:windows
-        displayName: 'Build Release'
+          versionSpec: "10.x"
+        displayName: "Install Node.js"
+      - script: npm install
+        displayName: "Installing App Dependencies"
+      - script: npm run ap_download:windows
+        displayName: "Installing AP"
+      - script: npm run lint
+        displayName: "Lint project"
+      - script: npm test
+        displayName: "Unit tests"
+      - script: npm run e2e
+        displayName: "End to end tests"
+      - script: npm run electron:windows
+        displayName: "Build project"
   - job: Linux
     pool:
-      vmImage: 'ubuntu-16.04'
+      vmImage: "ubuntu-16.04"
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: '10.x'
-        displayName: 'Install Node.js'
-      - script: |
-          npm install
-        displayName: 'Installing App Dependencies'
-      - script: |
-          npm run dependencies
-        displayName: 'Installing Linux Dependencies'
-      - script: |
-          npm run ap_download:linux
-        displayName: 'Download AP files'
-      - script: |
-          npm run electron:linux
-        displayName: 'Build Releases'
+          versionSpec: "10.x"
+        displayName: "Install Node.js"
+      - script: npm install
+        displayName: "Installing App Dependencies"
+      - script: npm run ap_download:linux
+        displayName: "Installing AP"
+      - script: npm run lint
+        displayName: "Lint project"
+      - script: npm test
+        displayName: "Unit tests"
+      - script: npm run e2e
+        displayName: "End to end tests"
+      - script: npm run electron:linux
+        displayName: "Build project"
