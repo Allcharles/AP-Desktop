@@ -19,6 +19,11 @@ jobs:
         displayName: "End to end tests"
       - script: npm run electron:windows
         displayName: "Build project"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: "$(Build.SourcesDirectory)/release/AP Desktop 4.0.0.exe"
+          artifactName: ap-desktop-windows
+        displayName: "Publish build files"
   - job: Linux
     pool:
       vmImage: "ubuntu-16.04"
