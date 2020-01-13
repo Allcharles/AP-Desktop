@@ -12,8 +12,8 @@ export class TypeComponent implements OnInit {
   @Input() backButton?: boolean;
   @Output() analysisTypeEvent = new EventEmitter<AnalysisTypeEvent>();
 
+  protected analysisTypeOptions: AnalysisOption[];
   private analysisTypeCurrent: AnalysisType;
-  private analysisTypeOptions: AnalysisOption[];
 
   constructor(private apService: APService) {}
 
@@ -32,7 +32,7 @@ export class TypeComponent implements OnInit {
    * Set the selected analysis type
    * @param id ID of analysis option
    */
-  changeSelection(id: number) {
+  protected changeSelection(id: number) {
     this.analysisTypeCurrent = this.analysisTypeOptions[id].analysis;
     this.analysisTypeOptions.map((analysisOption, index) => {
       analysisOption.isSelected = index === id;
