@@ -83,6 +83,7 @@
     "rxjs": "6.5.3",
     "spectron": "9.0.0",
     "ts-node": "8.3.0",
+    "tslint": "5.20.1",
     "typescript": "3.5.3",
     "wait-on": "3.3.0",
     "webdriver-manager": "12.1.7",
@@ -90,5 +91,9 @@
   },
   "engines": {
     "node": ">=10.9.0"
+  },
+  "dependencies": {
+    "@ng-bootstrap/ng-bootstrap": "5.1.5",
+    "bootstrap": "4.4.1"
   }
 }
