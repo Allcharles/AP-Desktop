@@ -81,9 +81,11 @@
     "mocha": "6.2.2",
     "npm-run-all": "4.1.5",
     "rxjs": "6.5.3",
+    "rxjs-tslint-rules": "4.28.0",
     "spectron": "9.0.0",
     "ts-node": "8.3.0",
     "tslint": "5.20.1",
+    "tslint-angular": "3.0.2",
     "typescript": "3.5.3",
     "wait-on": "3.3.0",
     "webdriver-manager": "12.1.7",
@@ -93,7 +95,13 @@
     "node": ">=10.9.0"
   },
   "dependencies": {
+    "@fortawesome/angular-fontawesome": "0.5.0",
+    "@fortawesome/fontawesome-svg-core": "1.2.26",
+    "@fortawesome/free-brands-svg-icons": "5.12.0",
+    "@fortawesome/free-regular-svg-icons": "5.12.0",
+    "@fortawesome/free-solid-svg-icons": "5.12.0",
     "@ng-bootstrap/ng-bootstrap": "5.1.5",
-    "bootstrap": "4.4.1"
+    "bootstrap": "4.4.1",
+    "immutable": "4.0.0-rc.12"
   }
 }
