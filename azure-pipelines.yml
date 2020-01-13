@@ -26,13 +26,15 @@ jobs:
         displayName: "Publish build files"
   - job: Linux
     pool:
-      vmImage: "ubuntu-16.04"
+      vmImage: "ubuntu-18.04"
     steps:
       - task: NodeTool@0
         inputs:
           versionSpec: "10.x"
         displayName: "Install Node.js"
-      - script: sudo apt-get update && sudo apt-get install libssh-gcrypt-4 mono-complete rpm ffmpeg wavpack libsox-fmt-all sox shntool mp3splt fakeroot libav-tools
+      - script: sudo apt-get update
+        displayName: "Updating Linux Dependencies"
+      - script: sudo apt-get install libssh-gcrypt-4 mono-complete rpm ffmpeg wavpack libsox-fmt-all sox shntool mp3splt fakeroot
         displayName: "Installing Linux Dependencies"
       - script: npm install
         displayName: "Installing App Dependencies"
