@@ -28,7 +28,7 @@ export class OutputComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.outputFolder = this.ap.defaultOutputFolder;
+    this.resetFolder();
   }
 
   /**
@@ -52,6 +52,17 @@ export class OutputComponent implements OnInit {
         });
         this.ref.detectChanges();
       });
+  }
+
+  /**
+   * Reset output folder to defaults
+   */
+  public resetFolder() {
+    this.outputFolder = this.ap.defaultOutputFolder;
+    this.outputFolderEvent.emit({
+      output: this.outputFolder,
+      isValid: true
+    });
   }
 }
 
