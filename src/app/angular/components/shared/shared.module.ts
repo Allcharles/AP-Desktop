@@ -1,17 +1,15 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
-import { PageNotFoundComponent } from "./components/";
-import { WebviewDirective } from "./directives/";
 import { FormsModule } from "@angular/forms";
-import { NavbarComponent } from "./components/navbar/navbar.component";
+import { NavbarComponent } from "./navbar/navbar.component";
 import { RouterModule } from "@angular/router";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 const sharedComponents = [NavbarComponent];
 
 @NgModule({
-  declarations: [PageNotFoundComponent, WebviewDirective, sharedComponents],
+  declarations: [sharedComponents],
   imports: [
     CommonModule,
     RouterModule,
@@ -20,8 +18,9 @@ const sharedComponents = [NavbarComponent];
     NgbModule
   ],
   exports: [
+    CommonModule,
+    RouterModule,
     TranslateModule,
-    WebviewDirective,
     FormsModule,
     NgbModule,
     sharedComponents
