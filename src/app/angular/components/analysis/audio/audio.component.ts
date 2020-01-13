@@ -47,19 +47,12 @@ export class AudioComponent implements OnInit {
         properties: ["openDirectory", "multiSelections"]
       })
       .then(response => {
-        if (
-          response.canceled ||
-          !response.filePaths ||
-          response.filePaths.length === 0
-        ) {
+        if (response.canceled || response.filePaths.length === 0) {
           this.invalidFiles();
           return;
         }
 
-        return response.filePaths;
-      })
-      .then(folders => {
-        this.retrieveFiles(folders);
+        this.retrieveFiles(response.filePaths);
       });
   }
 
@@ -85,10 +78,7 @@ export class AudioComponent implements OnInit {
           return;
         }
 
-        return response.filePaths;
-      })
-      .then(files => {
-        this.updateTable(files);
+        this.updateTable(response.filePaths);
       });
   }
 
@@ -140,8 +130,6 @@ export class AudioComponent implements OnInit {
       folders,
       file => this.ap.isSupportedAudioFormat(file),
       (err, files) => {
-        console.log(files);
-
         if (err || !files || files.length === 0) {
           this.invalidFiles();
           return;
@@ -157,6 +145,7 @@ export class AudioComponent implements OnInit {
    */
   private invalidFiles() {
     this.audioFiles = [];
+    this.rows = [];
     this.loading = false;
     this.filesSelected = false;
     this.audioFileEvent.emit({
