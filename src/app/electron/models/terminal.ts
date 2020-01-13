@@ -1,6 +1,6 @@
-import { spawn, ChildProcess } from "child_process";
-import { join } from "path";
+import { ChildProcess, spawn } from "child_process";
 import { remote } from "electron";
+import { join } from "path";
 
 /**
  * Create AP specific terminal commands

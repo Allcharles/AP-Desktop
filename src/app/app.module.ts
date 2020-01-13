@@ -1,18 +1,18 @@
-import "reflect-metadata";
-import "../polyfills";
-import { BrowserModule } from "@angular/platform-browser";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { HttpClientModule, HttpClient } from "@angular/common/http";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { AppComponent } from "./app.component";
-import { CoreModule } from "./electron/electron.module";
-import { SharedModule } from "./angular/components/shared/shared.module";
-import { HomeModule } from "./angular/components/home/home.module";
-import { AnalysisModule } from "./angular/components/analysis/analysis.module";
+import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import "reflect-metadata";
+import "../polyfills";
+import { AnalysisModule } from "./angular/components/analysis/analysis.module";
+import { HomeModule } from "./angular/components/home/home.module";
+import { SharedModule } from "./angular/components/shared/shared.module";
+import { AppComponent } from "./app.component";
 import { appRoutes } from "./app.routes";
+import { ElectronModule } from "./electron/electron.module";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -25,7 +25,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    CoreModule,
+    ElectronModule,
     SharedModule,
     HomeModule,
     AnalysisModule,

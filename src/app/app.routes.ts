@@ -3,7 +3,7 @@ import { Routes } from "@angular/router";
 export const appRoutes: Routes = [
   {
     path: "",
-    redirectTo: "home",
+    redirectTo: "analysis",
     pathMatch: "full"
   }
 ];
