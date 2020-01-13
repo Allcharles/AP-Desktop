@@ -12,14 +12,14 @@ export class FileSystemService extends ElectronService {
    * Create file dialog
    * @param windowSettings Dialog settings
    */
-  public createFileDialog(
+  public async createFileDialog(
     windowSettings: OpenDialogOptions
   ): Promise<OpenDialogReturnValue> {
     if (!this.isElectron) {
       return;
     }
 
-    return this.remote.dialog.showOpenDialog(undefined, windowSettings);
+    return this.remote.dialog.showOpenDialog(windowSettings);
   }
 
   /**

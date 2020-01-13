@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { extname } from "path";
+import { extname, join } from "path";
 import { AnalysisType } from "../../models/analysis";
 import { analysisTypes } from "../../models/analysisTypes";
 import { ElectronService } from "../electron/electron.service";
@@ -20,6 +20,14 @@ export class APService extends ElectronService {
     "alac",
     "wma"
   ];
+
+  public get defaultOutputFolder(): string {
+    if (!this.isElectron) {
+      return "";
+    } else {
+      return join(this.remote.app.getPath("documents"), "AP Desktop");
+    }
+  }
 
   /**
    * Returns list of supported analysis types

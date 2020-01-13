@@ -29,7 +29,8 @@ export class AudioComponent implements OnInit {
     private ref: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.rows = [];
     this.audioFiles = [];
     this.loading = false;
     this.filesSelected = false;
@@ -38,7 +39,7 @@ export class AudioComponent implements OnInit {
   /**
    * Select folder action
    */
-  protected selectFolder() {
+  protected selectFolder(): void {
     this.loading = true;
 
     this.fileSystem
@@ -48,7 +49,7 @@ export class AudioComponent implements OnInit {
       })
       .then(response => {
         if (response.canceled || response.filePaths.length === 0) {
-          this.invalidFiles();
+          this.loading = false;
           return;
         }
 
@@ -59,7 +60,7 @@ export class AudioComponent implements OnInit {
   /**
    * Select file action
    */
-  protected selectFiles() {
+  protected selectFiles(): void {
     this.loading = true;
 
     this.fileSystem
@@ -74,7 +75,7 @@ export class AudioComponent implements OnInit {
           !response.filePaths ||
           response.filePaths.length === 0
         ) {
-          this.invalidFiles();
+          this.loading = false;
           return;
         }
 
@@ -86,7 +87,7 @@ export class AudioComponent implements OnInit {
    * Update table with files
    * @param files Files
    */
-  updateTable(files: string[]) {
+  updateTable(files: string[]): void {
     this.audioFiles = files;
     this.loading = false;
     this.filesSelected = true;
@@ -115,10 +116,18 @@ export class AudioComponent implements OnInit {
 
     // If all files removed, disable next button
     if (this.audioFiles.length === 0) {
-      this.invalidFiles();
+      this.audioFiles = [];
+      this.rows = [];
+      this.loading = false;
+      this.filesSelected = false;
+      this.audioFileEvent.emit({
+        output: this.audioFiles,
+        isValid: false
+      });
+      this.ref.detectChanges();
+    } else {
+      this.updateTable(this.audioFiles);
     }
-
-    this.ref.detectChanges();
   }
 
   /**
@@ -131,28 +140,12 @@ export class AudioComponent implements OnInit {
       file => this.ap.isSupportedAudioFormat(file),
       (err, files) => {
         if (err || !files || files.length === 0) {
-          this.invalidFiles();
           return;
         }
 
         this.updateTable(files);
       }
     );
-  }
-
-  /**
-   * Handle logic for invalid files
-   */
-  private invalidFiles() {
-    this.audioFiles = [];
-    this.rows = [];
-    this.loading = false;
-    this.filesSelected = false;
-    this.audioFileEvent.emit({
-      output: null,
-      isValid: false
-    });
-    this.ref.detectChanges();
   }
 }
 

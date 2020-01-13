@@ -15,24 +15,22 @@ export class TypeComponent implements OnInit {
   public analysisTypeOptions: AnalysisOption[];
   private analysisTypeCurrent: AnalysisType;
 
-  constructor(private apService: APService) {}
+  constructor(private ap: APService) {}
 
   ngOnInit(): void {
-    this.analysisTypeOptions = this.apService
-      .getAnalysisTypes()
-      .map(analysisType => {
-        return {
-          analysis: analysisType,
-          isSelected: false
-        } as AnalysisOption;
-      });
+    this.analysisTypeOptions = this.ap.getAnalysisTypes().map(analysisType => {
+      return {
+        analysis: analysisType,
+        isSelected: false
+      } as AnalysisOption;
+    });
   }
 
   /**
    * Set the selected analysis type
    * @param id ID of analysis option
    */
-  protected changeSelection(id: number) {
+  protected changeSelection(id: number): void {
     this.analysisTypeCurrent = this.analysisTypeOptions[id].analysis;
     this.analysisTypeOptions.map((analysisOption, index) => {
       analysisOption.isSelected = index === id;
