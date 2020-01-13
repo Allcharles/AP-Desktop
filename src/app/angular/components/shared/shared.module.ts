@@ -5,8 +5,9 @@ import { FormsModule } from "@angular/forms";
 import { NavbarComponent } from "./navbar/navbar.component";
 import { RouterModule } from "@angular/router";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { FooterComponent } from "./footer/footer.component";
 
-const sharedComponents = [NavbarComponent];
+const sharedComponents = [NavbarComponent, FooterComponent];
 
 @NgModule({
   declarations: [sharedComponents],
