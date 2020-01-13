@@ -1,13 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output
-} from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { AnalysisType } from "../../../../electron/models/analysis";
 import { APService } from "../../../../electron/services/AP/ap.service";
+import { AnalysisEvent } from "../analysis.component";
 
 @Component({
   selector: "app-analysis-type",
@@ -16,7 +10,7 @@ import { APService } from "../../../../electron/services/AP/ap.service";
 })
 export class TypeComponent implements OnInit {
   @Input() backButton?: boolean;
-  @Output() analysisTypeEvent = new EventEmitter<AnalysisType>();
+  @Output() analysisTypeEvent = new EventEmitter<AnalysisTypeEvent>();
 
   private analysisTypeCurrent: AnalysisType;
   private analysisTypeOptions: AnalysisOption[];
@@ -44,8 +38,15 @@ export class TypeComponent implements OnInit {
       analysisOption.isSelected = index === id;
     });
 
-    this.analysisTypeEvent.emit(this.analysisTypeCurrent);
+    this.analysisTypeEvent.emit({
+      output: this.analysisTypeCurrent,
+      isValid: true
+    });
   }
+}
+
+interface AnalysisTypeEvent extends AnalysisEvent {
+  output: AnalysisType;
 }
 
 interface AnalysisOption {
