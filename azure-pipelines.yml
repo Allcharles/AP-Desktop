@@ -24,7 +24,7 @@ jobs:
           pathtoPublish: "$(Build.SourcesDirectory)/release/AP Desktop.exe"
           artifactName: ap-desktop-windows
         displayName: "Publish build files"
-  - job: Linux 18
+  - job: Linux_18
     pool:
       vmImage: "ubuntu-18.04"
     steps:
@@ -63,7 +63,7 @@ jobs:
           pathtoPublish: "$(Build.SourcesDirectory)/release/AP Desktop.rpm"
           artifactName: ap-desktop-linux-18-rpm
         displayName: "Publish linux rpm build files"
-  - job: Linux 16
+  - job: Linux_16
     pool:
       vmImage: "ubuntu-16.04"
     steps:
