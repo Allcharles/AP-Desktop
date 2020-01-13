@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { ElectronService } from "../../../../electron/services/electron/electron.service";
+import { APService } from "../../../../electron/services/AP/ap.service";
 
 @Component({
   selector: "app-analysis-type",
@@ -8,10 +8,10 @@ import { ElectronService } from "../../../../electron/services/electron/electron
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TypeComponent implements OnInit {
-  constructor(private electron: ElectronService) {}
+  constructor(private apService: APService) {}
 
   ngOnInit(): void {
     console.log("Type Selector");
-    console.log(this.electron.getAnalysisTypes());
+    console.log(this.apService.getAnalysisTypes());
   }
 }
