@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -13,8 +12,7 @@ import { AnalysisEvent } from "../analysis.component";
 @Component({
   selector: "app-analysis-output",
   templateUrl: "./output.component.html",
-  styleUrls: ["./output.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ["./output.component.scss"]
 })
 export class OutputComponent implements OnInit {
   @Output() outputFolderEvent = new EventEmitter<OutputFolderEvent>();
@@ -57,7 +55,7 @@ export class OutputComponent implements OnInit {
   /**
    * Reset output folder to defaults
    */
-  public resetFolder() {
+  public resetFolder(): void {
     this.outputFolder = this.ap.defaultOutputFolder;
     this.outputFolderEvent.emit({
       output: this.outputFolder,

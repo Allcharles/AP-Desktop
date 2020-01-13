@@ -1,6 +1,50 @@
+<!-- <app-analysis-type>
+  <div class="d-flex justify-content-around pb-3">
+    <button class="btn btn-warning">Back</button>
+    <button class="btn btn-success">Next</button>
+  </div>
+</app-analysis-type>
+<app-analysis-audio>
+  <div class="d-flex justify-content-around pb-3">
+    <button class="btn btn-warning">Back</button>
+    <button class="btn btn-success">Next</button>
+  </div>
+</app-analysis-audio>
 <app-analysis-output>
   <div class="d-flex justify-content-around pb-3">
     <button class="btn btn-warning">Back</button>
     <button class="btn btn-success">Next</button>
   </div>
-</app-analysis-output>
+</app-analysis-output> -->
+<app-analysis-confirmation>
+  <p class="lead d-flex flex-row justify-content-around">
+    <button
+      class="btn btn-danger btn-lg"
+      role="button"
+      (click)="updateParent(CANCEL)"
+    >
+      Cancel
+    </button>
+    <button
+      class="btn btn-warning btn-lg"
+      role="button"
+      (click)="updateParent(BACK)"
+    >
+      Back
+    </button>
+    <button
+      class="btn btn-warning btn-lg"
+      role="button"
+      (click)="updateParent(ADD)"
+    >
+      Add
+    </button>
+    <button
+      class="btn btn-success btn-lg"
+      role="button"
+      (click)="updateParent(RUN)"
+    >
+      Run
+    </button>
+  </p>
+</app-analysis-confirmation>

@@ -4,6 +4,7 @@ import { SharedModule } from "../shared/shared.module";
 import { AnalysisComponent } from "./analysis.component";
 import { analysisRoutes } from "./analysis.routes";
 import { AudioComponent } from "./audio/audio.component";
+import { ConfirmationComponent } from "./confirmation/confirmation.component";
 import { OutputComponent } from "./output/output.component";
 import { TypeComponent } from "./type/type.component";
 
@@ -12,10 +13,11 @@ import { TypeComponent } from "./type/type.component";
     AnalysisComponent,
     TypeComponent,
     AudioComponent,
-    OutputComponent
+    OutputComponent,
+    ConfirmationComponent
   ],
   imports: [SharedModule, RouterModule.forChild(analysisRoutes)],
-  exports: [RouterModule, AnalysisComponent],
+  exports: [RouterModule],
   providers: []
 })
 export class AnalysisModule {}

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { SharedModule } from "../../shared/shared.module";
-import { TypeComponent } from "./type.component";
+import { ConfirmationComponent } from "./confirmation.component";
 
-describe("TypeComponent", () => {
-  let component: TypeComponent;
-  let fixture: ComponentFixture<TypeComponent>;
+describe("ConfirmationComponent", () => {
+  let component: ConfirmationComponent;
+  let fixture: ComponentFixture<ConfirmationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [TypeComponent],
+      declarations: [ConfirmationComponent],
       imports: [SharedModule]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TypeComponent);
+    fixture = TestBed.createComponent(ConfirmationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
