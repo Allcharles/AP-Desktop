@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { SpectronClient } from "spectron";
-
 import commonSetup from "./common-setup";
 
 describe("ap-desktop App", function() {
@@ -14,12 +13,7 @@ describe("ap-desktop App", function() {
     browser = client as any;
   });
 
-  it("should display message saying App works !", async function() {
-    const text = await browser.getText("app-home h1");
-    expect(text).to.equal("App works !");
-  });
-
-  it("creates initial windows", async function() {
+  it("creates initial windows", async () => {
     const count = await client.getWindowCount();
     expect(count).to.equal(1);
   });
