@@ -12,7 +12,7 @@ export class TypeComponent implements OnInit {
   @Input() backButton?: boolean;
   @Output() analysisTypeEvent = new EventEmitter<AnalysisTypeEvent>();
 
-  protected analysisTypeOptions: AnalysisOption[];
+  public analysisTypeOptions: AnalysisOption[];
   private analysisTypeCurrent: AnalysisType;
 
   constructor(private apService: APService) {}

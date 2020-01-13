@@ -28,9 +28,9 @@
       <div *ngIf="loading || filesSelected">
         <ngx-datatable
           class="material"
+          columnMode="flex"
           [rows]="rows"
           [columns]="columns"
-          [columnMode]="'flex'"
           [headerHeight]="50"
           [footerHeight]="50"
           [rowHeight]="'auto'"

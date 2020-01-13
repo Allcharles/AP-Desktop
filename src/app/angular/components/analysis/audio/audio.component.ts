@@ -17,10 +17,10 @@ import { AnalysisEvent } from "../analysis.component";
 export class AudioComponent implements OnInit {
   @Output() audioFileEvent: EventEmitter<AudioFileEvent> = new EventEmitter();
 
-  protected rows: { no: number; filename: string }[];
-  protected columns = [{ prop: "no" }, { name: "Filename" }];
-  protected filesSelected: boolean;
-  protected loading: boolean;
+  public rows: { no: number; filename: string }[];
+  public columns = [{ prop: "no" }, { name: "Filename" }];
+  public filesSelected: boolean;
+  public loading: boolean;
   private audioFiles: string[];
 
   constructor(

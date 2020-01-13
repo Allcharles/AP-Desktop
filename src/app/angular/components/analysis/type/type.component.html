@@ -9,7 +9,7 @@
           href="#"
           class="list-group-item list-group-item-action"
           *ngFor="let analysisType of analysisTypeOptions; let i = index"
-          [id]="i"
+          [id]="i.toString()"
           [ngClass]="{ selected: analysisType.isSelected }"
           (click)="changeSelection(i)"
         >
