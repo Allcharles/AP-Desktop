@@ -58,6 +58,7 @@
     "@ngx-translate/http-loader": "4.0.0",
     "@types/jasmine": "3.3.16",
     "@types/jasminewd2": "2.0.8",
+    "@types/js-yaml": "3.12.1",
     "@types/mocha": "5.2.7",
     "@types/node": "12.6.9",
     "@typescript-eslint/eslint-plugin": "2.8.0",
@@ -103,6 +104,7 @@
     "@ng-bootstrap/ng-bootstrap": "5.1.5",
     "@swimlane/ngx-datatable": "16.0.3",
     "bootstrap": "4.4.1",
-    "immutable": "4.0.0-rc.12"
+    "immutable": "4.0.0-rc.12",
+    "js-yaml": "3.13.1"
   }
 }

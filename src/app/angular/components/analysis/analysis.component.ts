@@ -48,9 +48,7 @@ export class AnalysisComponent implements OnInit {
       this.analysisBatch.push(this.currentAnalysis);
     }
 
-    if (this.currentStage === Stages.SelectFolder) {
-      this.currentStage = Stages.Confirmation;
-    } else if (this.currentStage === Stages.Confirmation) {
+    if (this.currentStage === Stages.Confirmation) {
       this.currentStage = Stages.SelectType;
     } else {
       this.currentStage++;
@@ -60,7 +58,7 @@ export class AnalysisComponent implements OnInit {
       this.currentSelection = {
         analysisType: this.currentAnalysis,
         audioFiles: this.currentAnalysis.audioFiles,
-        outputFolder: this.currentAnalysis.outputFolder
+        outputFolder: this.currentAnalysis.output
       };
     } else {
       this.currentSelection = {};
@@ -76,9 +74,7 @@ export class AnalysisComponent implements OnInit {
       this.analysisBatch.pop();
     }
 
-    if (this.currentStage === Stages.Confirmation) {
-      this.currentStage = Stages.SelectFolder;
-    } else if (this.currentStage === Stages.SelectType) {
+    if (this.currentStage === Stages.SelectType) {
       this.currentStage = Stages.Confirmation;
     } else {
       this.currentStage--;
@@ -109,7 +105,7 @@ export class AnalysisComponent implements OnInit {
    */
   public receiveOutputFolder($event: AnalysisEvent): void {
     this.isValid = $event.isValid;
-    this.currentAnalysis.outputFolder = $event.output;
+    this.currentAnalysis.output = $event.output;
   }
 
   /**
@@ -141,9 +137,7 @@ enum Stages {
   SelectType,
   SelectAudio,
   SelectFolder,
-  OpenAdvanced,
-  ChangeConfig,
-  ChangeOptions,
+  Advanced,
   Confirmation,
   DisplayOutput
 }
