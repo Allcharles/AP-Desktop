@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  OnInit,
-  Output
-} from "@angular/core";
+import { Component, EventEmitter, OnInit, Output, Input } from "@angular/core";
 import { APService } from "../../../../electron/services/AP/ap.service";
 import { FileSystemService } from "../../../../electron/services/file-system/file-system.service";
 import { AnalysisEvent } from "../analysis.component";
@@ -15,18 +9,19 @@ import { AnalysisEvent } from "../analysis.component";
   styleUrls: ["./output.component.scss"]
 })
 export class OutputComponent implements OnInit {
+  @Input() outputFolder: string;
   @Output() outputFolderEvent = new EventEmitter<OutputFolderEvent>();
 
-  public outputFolder: string;
+  public currentOutputFolder: string;
 
-  constructor(
-    private ap: APService,
-    private fileSystem: FileSystemService,
-    private ref: ChangeDetectorRef
-  ) {}
+  constructor(private ap: APService, private fileSystem: FileSystemService) {}
 
   ngOnInit(): void {
-    this.resetFolder();
+    if (this.outputFolder) {
+      this.setFolder(this.outputFolder);
+    } else {
+      this.resetFolder();
+    }
   }
 
   /**
@@ -42,13 +37,7 @@ export class OutputComponent implements OnInit {
         if (response.canceled || response.filePaths.length === 0) {
           return;
         }
-
-        this.outputFolder = response.filePaths[0];
-        this.outputFolderEvent.emit({
-          output: this.outputFolder,
-          isValid: true
-        });
-        this.ref.detectChanges();
+        this.setFolder(response.filePaths[0]);
       });
   }
 
@@ -56,9 +45,17 @@ export class OutputComponent implements OnInit {
    * Reset output folder to defaults
    */
   public resetFolder(): void {
-    this.outputFolder = this.ap.defaultOutputFolder;
+    this.setFolder(this.ap.defaultOutputFolder);
+  }
+
+  /**
+   * Set the output folder
+   * @param folder Folder
+   */
+  private setFolder(folder: string): void {
+    this.currentOutputFolder = folder;
     this.outputFolderEvent.emit({
-      output: this.outputFolder,
+      output: this.currentOutputFolder,
       isValid: true
     });
   }

@@ -9,7 +9,7 @@ import { AnalysisEvent } from "../analysis.component";
   styleUrls: ["./type.component.scss"]
 })
 export class TypeComponent implements OnInit {
-  @Input() backButton?: boolean;
+  @Input() analysisType?: AnalysisType;
   @Output() analysisTypeEvent = new EventEmitter<AnalysisTypeEvent>();
 
   public analysisTypeOptions: AnalysisOption[];
@@ -18,11 +18,20 @@ export class TypeComponent implements OnInit {
   constructor(private ap: APService) {}
 
   ngOnInit(): void {
+    this.analysisTypeCurrent = this.analysisType;
+
     this.analysisTypeOptions = this.ap.getAnalysisTypes().map(analysisType => {
       return {
         analysis: analysisType,
-        isSelected: false
+        isSelected: this.analysisType
+          ? analysisType.label === this.analysisType.label
+          : false
       } as AnalysisOption;
+    });
+
+    this.analysisTypeEvent.emit({
+      output: this.analysisTypeCurrent,
+      isValid: !!this.analysisTypeCurrent
     });
   }
 

@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Input,
   OnInit,
   Output
 } from "@angular/core";
@@ -15,13 +16,14 @@ import { AnalysisEvent } from "../analysis.component";
   styleUrls: ["./audio.component.scss"]
 })
 export class AudioComponent implements OnInit {
+  @Input() audioFiles?: string[];
   @Output() audioFileEvent: EventEmitter<AudioFileEvent> = new EventEmitter();
 
   public rows: { no: number; filename: string }[];
   public columns = [{ prop: "no" }, { name: "Filename" }];
   public filesSelected: boolean;
   public loading: boolean;
-  private audioFiles: string[];
+  private currentAudioFiles: string[];
 
   constructor(
     private ap: APService,
@@ -30,16 +32,17 @@ export class AudioComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.rows = [];
-    this.audioFiles = [];
-    this.loading = false;
-    this.filesSelected = false;
+    if (this.audioFiles && this.audioFiles.length !== 0) {
+      this.updateTable(this.audioFiles);
+    } else {
+      this.noFiles();
+    }
   }
 
   /**
    * Select folder action
    */
-  protected selectFolder(): void {
+  public selectFolder(): void {
     this.loading = true;
 
     this.fileSystem
@@ -60,7 +63,7 @@ export class AudioComponent implements OnInit {
   /**
    * Select file action
    */
-  protected selectFiles(): void {
+  public selectFiles(): void {
     this.loading = true;
 
     this.fileSystem
@@ -84,49 +87,21 @@ export class AudioComponent implements OnInit {
   }
 
   /**
-   * Update table with files
-   * @param files Files
-   */
-  updateTable(files: string[]): void {
-    this.audioFiles = files;
-    this.loading = false;
-    this.filesSelected = true;
-    this.audioFileEvent.emit({
-      output: this.audioFiles,
-      isValid: true
-    });
-
-    this.rows = this.audioFiles.map((audioFile, index) => {
-      return { no: index + 1, filename: audioFile };
-    });
-
-    this.ref.detectChanges();
-  }
-
-  /**
    * Remove audio file from list
-   * @param id Index of audio file
+   * @param index Index of audio file
    */
-  removeFile(index: number): void {
-    if (this.audioFiles.length === 0) {
+  public removeFile(index: number): void {
+    if (this.currentAudioFiles.length === 0) {
       return;
     }
 
-    this.audioFiles.splice(index, 1);
+    this.currentAudioFiles.splice(index, 1);
 
     // If all files removed, disable next button
-    if (this.audioFiles.length === 0) {
-      this.audioFiles = [];
-      this.rows = [];
-      this.loading = false;
-      this.filesSelected = false;
-      this.audioFileEvent.emit({
-        output: this.audioFiles,
-        isValid: false
-      });
-      this.ref.detectChanges();
+    if (this.currentAudioFiles.length === 0) {
+      this.noFiles();
     } else {
-      this.updateTable(this.audioFiles);
+      this.updateTable(this.currentAudioFiles);
     }
   }
 
@@ -144,8 +119,38 @@ export class AudioComponent implements OnInit {
         }
 
         this.updateTable(files);
+        this.ref.detectChanges();
       }
     );
+  }
+
+  /**
+   * Update table with files
+   * @param files Files
+   */
+  private updateTable(files: string[]): void {
+    this.currentAudioFiles = files;
+    this.filesSelected = true;
+    this.loading = false;
+    this.audioFileEvent.emit({
+      output: this.currentAudioFiles,
+      isValid: true
+    });
+
+    this.rows = this.currentAudioFiles.map((audioFile, index) => {
+      return { no: index + 1, filename: audioFile };
+    });
+  }
+
+  /**
+   * Handle lack of files
+   */
+  private noFiles(): void {
+    this.audioFileEvent.emit({ isValid: false, output: [] });
+    this.currentAudioFiles = [];
+    this.filesSelected = false;
+    this.loading = false;
+    this.rows = [];
   }
 }
 

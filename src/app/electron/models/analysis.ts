@@ -322,6 +322,14 @@ export class AnalysisType {
   }
 
   /**
+   * Set the output folder path for analysis
+   * @param outputFolder Output folder path
+   */
+  public get outputFolder(): string {
+    return this._output;
+  }
+
+  /**
    * Set the list of audio files for analysis
    * @param audioFiles List of audio files
    */
