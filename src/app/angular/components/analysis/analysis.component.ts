@@ -89,10 +89,17 @@ export class AnalysisComponent implements OnInit {
    * @param $event Audio file event
    */
   public receiveAudio($event: AnalysisEvent): void {
-    console.log($event);
-
     this.isValid = $event.isValid;
     this.currentAnalysis.audioFiles = $event.output;
+  }
+
+  /**
+   * Receive analysis audio files
+   * @param $event Audio file event
+   */
+  public receiveOutputFolder($event: AnalysisEvent): void {
+    this.isValid = $event.isValid;
+    this.currentAnalysis.outputFolder = $event.output;
   }
 }
 

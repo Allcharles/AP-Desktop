@@ -1,3 +1,4 @@
+<!-- Select analysis type -->
 <app-analysis-type
   *ngIf="showStage(stages.SelectType)"
   [analysisType]="currentSelection.analysisType"
@@ -11,6 +12,8 @@
   >
   </app-analysis-nav>
 </app-analysis-type>
+
+<!-- Select audio files -->
 <app-analysis-audio
   *ngIf="showStage(stages.SelectAudio)"
   [audioFiles]="currentSelection.audioFiles"
@@ -19,10 +22,18 @@
   <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
   </app-analysis-nav>
 </app-analysis-audio>
-<app-analysis-output *ngIf="showStage(stages.SelectOutput)">
+
+<!-- Select output folder -->
+<app-analysis-output
+  *ngIf="showStage(stages.SelectOutput)"
+  [outputFolder]="currentSelection.outputFolder"
+  (outputFolderEvent)="receiveOutputFolder($event)"
+>
   <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
   </app-analysis-nav>
 </app-analysis-output>
+
+<!-- Confirmation -->
 <app-analysis-confirmation *ngIf="showStage(stages.RunAnalysis)">
   <p class="lead d-flex flex-row justify-content-around">
     <button class="btn btn-danger btn-lg" role="button">
