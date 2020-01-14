@@ -8,6 +8,7 @@ import { ConfirmationComponent } from "./confirmation/confirmation.component";
 import { TypeComponent } from "./type/type.component";
 import { NavigationComponent } from "./navigation/navigation.component";
 import { FolderComponent } from "./folder/folder.component";
+import { OutputComponent } from './output/output.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FolderComponent } from "./folder/folder.component";
     AudioComponent,
     FolderComponent,
     ConfirmationComponent,
-    NavigationComponent
+    NavigationComponent,
+    OutputComponent
   ],
   imports: [SharedModule, RouterModule.forChild(analysisRoutes)],
   exports: [RouterModule],

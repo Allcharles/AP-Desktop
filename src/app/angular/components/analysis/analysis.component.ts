@@ -43,9 +43,14 @@ export class AnalysisComponent implements OnInit {
    * Go to next stage
    */
   public next(): void {
-    if (this.currentStage === Stages.SelectOutput) {
-      this.currentStage = Stages.RunAnalysis;
-    } else if (this.currentStage === Stages.RunAnalysis) {
+    // Push current analysis to analysis batch before showing confirmation
+    if (this.currentStage === Stages.SelectFolder) {
+      this.analysisBatch.push(this.currentAnalysis);
+    }
+
+    if (this.currentStage === Stages.SelectFolder) {
+      this.currentStage = Stages.Confirmation;
+    } else if (this.currentStage === Stages.Confirmation) {
       this.currentStage = Stages.SelectType;
     } else {
       this.currentStage++;
@@ -66,10 +71,15 @@ export class AnalysisComponent implements OnInit {
    * Go to previous stage
    */
   public back(): void {
-    if (this.currentStage === Stages.RunAnalysis) {
-      this.currentStage = Stages.SelectOutput;
+    // Pop current analysis from analysis batch if backing out of showing confirmation
+    if (this.currentStage === Stages.Confirmation) {
+      this.analysisBatch.pop();
+    }
+
+    if (this.currentStage === Stages.Confirmation) {
+      this.currentStage = Stages.SelectFolder;
     } else if (this.currentStage === Stages.SelectType) {
-      this.currentStage = Stages.RunAnalysis;
+      this.currentStage = Stages.Confirmation;
     } else {
       this.currentStage--;
     }
@@ -101,6 +111,25 @@ export class AnalysisComponent implements OnInit {
     this.isValid = $event.isValid;
     this.currentAnalysis.outputFolder = $event.output;
   }
+
+  /**
+   * Cancel all analyses
+   */
+  public cancelAnalysis(): void {
+    this.analyses = [];
+    this.analysisBatch = [];
+    this.currentStage = Stages.SelectType;
+  }
+
+  /**
+   * Generate list of analyses and show output
+   */
+  public runAnalysis(): void {
+    this.analysisBatch.map(analysisType => {
+      this.analyses.push.apply(this.analyses, analysisType.generateBatch());
+    });
+    this.currentStage = Stages.DisplayOutput;
+  }
 }
 
 export interface AnalysisEvent {
@@ -111,11 +140,11 @@ export interface AnalysisEvent {
 enum Stages {
   SelectType,
   SelectAudio,
-  SelectOutput,
+  SelectFolder,
   OpenAdvanced,
   ChangeConfig,
   ChangeOptions,
-  RunAnalysis,
+  Confirmation,
   DisplayOutput
 }
 
