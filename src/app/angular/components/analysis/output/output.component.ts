@@ -37,7 +37,6 @@ export class OutputComponent implements OnInit {
         if (response.canceled || response.filePaths.length === 0) {
           return;
         }
-
         this.setFolder(response.filePaths[0]);
       });
   }

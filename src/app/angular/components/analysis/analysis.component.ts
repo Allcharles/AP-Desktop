@@ -118,3 +118,8 @@ enum Stages {
   RunAnalysis,
   DisplayOutput
 }
+
+export interface AnalysisEvent {
+  output: any;
+  isValid: boolean;
+}
