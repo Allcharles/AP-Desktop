@@ -1,49 +1,39 @@
-<!-- <app-analysis-type>
-  <div class="d-flex justify-content-around pb-3">
-    <button class="btn btn-warning">Back</button>
-    <button class="btn btn-success">Next</button>
-  </div>
+<app-analysis-type
+  *ngIf="showStage(stages.SelectType)"
+  [analysisType]="currentAnalysis"
+  (analysisTypeEvent)="receiveAnalysisType($event)"
+>
+  <app-analysis-nav
+    [isValid]="isValid"
+    [disabledBack]="analysisBatch.length === 0"
+    (back)="back()"
+    (next)="next()"
+  >
+  </app-analysis-nav>
 </app-analysis-type>
-<app-analysis-audio>
-  <div class="d-flex justify-content-around pb-3">
-    <button class="btn btn-warning">Back</button>
-    <button class="btn btn-success">Next</button>
-  </div>
+<app-analysis-audio
+  *ngIf="showStage(stages.SelectAudio)"
+  (audioFileEvent)="receiveAudio($event)"
+>
+  <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
+  </app-analysis-nav>
 </app-analysis-audio>
-<app-analysis-output>
-  <div class="d-flex justify-content-around pb-3">
-    <button class="btn btn-warning">Back</button>
-    <button class="btn btn-success">Next</button>
-  </div>
-</app-analysis-output> -->
-<app-analysis-confirmation>
+<app-analysis-output *ngIf="showStage(stages.SelectOutput)">
+  <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
+  </app-analysis-nav>
+</app-analysis-output>
+<app-analysis-confirmation *ngIf="showStage(stages.RunAnalysis)">
   <p class="lead d-flex flex-row justify-content-around">
-    <button
-      class="btn btn-danger btn-lg"
-      role="button"
-      (click)="updateParent(CANCEL)"
-    >
+    <button class="btn btn-danger btn-lg" role="button">
       Cancel
     </button>
-    <button
-      class="btn btn-warning btn-lg"
-      role="button"
-      (click)="updateParent(BACK)"
-    >
+    <button class="btn btn-warning btn-lg" role="button" (click)="back()">
       Back
     </button>
-    <button
-      class="btn btn-warning btn-lg"
-      role="button"
-      (click)="updateParent(ADD)"
-    >
+    <button class="btn btn-warning btn-lg" role="button" (click)="next()">
       Add
     </button>
-    <button
-      class="btn btn-success btn-lg"
-      role="button"
-      (click)="updateParent(RUN)"
-    >
+    <button class="btn btn-success btn-lg" role="button">
       Run
     </button>
   </p>

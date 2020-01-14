@@ -34,6 +34,7 @@ export class AudioComponent implements OnInit {
     this.audioFiles = [];
     this.loading = false;
     this.filesSelected = false;
+    this.audioFileEvent.emit({ isValid: false, output: [] });
   }
 
   /**

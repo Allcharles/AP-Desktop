@@ -7,6 +7,7 @@ import { AudioComponent } from "./audio/audio.component";
 import { ConfirmationComponent } from "./confirmation/confirmation.component";
 import { OutputComponent } from "./output/output.component";
 import { TypeComponent } from "./type/type.component";
+import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { TypeComponent } from "./type/type.component";
     TypeComponent,
     AudioComponent,
     OutputComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    NavigationComponent
   ],
   imports: [SharedModule, RouterModule.forChild(analysisRoutes)],
   exports: [RouterModule],
