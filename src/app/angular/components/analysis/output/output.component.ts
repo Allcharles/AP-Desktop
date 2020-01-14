@@ -1,5 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef
+} from "@angular/core";
 import { AnalysisItem } from "src/app/electron/models/analysis";
+import { APService } from "../../../../electron/services/AP/ap.service";
 
 @Component({
   selector: "app-analysis-output",
@@ -15,40 +23,27 @@ export class OutputComponent implements OnInit {
   public currentProgress: number;
   public currentAnalysis: AnalysisItem;
   public running: boolean;
-  public pause: boolean;
 
-  constructor() {}
+  constructor(private ap: APService, private ref: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    console.log("Analyses to run");
-    console.log(this.analyses);
-
     this.totalFiles = this.analyses.length;
     this.completeFiles = 0;
     this.currentProgress = 0;
-    this.pause = false;
-    this.running = false;
-    this.analyseFiles();
-  }
+    this.running = true;
 
-  /**
-   * Toggle pause analysis after currently running file is finished.
-   */
-  public pauseAnalysis(): void {
-    this.pause = !this.pause;
-
-    // If unpause and analysis is no longer running
-    if (!this.pause && !this.running) {
-      this.analyseFiles();
-    }
-  }
-
-  /**
-   * Resets analyses and sends user back to analysis selection page
-   */
-  public stopAnalysis(): void {
-    this.analyses = [];
-    this.newAnalysis();
+    this.ap.analyseFiles(this.analyses).subscribe(
+      update => {
+        this.currentAnalysis = update.analysis;
+        this.currentProgress = update.progress;
+        this.completeFiles = update.fileNumber;
+        this.ref.detectChanges();
+      },
+      err => {},
+      () => {
+        this.running = false;
+      }
+    );
   }
 
   /**
@@ -65,6 +60,4 @@ export class OutputComponent implements OnInit {
   public newAnalysis(): void {
     this.onComplete.emit(true);
   }
-
-  private analyseFiles(): void {}
 }
