@@ -9,6 +9,9 @@ import { TypeComponent } from "./type/type.component";
 import { NavigationComponent } from "./navigation/navigation.component";
 import { FolderComponent } from "./folder/folder.component";
 import { OutputComponent } from './output/output.component';
+import { AdvancedComponent } from './advanced/advanced.component';
+import { OptionsComponent } from './options/options.component';
+import { ConfigComponent } from './config/config.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,10 @@ import { OutputComponent } from './output/output.component';
     FolderComponent,
     ConfirmationComponent,
     NavigationComponent,
-    OutputComponent
+    OutputComponent,
+    AdvancedComponent,
+    OptionsComponent,
+    ConfigComponent
   ],
   imports: [SharedModule, RouterModule.forChild(analysisRoutes)],
   exports: [RouterModule],
