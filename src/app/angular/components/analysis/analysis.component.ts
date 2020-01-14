@@ -1,17 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AnalysisItem, AnalysisType } from "../../../electron/models/analysis";
 
-enum Stages {
-  SelectType,
-  SelectAudio,
-  SelectOutput,
-  OpenAdvanced,
-  ChangeConfig,
-  ChangeOptions,
-  RunAnalysis,
-  DisplayOutput
-}
-
 @Component({
   selector: "app-analysis",
   templateUrl: "./analysis.component.html",
@@ -110,4 +99,15 @@ export class AnalysisComponent implements OnInit {
 export interface AnalysisEvent {
   output: any;
   isValid: boolean;
+}
+
+enum Stages {
+  SelectType,
+  SelectAudio,
+  SelectOutput,
+  OpenAdvanced,
+  ChangeConfig,
+  ChangeOptions,
+  RunAnalysis,
+  DisplayOutput
 }
