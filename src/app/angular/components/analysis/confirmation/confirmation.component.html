@@ -1,0 +1,17 @@
+<div class="jumbotron container mt-3">
+  <h1 class="display-4">Run Analysis</h1>
+
+  <p class="lead">
+    Run the following analysis tasks:
+  </p>
+
+  <hr class="my-4" />
+
+  <li *ngFor="let analysisGroup of analysisBatch">
+    {{ analysisGroup.label }} on {{ analysisGroup.audioFiles.length }} file/s
+  </li>
+
+  <hr class="my-4" />
+
+  <ng-content></ng-content>
+</div>

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { SharedModule } from "../shared/shared.module";
-import { AnalysisComponent } from "./analysis.component";
+import { SharedModule } from "../../shared/shared.module";
+import { TypeComponent } from "./type.component";
 
-describe("AnalysisComponent", () => {
-  let component: AnalysisComponent;
-  let fixture: ComponentFixture<AnalysisComponent>;
+describe("TypeComponent", () => {
+  let component: TypeComponent;
+  let fixture: ComponentFixture<TypeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AnalysisComponent],
+      declarations: [TypeComponent],
       imports: [SharedModule]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AnalysisComponent);
+    fixture = TestBed.createComponent(TypeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

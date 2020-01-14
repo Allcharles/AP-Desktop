@@ -10,3 +10,8 @@ export class AnalysisComponent implements OnInit {
 
   ngOnInit(): void {}
 }
+
+export interface AnalysisEvent {
+  output: any;
+  isValid: boolean;
+}

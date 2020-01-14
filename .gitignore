@@ -50,5 +50,4 @@ package-lock.json
 Thumbs.db
 
 # AP
-ap/
-temp/
+/ap/

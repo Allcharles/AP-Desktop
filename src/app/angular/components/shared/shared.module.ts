@@ -1,11 +1,12 @@
-import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { TranslateModule } from "@ngx-translate/core";
+import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { NavbarComponent } from "./navbar/navbar.component";
 import { RouterModule } from "@angular/router";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { TranslateModule } from "@ngx-translate/core";
+import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { FooterComponent } from "./footer/footer.component";
+import { NavbarComponent } from "./navbar/navbar.component";
 
 const sharedComponents = [NavbarComponent, FooterComponent];
 
@@ -16,7 +17,8 @@ const sharedComponents = [NavbarComponent, FooterComponent];
     RouterModule,
     TranslateModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    NgxDatatableModule
   ],
   exports: [
     CommonModule,
@@ -24,6 +26,7 @@ const sharedComponents = [NavbarComponent, FooterComponent];
     TranslateModule,
     FormsModule,
     NgbModule,
+    NgxDatatableModule,
     sharedComponents
   ]
 })
