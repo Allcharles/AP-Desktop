@@ -3,7 +3,7 @@ import { extname, join } from "path";
 import { AnalysisType, AnalysisItem } from "../../models/analysis";
 import { analysisTypes } from "../../models/analysisTypes";
 import { ElectronService } from "../electron/electron.service";
-import { BehaviorSubject, Subject } from "rxjs";
+import { Subject } from "rxjs";
 import { ChildProcess } from "child_process";
 import APTerminal from "../../models/terminal";
 
@@ -115,9 +115,10 @@ export class APService extends ElectronService {
       });
 
       // Handle terminal error
-      terminal.on("error", () => {
+      terminal.on("error", err => {
         subject.next({
           error: true,
+          errorDetails: err,
           analysis,
           progress,
           fileNumber
@@ -186,6 +187,7 @@ export class APService extends ElectronService {
 
 export interface AnalysisProgress {
   error: boolean;
+  errorDetails?: any;
   analysis: AnalysisItem;
   progress: number;
   fileNumber: number;

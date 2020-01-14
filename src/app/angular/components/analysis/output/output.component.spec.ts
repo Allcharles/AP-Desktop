@@ -16,6 +16,7 @@ describe("OutputComponent", () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(OutputComponent);
     component = fixture.componentInstance;
+    component.analyses = [];
     fixture.detectChanges();
   });
 

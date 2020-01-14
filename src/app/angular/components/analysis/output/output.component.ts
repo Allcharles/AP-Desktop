@@ -6,7 +6,7 @@ import {
   EventEmitter,
   ChangeDetectorRef
 } from "@angular/core";
-import { AnalysisItem } from "src/app/electron/models/analysis";
+import { AnalysisItem } from "../../../../electron/models/analysis";
 import { APService } from "../../../../electron/services/AP/ap.service";
 
 @Component({
@@ -34,12 +34,18 @@ export class OutputComponent implements OnInit {
 
     this.ap.analyseFiles(this.analyses).subscribe(
       update => {
-        this.currentAnalysis = update.analysis;
-        this.currentProgress = update.progress;
-        this.completeFiles = update.fileNumber;
-        this.ref.detectChanges();
+        if (update.error) {
+          console.error("Analysis Error: ", update.errorDetails);
+        } else {
+          this.currentAnalysis = update.analysis;
+          this.currentProgress = update.progress;
+          this.completeFiles = update.fileNumber;
+          this.ref.detectChanges();
+        }
       },
-      err => {},
+      err => {
+        console.error("Analysis Error: ", err);
+      },
       () => {
         this.running = false;
       }
