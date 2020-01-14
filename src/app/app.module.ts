@@ -8,7 +8,6 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import "reflect-metadata";
 import "../polyfills";
 import { AnalysisModule } from "./angular/components/analysis/analysis.module";
-import { HomeModule } from "./angular/components/home/home.module";
 import { SharedModule } from "./angular/components/shared/shared.module";
 import { AppComponent } from "./app.component";
 import { appRoutes } from "./app.routes";
@@ -27,7 +26,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     ElectronModule,
     SharedModule,
-    HomeModule,
     AnalysisModule,
     RouterModule.forRoot(appRoutes, { useHash: true }),
     TranslateModule.forRoot({
