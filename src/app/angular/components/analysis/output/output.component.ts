@@ -45,9 +45,12 @@ export class OutputComponent implements OnInit {
       },
       err => {
         console.error("Analysis Error: ", err);
+        this.running = false;
+        this.ref.detectChanges();
       },
       () => {
         this.running = false;
+        this.ref.detectChanges();
       }
     );
   }
@@ -56,7 +59,7 @@ export class OutputComponent implements OnInit {
    * Round the current progress value for display in the progress bar
    * @returns Floored value of currentProgress
    */
-  public displayCurrentProgress() {
+  public displayCurrentProgress(): number {
     return Math.floor(this.currentProgress);
   }
 

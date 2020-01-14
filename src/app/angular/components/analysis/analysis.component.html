@@ -42,7 +42,7 @@
     <button
       class="btn btn-danger btn-lg"
       role="button"
-      (click)="cancelAnalysis()"
+      (click)="resetProgress()"
     >
       Cancel
     </button>
@@ -66,5 +66,6 @@
 <app-analysis-output
   *ngIf="showStage(stages.DisplayOutput)"
   [analyses]="analyses"
+  (onComplete)="resetProgress()"
 >
 </app-analysis-output>

@@ -24,6 +24,9 @@ export class APService extends ElectronService {
     "wma"
   ];
 
+  /**
+   * Returns the default output folder
+   */
   public get defaultOutputFolder(): string {
     if (!this.isElectron) {
       return "";
@@ -57,6 +60,10 @@ export class APService extends ElectronService {
     });
   }
 
+  /**
+   * Analysis all files. Sends updates back to program through subject.
+   * @param analyses Analysis item list
+   */
   public analyseFiles(analyses: AnalysisItem[]): Subject<AnalysisProgress> {
     if (!this.isElectron) {
       return;
@@ -72,11 +79,17 @@ export class APService extends ElectronService {
     return subject;
   }
 
+  /**
+   * Recursively analyse all analysis items from list
+   * @param subject Subject to update
+   * @param analyses Analysis item list
+   * @param fileNumber Number of file to analyse
+   */
   private recursiveAnalysis(
     subject: Subject<AnalysisProgress>,
     analyses: AnalysisItem[],
-    fileNumber: number = 1
-  ) {
+    fileNumber = 1
+  ): void {
     if (analyses.length === 0) {
       AnalysisType.cleanupTemporaryFiles();
       subject.complete();
@@ -116,6 +129,7 @@ export class APService extends ElectronService {
 
       // Handle terminal error
       terminal.on("error", err => {
+        progress = 100;
         subject.next({
           error: true,
           errorDetails: err,
@@ -129,7 +143,7 @@ export class APService extends ElectronService {
       // Handle terminal closing
       terminal.on("close", code => {
         progress = 100;
-        let error = code !== APTerminal.OK_CODE;
+        const error = code !== APTerminal.OK_CODE;
         subject.next({
           error,
           analysis,
@@ -141,6 +155,10 @@ export class APService extends ElectronService {
     }
   }
 
+  /**
+   * Handle terminal output from analysis
+   * @param data Terminal output
+   */
   private handleTerminalData(data: string): number {
     const progressReport = "Completed segment";
     const parallelRegex = /INFO.+\/(\d+).+ (\d+) /; // Completed segment ?/? - roughly ? completed
@@ -175,11 +193,6 @@ export class APService extends ElectronService {
       segNumber = parseFloat(res[1]);
       segTotal = parseFloat(res[2]);
     }
-
-    console.log("Terminal: ", data);
-    console.log("Regex: ", res);
-    console.log("segNumber: ", segNumber);
-    console.log("segTotal: ", segTotal);
 
     return (segNumber / segTotal) * 100;
   }

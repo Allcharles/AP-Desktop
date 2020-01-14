@@ -86,7 +86,7 @@
       </button> -->
       <button
         class="btn btn-outline-success"
-        [disabled]="completeFiles !== totalFiles"
+        [disabled]="running"
         (click)="newAnalysis()"
       >
         New Analysis

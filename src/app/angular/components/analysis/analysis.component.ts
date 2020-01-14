@@ -115,7 +115,7 @@ export class AnalysisComponent implements OnInit {
   /**
    * Cancel all analyses
    */
-  public cancelAnalysis(): void {
+  public resetProgress(): void {
     this.analyses = [];
     this.analysisBatch = [];
     this.currentStage = Stages.SelectType;
@@ -126,7 +126,7 @@ export class AnalysisComponent implements OnInit {
    */
   public runAnalysis(): void {
     this.analysisBatch.map(analysisType => {
-      this.analyses.push.apply(this.analyses, analysisType.generateBatch());
+      this.analyses = this.analyses.concat(analysisType.generateBatch());
     });
     this.currentStage = Stages.DisplayOutput;
   }
@@ -146,9 +146,4 @@ enum Stages {
   ChangeOptions,
   Confirmation,
   DisplayOutput
-}
-
-export interface AnalysisEvent {
-  output: any;
-  isValid: boolean;
 }
