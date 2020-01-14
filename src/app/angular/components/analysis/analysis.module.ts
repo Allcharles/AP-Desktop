@@ -5,18 +5,20 @@ import { AnalysisComponent } from "./analysis.component";
 import { analysisRoutes } from "./analysis.routes";
 import { AudioComponent } from "./audio/audio.component";
 import { ConfirmationComponent } from "./confirmation/confirmation.component";
-import { OutputComponent } from "./output/output.component";
 import { TypeComponent } from "./type/type.component";
-import { NavigationComponent } from './navigation/navigation.component';
+import { NavigationComponent } from "./navigation/navigation.component";
+import { FolderComponent } from "./folder/folder.component";
+import { OutputComponent } from './output/output.component';
 
 @NgModule({
   declarations: [
     AnalysisComponent,
     TypeComponent,
     AudioComponent,
-    OutputComponent,
+    FolderComponent,
     ConfirmationComponent,
-    NavigationComponent
+    NavigationComponent,
+    OutputComponent
   ],
   imports: [SharedModule, RouterModule.forChild(analysisRoutes)],
   exports: [RouterModule],

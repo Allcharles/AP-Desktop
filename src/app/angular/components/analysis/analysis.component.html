@@ -24,19 +24,26 @@
 </app-analysis-audio>
 
 <!-- Select output folder -->
-<app-analysis-output
-  *ngIf="showStage(stages.SelectOutput)"
+<app-analysis-folder
+  *ngIf="showStage(stages.SelectFolder)"
   [outputFolder]="currentSelection.outputFolder"
   (outputFolderEvent)="receiveOutputFolder($event)"
 >
   <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
   </app-analysis-nav>
-</app-analysis-output>
+</app-analysis-folder>
 
 <!-- Confirmation -->
-<app-analysis-confirmation *ngIf="showStage(stages.RunAnalysis)">
+<app-analysis-confirmation
+  *ngIf="showStage(stages.Confirmation)"
+  [analysisBatch]="analysisBatch"
+>
   <p class="lead d-flex flex-row justify-content-around">
-    <button class="btn btn-danger btn-lg" role="button">
+    <button
+      class="btn btn-danger btn-lg"
+      role="button"
+      (click)="resetProgress()"
+    >
       Cancel
     </button>
     <button class="btn btn-warning btn-lg" role="button" (click)="back()">
@@ -45,8 +52,20 @@
     <button class="btn btn-warning btn-lg" role="button" (click)="next()">
       Add
     </button>
-    <button class="btn btn-success btn-lg" role="button">
+    <button
+      class="btn btn-success btn-lg"
+      role="button"
+      (click)="runAnalysis()"
+    >
       Run
     </button>
   </p>
 </app-analysis-confirmation>
+
+<!-- Output -->
+<app-analysis-output
+  *ngIf="showStage(stages.DisplayOutput)"
+  [analyses]="analyses"
+  (onComplete)="resetProgress()"
+>
+</app-analysis-output>

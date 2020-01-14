@@ -1,8 +1,11 @@
 import { Injectable } from "@angular/core";
 import { extname, join } from "path";
-import { AnalysisType } from "../../models/analysis";
+import { AnalysisType, AnalysisItem } from "../../models/analysis";
 import { analysisTypes } from "../../models/analysisTypes";
 import { ElectronService } from "../electron/electron.service";
+import { Subject } from "rxjs";
+import { ChildProcess } from "child_process";
+import APTerminal from "../../models/terminal";
 
 @Injectable({
   providedIn: "root"
@@ -21,6 +24,9 @@ export class APService extends ElectronService {
     "wma"
   ];
 
+  /**
+   * Returns the default output folder
+   */
   public get defaultOutputFolder(): string {
     if (!this.isElectron) {
       return "";
@@ -53,4 +59,149 @@ export class APService extends ElectronService {
       return extname(file) === `.${ext}`;
     });
   }
+
+  /**
+   * Analysis all files. Sends updates back to program through subject.
+   * @param analyses Analysis item list
+   */
+  public analyseFiles(analyses: AnalysisItem[]): Subject<AnalysisProgress> {
+    if (!this.isElectron) {
+      return;
+    }
+
+    const subject = new Subject<AnalysisProgress>();
+
+    // Run analysis in separate thread
+    setTimeout(() => {
+      this.recursiveAnalysis(subject, analyses);
+    }, 0);
+
+    return subject;
+  }
+
+  /**
+   * Recursively analyse all analysis items from list
+   * @param subject Subject to update
+   * @param analyses Analysis item list
+   * @param fileNumber Number of file to analyse
+   */
+  private recursiveAnalysis(
+    subject: Subject<AnalysisProgress>,
+    analyses: AnalysisItem[],
+    fileNumber = 1
+  ): void {
+    if (analyses.length === 0) {
+      AnalysisType.cleanupTemporaryFiles();
+      subject.complete();
+      return;
+    }
+
+    // Loop over all analysis items
+    if (analyses.length > 0) {
+      const analysis = analyses.pop();
+      const terminal: ChildProcess = analysis.spawn();
+      let progress = 0;
+
+      subject.next({
+        error: false,
+        analysis,
+        progress,
+        fileNumber
+      });
+
+      // Handle terminal output
+      terminal.stdout.on("data", data => {
+        const temp = this.handleTerminalData(data.toString());
+
+        if (temp) {
+          progress = temp;
+        } else {
+          return;
+        }
+
+        subject.next({
+          error: false,
+          analysis,
+          progress,
+          fileNumber
+        });
+      });
+
+      // Handle terminal error
+      terminal.on("error", err => {
+        progress = 100;
+        subject.next({
+          error: true,
+          errorDetails: err,
+          analysis,
+          progress,
+          fileNumber
+        });
+        this.recursiveAnalysis(subject, analyses, fileNumber + 1);
+      });
+
+      // Handle terminal closing
+      terminal.on("close", code => {
+        progress = 100;
+        const error = code !== APTerminal.OK_CODE;
+        subject.next({
+          error,
+          analysis,
+          progress,
+          fileNumber
+        });
+        this.recursiveAnalysis(subject, analyses, fileNumber + 1);
+      });
+    }
+  }
+
+  /**
+   * Handle terminal output from analysis
+   * @param data Terminal output
+   */
+  private handleTerminalData(data: string): number {
+    const progressReport = "Completed segment";
+    const parallelRegex = /INFO.+\/(\d+).+ (\d+) /; // Completed segment ?/? - roughly ? completed
+    const serialRegex = /INFO.+(\d+)\/(\d+)$/; // Completed segment ?/?
+    const matchLength = 3;
+    let isParallel = true;
+
+    // Ignore data if it does not contain progress information
+    if (!data.includes(progressReport)) {
+      return;
+    }
+
+    // Determine what type of search is conducted
+    let res = parallelRegex.exec(data);
+    if (!res) {
+      isParallel = false;
+      res = serialRegex.exec(data);
+    }
+
+    if (!res || res.length !== matchLength) {
+      return;
+    }
+
+    // Calculate progress
+    let segNumber: number;
+    let segTotal: number;
+
+    if (isParallel) {
+      segNumber = parseFloat(res[2]);
+      segTotal = parseFloat(res[1]);
+    } else {
+      segNumber = parseFloat(res[1]);
+      segTotal = parseFloat(res[2]);
+    }
+
+    return (segNumber / segTotal) * 100;
+  }
+}
+
+export interface AnalysisProgress {
+  error: boolean;
+  errorDetails?: any;
+  analysis: AnalysisItem;
+  progress: number;
+  fileNumber: number;
 }
