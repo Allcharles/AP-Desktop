@@ -231,10 +231,10 @@ export class APService extends ElectronService {
    * @param target Output folder path
    */
   private copyFolderRecursiveSync(source: string, target: string): void {
-    var files = [];
+    let files = [];
 
     //check if folder needs to be created or integrated
-    var targetFolder = join(target, basename(source));
+    const targetFolder = join(target, basename(source));
     if (!existsSync(targetFolder)) {
       mkdirSync(targetFolder);
     }
@@ -244,11 +244,11 @@ export class APService extends ElectronService {
       files = readdirSync(source);
 
       for (const file of files) {
-        var curSource = join(source, file);
+        const curSource = join(source, file);
         if (lstatSync(curSource).isDirectory()) {
           this.copyFolderRecursiveSync(curSource, targetFolder);
         } else {
-          var targetFile = targetFolder;
+          let targetFile = targetFolder;
 
           //if target is a directory a new file with the same name will be created
           if (existsSync(targetFolder)) {
