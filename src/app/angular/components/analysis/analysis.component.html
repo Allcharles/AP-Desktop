@@ -24,14 +24,14 @@
 </app-analysis-audio>
 
 <!-- Select output folder -->
-<app-analysis-output
+<app-analysis-folder
   *ngIf="showStage(stages.SelectOutput)"
   [outputFolder]="currentSelection.outputFolder"
   (outputFolderEvent)="receiveOutputFolder($event)"
 >
   <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
   </app-analysis-nav>
-</app-analysis-output>
+</app-analysis-folder>
 
 <!-- Confirmation -->
 <app-analysis-confirmation *ngIf="showStage(stages.RunAnalysis)">

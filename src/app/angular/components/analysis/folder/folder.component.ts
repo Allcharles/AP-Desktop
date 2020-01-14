@@ -4,11 +4,11 @@ import { FileSystemService } from "../../../../electron/services/file-system/fil
 import { AnalysisEvent } from "../analysis.component";
 
 @Component({
-  selector: "app-analysis-output",
-  templateUrl: "./output.component.html",
-  styleUrls: ["./output.component.scss"]
+  selector: "app-analysis-folder",
+  templateUrl: "./folder.component.html",
+  styleUrls: ["./folder.component.scss"]
 })
-export class OutputComponent implements OnInit {
+export class FolderComponent implements OnInit {
   @Input() outputFolder: string;
   @Output() outputFolderEvent = new EventEmitter<OutputFolderEvent>();
 

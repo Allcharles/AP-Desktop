@@ -25,8 +25,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     FormsModule,
     HttpClientModule,
     ElectronModule,
-    SharedModule,
-    AnalysisModule,
     RouterModule.forRoot(appRoutes, { useHash: true }),
     TranslateModule.forRoot({
       loader: {
@@ -34,7 +32,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    SharedModule,
+    AnalysisModule
   ],
   providers: [],
   bootstrap: [AppComponent]
