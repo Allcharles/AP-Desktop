@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { OpenDialogOptions, OpenDialogReturnValue } from "electron";
-import { readdir, stat } from "fs";
 import { resolve } from "path";
 import { ElectronService } from "../electron/electron.service";
 
@@ -73,7 +72,7 @@ export class FileSystemService extends ElectronService {
     }
 
     let results: string[] = [];
-    readdir(dir, (err: Error, list: string[]) => {
+    this.fs.readdir(dir, (err: Error, list: string[]) => {
       if (err) {
         return done(err);
       }
@@ -83,7 +82,7 @@ export class FileSystemService extends ElectronService {
       }
       list.forEach((file: string) => {
         file = resolve(dir, file);
-        stat(file, (err2, fileStats) => {
+        this.fs.stat(file, (err2, fileStats) => {
           if (fileStats && fileStats.isDirectory()) {
             this.searchDirectory(file, filter, (err3, res) => {
               if (res) {

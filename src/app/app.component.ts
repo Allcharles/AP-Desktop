@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { ElectronService } from "./electron/services/electron/electron.service";
+import { APService } from "./electron/services/AP/ap.service";
 
 @Component({
   selector: "app-root",
@@ -8,11 +8,8 @@ import { ElectronService } from "./electron/services/electron/electron.service";
   styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-  constructor(
-    public electronService: ElectronService,
-    private translate: TranslateService
-  ) {
-    translate.setDefaultLang("en");
+  constructor(private ap: APService, private translate: TranslateService) {
+    this.translate.setDefaultLang("en");
     // console.log("AppConfig", AppConfig);
 
     // if (electronService.isElectron) {

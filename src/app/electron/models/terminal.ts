@@ -6,11 +6,9 @@ import { join } from "path";
  * Create AP specific terminal commands
  */
 export default class APTerminal {
-  private static AP = join(
-    remote.app.getAppPath(),
-    "ap",
-    "AnalysisPrograms.exe"
-  );
+  public static apLocation = remote.app.getPath("home");
+  public static apFolder = join(APTerminal.apLocation, "ap");
+  private static AP = join(APTerminal.apFolder, "AnalysisPrograms.exe");
 
   /**
    * AP Error Codes
@@ -41,7 +39,7 @@ export default class APTerminal {
    * Creates and returns a ChildProcess terminal running AP specific commands.
    * @param func Function to call
    * @param args List of arguments to pass to the function
-   * @returns ChildProces ready to run AP specific terminal commands
+   * @returns ChildProcess ready to run AP specific terminal commands
    */
   static spawn(func: string, args?: string[]): ChildProcess {
     console.debug("AP Terminal Spawned with the following parameters:");

@@ -1,11 +1,17 @@
 import { Injectable } from "@angular/core";
-import { extname, join } from "path";
+import { extname, join, basename } from "path";
 import { AnalysisType, AnalysisItem } from "../../models/analysis";
 import { analysisTypes } from "../../models/analysisTypes";
 import { ElectronService } from "../electron/electron.service";
 import { Subject } from "rxjs";
-import { ChildProcess } from "child_process";
 import APTerminal from "../../models/terminal";
+import {
+  existsSync,
+  mkdirSync,
+  lstatSync,
+  readdirSync,
+  copyFileSync
+} from "fs";
 
 @Injectable({
   providedIn: "root"
@@ -23,6 +29,28 @@ export class APService extends ElectronService {
     "alac",
     "wma"
   ];
+
+  constructor() {
+    super();
+
+    if (!this.isElectron) {
+      return;
+    }
+
+    setTimeout(() => {
+      //TODO Add a check for the version AP to determine if an update is required
+
+      // Download AP to client computer
+      if (!existsSync(APTerminal.apFolder)) {
+        mkdirSync(APTerminal.apFolder);
+
+        this.copyFolderRecursiveSync(
+          join(this.remote.app.getAppPath(), "dist", "assets", "ap"),
+          APTerminal.apLocation
+        );
+      }
+    }, 0);
+  }
 
   /**
    * Returns the default output folder
@@ -99,7 +127,7 @@ export class APService extends ElectronService {
     // Loop over all analysis items
     if (analyses.length > 0) {
       const analysis = analyses.pop();
-      const terminal: ChildProcess = analysis.spawn();
+      const terminal = analysis.spawn();
       let progress = 0;
 
       subject.next({
@@ -195,6 +223,44 @@ export class APService extends ElectronService {
     }
 
     return (segNumber / segTotal) * 100;
+  }
+
+  /**
+   * Copy folder and its files recursively
+   * @param source Source folder path
+   * @param target Output folder path
+   */
+  private copyFolderRecursiveSync(source: string, target: string): void {
+    var files = [];
+
+    //check if folder needs to be created or integrated
+    var targetFolder = join(target, basename(source));
+    if (!existsSync(targetFolder)) {
+      mkdirSync(targetFolder);
+    }
+
+    //copy
+    if (lstatSync(source).isDirectory()) {
+      files = readdirSync(source);
+
+      for (const file of files) {
+        var curSource = join(source, file);
+        if (lstatSync(curSource).isDirectory()) {
+          this.copyFolderRecursiveSync(curSource, targetFolder);
+        } else {
+          var targetFile = targetFolder;
+
+          //if target is a directory a new file with the same name will be created
+          if (existsSync(targetFolder)) {
+            if (lstatSync(targetFolder).isDirectory()) {
+              targetFile = join(targetFolder, basename(curSource));
+            }
+          }
+
+          copyFileSync(curSource, targetFile);
+        }
+      }
+    }
   }
 }
 

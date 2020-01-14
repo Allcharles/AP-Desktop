@@ -50,4 +50,4 @@ package-lock.json
 Thumbs.db
 
 # AP
-/ap/
+/src/assets/ap
