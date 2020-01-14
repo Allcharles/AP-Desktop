@@ -13,13 +13,13 @@ export class NavigationComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  goBack() {
+  goBack(): void {
     this.back.emit();
   }
 
-  goNext() {
+  goNext(): void {
     this.next.emit();
   }
 }

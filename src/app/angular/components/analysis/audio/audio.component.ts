@@ -145,7 +145,7 @@ export class AudioComponent implements OnInit {
   /**
    * Handle lack of files
    */
-  private noFiles() {
+  private noFiles(): void {
     this.audioFileEvent.emit({ isValid: false, output: [] });
     this.currentAudioFiles = [];
     this.filesSelected = false;
