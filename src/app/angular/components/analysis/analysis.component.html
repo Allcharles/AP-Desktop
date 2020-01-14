@@ -1,6 +1,6 @@
 <app-analysis-type
   *ngIf="showStage(stages.SelectType)"
-  [analysisType]="currentAnalysis"
+  [analysisType]="currentSelection.analysisType"
   (analysisTypeEvent)="receiveAnalysisType($event)"
 >
   <app-analysis-nav
@@ -13,6 +13,7 @@
 </app-analysis-type>
 <app-analysis-audio
   *ngIf="showStage(stages.SelectAudio)"
+  [audioFiles]="currentSelection.audioFiles"
   (audioFileEvent)="receiveAudio($event)"
 >
   <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">

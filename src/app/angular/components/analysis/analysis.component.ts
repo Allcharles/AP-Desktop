@@ -14,12 +14,19 @@ export class AnalysisComponent implements OnInit {
   public stages = Stages;
   public isValid: boolean;
 
+  public currentSelection: {
+    analysisType?: AnalysisType;
+    audioFiles?: string[];
+    outputFolder?: string;
+  };
+
   constructor() {}
 
   ngOnInit(): void {
     this.currentStage = Stages.SelectType;
     this.analyses = [];
     this.analysisBatch = [];
+    this.currentSelection = {};
     this.isValid = false;
   }
 
@@ -42,6 +49,16 @@ export class AnalysisComponent implements OnInit {
       this.currentStage = Stages.SelectType;
     } else {
       this.currentStage++;
+    }
+
+    if (this.currentAnalysis) {
+      this.currentSelection = {
+        analysisType: this.currentAnalysis,
+        audioFiles: this.currentAnalysis.audioFiles,
+        outputFolder: this.currentAnalysis.outputFolder
+      };
+    } else {
+      this.currentSelection = {};
     }
   }
 
