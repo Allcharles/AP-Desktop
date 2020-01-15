@@ -43,7 +43,7 @@ export class OptionComponent implements OnInit, OnChanges {
   }
 
   public isChecked(): boolean {
-    return !!this.value ? true : false;
+    return this.value ? true : false;
   }
 }
 

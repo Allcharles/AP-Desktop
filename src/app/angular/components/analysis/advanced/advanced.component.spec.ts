@@ -6,6 +6,7 @@ import {
 } from "src/app/electron/models/analysis";
 import { DEFAULT_OPTIONS } from "src/app/electron/models/analysisTypes";
 import { AnalysisModule } from "../analysis.module";
+import { SharedModule } from "../../shared/shared.module";
 
 describe("AdvancedComponent", () => {
   let component: AdvancedComponent;
@@ -15,7 +16,7 @@ describe("AdvancedComponent", () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [],
-      imports: [AnalysisModule]
+      imports: [SharedModule, AnalysisModule]
     }).compileComponents();
   }));
 
