@@ -1,17 +1,49 @@
-import { Component, OnInit, Input } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges
+} from "@angular/core";
 import { AnalysisType } from "../../../../../electron/models/analysis";
 
 @Component({
   selector: "app-option",
   templateUrl: "./option.component.html"
 })
-export class OptionComponent implements OnInit {
+export class OptionComponent implements OnInit, OnChanges {
   @Input() analysis: AnalysisType;
   @Input() option: Option;
+  @Output() onChange = new EventEmitter<any>();
+
+  public value: any;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.ngOnChanges();
+  }
+
+  ngOnChanges(): void {
+    this.value = this.analysis.options[this.option.id];
+
+    if (this.option.type === "select" && !this.value) {
+      this.value = "unselected";
+    }
+  }
+
+  public setValue(): void {
+    if (
+      !this.value ||
+      this.value === "" ||
+      (this.option.type === "select" && this.value === "unselected")
+    ) {
+      delete this.analysis.options[this.option.id];
+    } else {
+      this.analysis.options[this.option.id] = this.value;
+    }
+  }
 
   public getValue(): string {
     const output = this.analysis.options[this.option.id];

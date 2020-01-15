@@ -5,8 +5,7 @@ import { AnalysisEvent } from "../analysis.component";
 
 @Component({
   selector: "app-analysis-folder",
-  templateUrl: "./folder.component.html",
-  styleUrls: ["./folder.component.scss"]
+  templateUrl: "./folder.component.html"
 })
 export class FolderComponent implements OnInit {
   @Input() outputFolder: string;

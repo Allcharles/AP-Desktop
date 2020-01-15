@@ -10,6 +10,8 @@
         placeholder="No Value"
         [id]="option.id"
         [value]="getValue()"
+        [(ngModel)]="value"
+        (change)="setValue()"
       />
     </div>
   </div>
@@ -21,7 +23,12 @@
       {{ option.label }}
     </label>
     <div class="col-sm-6 col-md-8 col-lg-9">
-      <select class="custom-select" [id]="option.id">
+      <select
+        class="custom-select"
+        [id]="option.id"
+        [(ngModel)]="value"
+        (change)="setValue()"
+      >
         <option value="unselected">Not Selected</option>
         <option
           *ngFor="let item of option.options"
@@ -46,6 +53,8 @@
         class="custom-control-input"
         [id]="option.id"
         [checked]="isChecked()"
+        [(ngModel)]="value"
+        (change)="setValue()"
       />
       <label class="custom-control-label" [for]="option.id"></label>
     </div>

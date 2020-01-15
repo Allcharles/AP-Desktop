@@ -148,7 +148,7 @@ export class AnalysisType {
     public readonly configFile: AnalysisConfig,
     public readonly shortDescription: string,
     public readonly description: string,
-    public readonly options: AnalysisOptions,
+    public options: AnalysisOptions,
     public audioFiles: string[] = [],
     public config: object = {},
     public output: string = ""

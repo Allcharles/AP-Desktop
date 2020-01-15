@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, OnChanges } from "@angular/core";
 
 @Component({
   selector: "app-config-option",
   template: `
     <div *ngFor="let option of config" class="form-group row">
+      <!-- Input form -->
       <ng-container *ngIf="!option.hasChildren; else children">
         <label
           [for]="option.key"
@@ -20,6 +21,8 @@ import { Component, OnInit, Input } from "@angular/core";
           />
         </div>
       </ng-container>
+
+      <!-- Title with inputs -->
       <ng-template #children>
         <label class="col-12">{{ option.key }}</label>
 
@@ -32,12 +35,14 @@ import { Component, OnInit, Input } from "@angular/core";
     </div>
   `
 })
-export class ConfigOptionComponent implements OnInit {
+export class ConfigOptionComponent implements OnInit, OnChanges {
   @Input() config: Config[];
 
   constructor() {}
 
   ngOnInit(): void {}
+
+  ngOnChanges(): void {}
 
   public getType(config: Config): string {
     if (typeof config.value === "number") {
