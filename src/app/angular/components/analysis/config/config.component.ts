@@ -14,7 +14,7 @@ export class ConfigComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.config = this.convertToArray(this.analysis.getConfig());
     console.log(this.analysis.getConfig());
     console.log(this.config);

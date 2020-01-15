@@ -11,5 +11,5 @@ export class AdvancedComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 }

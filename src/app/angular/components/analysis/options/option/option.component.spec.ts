@@ -1,26 +1,25 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { AdvancedComponent } from "./advanced.component";
+import { OptionComponent } from "./option.component";
 import {
+  AnalysisOption,
   AnalysisType,
   AnalysisProcessingType
-} from "src/app/electron/models/analysis";
-import { DEFAULT_OPTIONS } from "src/app/electron/models/analysisTypes";
-import { AnalysisModule } from "../analysis.module";
+} from "../../../../../electron/models/analysis";
+import { DEFAULT_OPTIONS } from "../../../../../electron/models/analysisTypes";
 
-describe("AdvancedComponent", () => {
-  let component: AdvancedComponent;
-  let fixture: ComponentFixture<AdvancedComponent>;
+describe("OptionComponent", () => {
+  let component: OptionComponent;
+  let fixture: ComponentFixture<OptionComponent>;
   let analysis: AnalysisType;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [AnalysisModule]
+      declarations: [OptionComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdvancedComponent);
+    fixture = TestBed.createComponent(OptionComponent);
     component = fixture.componentInstance;
   });
 
@@ -40,6 +39,11 @@ describe("AdvancedComponent", () => {
     analysis.output = "output_folder/";
 
     component.analysis = analysis;
+    component.option = {
+      id: AnalysisOption.temporaryDirectory,
+      label: "Temporary Directory",
+      type: "text"
+    };
     fixture.detectChanges();
 
     expect(component).toBeTruthy();

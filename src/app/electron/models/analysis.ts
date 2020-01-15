@@ -24,19 +24,31 @@ export enum AnalysisProcessingType {
   indiciesCsv2image = "IndiciesCsv2Image"
 }
 
+export enum AnalysisOption {
+  temporaryDirectory = "--temp-dir",
+  audioOffset = "--offset",
+  alignToMinute = "--align-to-minute",
+  channels = "--channels",
+  mixDownToMono = "--mix-down-to-mono",
+  parallel = "--parallel",
+  copyLog = "--when-exit-copy-log",
+  copyConfig = "--when-exit-copy-config",
+  logLevel = "--log-level"
+}
+
 /**
  * AP analysis options
  */
 export interface AnalysisOptions {
-  "--temp-dir"?: string;
-  "--offset"?: string;
-  "--align-to-minute"?: AnalysisAlignToMinute;
-  "--channels"?: string;
-  "--mix-down-to-mono"?: AnalysisMixDownToMono;
-  "--parallel"?: boolean;
-  "--when-exit-copy-log"?: boolean;
-  "--when-exit-copy-config"?: boolean;
-  "--log-level"?: AnalysisLogLevel;
+  [AnalysisOption.temporaryDirectory]?: string;
+  [AnalysisOption.audioOffset]?: string;
+  [AnalysisOption.alignToMinute]?: AnalysisAlignToMinute;
+  [AnalysisOption.channels]?: string;
+  [AnalysisOption.mixDownToMono]?: AnalysisMixDownToMono;
+  [AnalysisOption.parallel]?: boolean;
+  [AnalysisOption.copyLog]?: boolean;
+  [AnalysisOption.copyConfig]?: boolean;
+  [AnalysisOption.logLevel]?: AnalysisLogLevel;
 }
 
 /**
@@ -158,11 +170,6 @@ export class AnalysisType {
       this.setConfig(this.getConfig());
     }
 
-    // Apply changes to config
-    if (this.configFile.changes) {
-      this.updateConfigValues(this.config, this.configFile.changes);
-    }
-
     // Generate inputs for analysis
     const timestamp: number = Date.now();
     const temporaryConfig = this.createTemporaryConfigFile(timestamp);
@@ -196,7 +203,13 @@ export class AnalysisType {
     );
     try {
       const file = readFileSync(configFilePath);
-      return safeLoad(file.toString());
+      const config = safeLoad(file.toString());
+
+      if (this.configFile.changes) {
+        this.updateConfigValues(config, this.configFile.changes);
+      }
+
+      return config;
     } catch (err) {
       console.error("Failed to read config file: " + configFilePath);
       console.error(err);

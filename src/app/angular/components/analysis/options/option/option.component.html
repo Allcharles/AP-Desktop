@@ -1,0 +1,53 @@
+<ng-container *ngIf="option.type === 'text'">
+  <div class="form-group row">
+    <label class="col-sm-6 col-md-4 col-lg-3 col-form-label" [for]="option.id">
+      {{ option.label }}
+    </label>
+    <div class="col-sm-6 col-md-8 col-lg-9">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="No Value"
+        [id]="option.id"
+        [value]="getValue()"
+      />
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="option.type === 'select'">
+  <div class="form-group row">
+    <label class="col-sm-6 col-md-4 col-lg-3 col-form-label" [for]="option.id">
+      {{ option.label }}
+    </label>
+    <div class="col-sm-6 col-md-8 col-lg-9">
+      <select class="custom-select" [id]="option.id">
+        <option value="unselected">Not Selected</option>
+        <option
+          *ngFor="let item of option.options"
+          [value]="item.id"
+          [selected]="isSelected(item.id)"
+        >
+          {{ item.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="option.type === 'checkbox'">
+  <div class="form-group row">
+    <label class="col-sm-6 col-md-4 col-lg-3 col-form-label">
+      {{ option.label }}
+    </label>
+    <div class="ml-3 mt-1 custom-control custom-checkbox">
+      <input
+        type="checkbox"
+        class="custom-control-input"
+        [id]="option.id"
+        [checked]="isChecked()"
+      />
+      <label class="custom-control-label" [for]="option.id"></label>
+    </div>
+  </div>
+</ng-container>

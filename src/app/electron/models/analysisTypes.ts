@@ -2,12 +2,13 @@ import {
   AnalysisMixDownToMono,
   AnalysisOptions,
   AnalysisProcessingType,
-  AnalysisType
+  AnalysisType,
+  AnalysisOption
 } from "./analysis";
 
-const DEFAULT_OPTIONS: AnalysisOptions = {
-  "--mix-down-to-mono": AnalysisMixDownToMono.True,
-  "--parallel": true
+export const DEFAULT_OPTIONS: AnalysisOptions = {
+  [AnalysisOption.mixDownToMono]: AnalysisMixDownToMono.True,
+  [AnalysisOption.parallel]: true
 };
 
 // TODO Update this to read from AP's AnalysesAvailable command

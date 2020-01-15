@@ -10,13 +10,21 @@ export class ConfigOptionComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
   public getType(config: Config): string {
     if (typeof config.value === "number") {
       return "number";
     } else {
       return "test";
+    }
+  }
+
+  public getChildConfig(value: string | number | Config[]): Config[] {
+    if (value instanceof Array) {
+      return value;
+    } else {
+      return null;
     }
   }
 }

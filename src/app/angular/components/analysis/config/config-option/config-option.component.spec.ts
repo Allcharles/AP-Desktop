@@ -1,16 +1,14 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ConfigOptionComponent } from "./config-option.component";
 
-import { ConfigOptionComponent } from './config-option.component';
-
-describe('ConfigOptionComponent', () => {
+describe("ConfigOptionComponent", () => {
   let component: ConfigOptionComponent;
   let fixture: ComponentFixture<ConfigOptionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfigOptionComponent ]
-    })
-    .compileComponents();
+      declarations: [ConfigOptionComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +17,7 @@ describe('ConfigOptionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

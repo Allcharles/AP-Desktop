@@ -12,6 +12,7 @@ import { OutputComponent } from "./output/output.component";
 import { AdvancedComponent } from "./advanced/advanced.component";
 import { OptionsComponent } from "./options/options.component";
 import { ConfigModule } from "./config/config.module";
+import { OptionComponent } from './options/option/option.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ConfigModule } from "./config/config.module";
     NavigationComponent,
     OutputComponent,
     AdvancedComponent,
-    OptionsComponent
+    OptionsComponent,
+    OptionComponent
   ],
   imports: [SharedModule, ConfigModule, RouterModule.forChild(analysisRoutes)],
   exports: [RouterModule],
