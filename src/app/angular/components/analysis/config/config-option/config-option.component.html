@@ -16,7 +16,9 @@
     <label class="col-12">{{ option.key }}</label>
 
     <div class="pl-5 col-12">
-      <app-config-option [config]="option.value"></app-config-option>
+      <app-config-option
+        [config]="getChildConfig(option.value)"
+      ></app-config-option>
     </div>
   </ng-template>
 </div>
