@@ -5,13 +5,27 @@ import {
   AnalysisAlignToMinute,
   AnalysisLogLevel,
   AnalysisMixDownToMono
-} from "../../../../electron/models/analysis";
-import { Option } from "./option/option.component";
+} from "../../../../../electron/models/analysis";
+import { Option } from "../option/option.component";
 
 @Component({
   selector: "app-analysis-options",
-  templateUrl: "./options.component.html",
-  styleUrls: ["./options.component.scss"]
+  template: `
+    <div class="container">
+      <div class="card shadow">
+        <div class="card-header">
+          Analysis Options
+        </div>
+        <div class="card-body">
+          <app-option
+            *ngFor="let option of options"
+            [analysis]="analysis"
+            [option]="option"
+          ></app-option>
+        </div>
+      </div>
+    </div>
+  `
 })
 export class OptionsComponent implements OnInit {
   @Input() analysis: AnalysisType;

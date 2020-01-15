@@ -1,11 +1,21 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { AnalysisType } from "../../../../electron/models/analysis";
-import { Config } from "./config-option/config-option.component";
+import { AnalysisType } from "../../../../../electron/models/analysis";
+import { Config } from "../config-option/config-option.component";
 
 @Component({
   selector: "app-analysis-config",
-  templateUrl: "./config.component.html",
-  styleUrls: ["./config.component.scss"]
+  template: `
+    <div class="container">
+      <div class="card shadow">
+        <div class="card-header">
+          Configuration Editor
+        </div>
+        <div class="card-body">
+          <app-config-option [config]="config"></app-config-option>
+        </div>
+      </div>
+    </div>
+  `
 })
 export class ConfigComponent implements OnInit {
   @Input() analysis: AnalysisType;
@@ -16,8 +26,6 @@ export class ConfigComponent implements OnInit {
 
   ngOnInit(): void {
     this.config = this.convertToArray(this.analysis.getConfig());
-    console.log(this.analysis.getConfig());
-    console.log(this.config);
   }
 
   convertToArray(config: object): Config[] {
