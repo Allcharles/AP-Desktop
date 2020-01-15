@@ -148,15 +148,17 @@ export class AdvancedComponent implements OnInit {
     // Update analysis
     this.analysis.setConfig(this.convertConfigToObject(this.config));
     this.analysis.options = this.convertOptionsToObject(this.options);
-
-    console.log(this.analysis);
   }
 
   private convertConfigToObject(config: Config[]): object {
     const output = {};
 
-    for (const configOption of config) {
-      output[configOption.key] = configOption.value;
+    for (const option of config) {
+      if (option.value instanceof Array) {
+        output[option.key] = this.convertConfigToObject(option.value);
+      } else {
+        output[option.key] = option.value;
+      }
     }
 
     return output;

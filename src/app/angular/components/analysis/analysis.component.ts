@@ -44,7 +44,7 @@ export class AnalysisComponent implements OnInit {
    */
   public next(): void {
     // Push current analysis to analysis batch before showing confirmation
-    if (this.currentStage === Stages.SelectFolder) {
+    if (this.currentStage === Stages.Advanced) {
       this.analysisBatch.push(this.currentAnalysis);
     }
 
