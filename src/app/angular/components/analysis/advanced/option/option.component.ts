@@ -1,23 +1,12 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges
-} from "@angular/core";
-import { AnalysisType } from "../../../../../electron/models/analysis";
+import { Component, OnInit, Input, OnChanges } from "@angular/core";
 
 @Component({
   selector: "app-option",
   templateUrl: "./option.component.html"
 })
 export class OptionComponent implements OnInit, OnChanges {
-  @Input() analysis: AnalysisType;
   @Input() option: Option;
-  @Output() onChange = new EventEmitter<any>();
-
-  public value: any;
+  value: string;
 
   constructor() {}
 
@@ -26,44 +15,42 @@ export class OptionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    this.value = this.analysis.options[this.option.id];
-
-    if (this.option.type === "select" && !this.value) {
-      this.value = "unselected";
-    }
+    this.value = this.option.value as string;
   }
 
   public setValue(): void {
-    if (
-      !this.value ||
-      this.value === "" ||
-      (this.option.type === "select" && this.value === "unselected")
-    ) {
-      delete this.analysis.options[this.option.id];
+    if (!this.value || this.value === "") {
+      delete this.option.value;
     } else {
-      this.analysis.options[this.option.id] = this.value;
+      if (typeof this.option.value === "boolean") {
+        this.option.value = !!this.value;
+      } else if (typeof this.option.value === "number") {
+        this.option.value = parseInt(this.value);
+      } else {
+        this.option.value = this.value;
+      }
     }
   }
 
   public getValue(): string {
-    const output = this.analysis.options[this.option.id];
+    const output = this.value;
     return output ? output : "";
   }
 
   public isSelected(id: string): boolean {
-    const selected = this.analysis.options[this.option.id];
+    const selected = this.value;
     return selected ? selected === id : false;
   }
 
   public isChecked(): boolean {
-    const checked = this.analysis.options[this.option.id];
-    return checked ? checked : false;
+    return !!this.value ? true : false;
   }
 }
 
 export interface Option {
   id: string;
   label: string;
+  value?: string | number | boolean;
   type: "text" | "select" | "checkbox";
   options?: { id: string; label: string }[];
 }

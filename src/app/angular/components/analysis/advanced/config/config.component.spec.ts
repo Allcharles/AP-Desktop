@@ -1,18 +1,18 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { ConfigOptionComponent } from "./config-option.component";
+import { ConfigComponent } from "./config.component";
 
-describe("ConfigOptionComponent", () => {
-  let component: ConfigOptionComponent;
-  let fixture: ComponentFixture<ConfigOptionComponent>;
+describe("ConfigComponent", () => {
+  let component: ConfigComponent;
+  let fixture: ComponentFixture<ConfigComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConfigOptionComponent]
+      declarations: [ConfigComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigOptionComponent);
+    fixture = TestBed.createComponent(ConfigComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

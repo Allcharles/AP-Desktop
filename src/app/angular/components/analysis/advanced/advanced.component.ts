@@ -1,15 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, ChangeDetectorRef } from "@angular/core";
 import {
   AnalysisType,
   AnalysisOption,
   AnalysisAlignToMinute,
   AnalysisMixDownToMono,
-  AnalysisLogLevel,
-  AnalysisOptions
+  AnalysisLogLevel
 } from "../../../../electron/models/analysis";
-import { AnalysisEvent } from "../analysis.component";
 import { Option } from "./option/option.component";
-import { Config } from "./config-option/config-option.component";
+import { Config } from "./config/config.component";
 
 @Component({
   selector: "app-analysis-advanced",
@@ -20,8 +18,8 @@ export class AdvancedComponent implements OnInit {
 
   public options: Option[];
   public config: Config[];
-  private originalOptions: object;
-  private originalConfig: AnalysisOptions;
+  private originalOptions: Option[];
+  private originalConfig: Config[];
 
   constructor() {}
 
@@ -129,13 +127,56 @@ export class AdvancedComponent implements OnInit {
       }
     ];
 
+    this.updateOption(0, AnalysisOption.temporaryDirectory);
+    this.updateOption(1, AnalysisOption.audioOffset);
+    this.updateOption(2, AnalysisOption.alignToMinute);
+    this.updateOption(3, AnalysisOption.channels);
+    this.updateOption(4, AnalysisOption.mixDownToMono);
+    this.updateOption(5, AnalysisOption.parallel);
+    this.updateOption(6, AnalysisOption.copyLog);
+    this.updateOption(7, AnalysisOption.copyConfig);
+    this.updateOption(8, AnalysisOption.logLevel);
+
     // Need to be very careful to create new objects
-    this.originalConfig = Object.assign({}, this.analysis.getConfig());
-    this.originalOptions = Object.assign({}, this.analysis.options);
+    this.originalConfig = this.config.map(configOption =>
+      Object.assign({}, configOption)
+    );
+    this.originalOptions = this.options.map(option =>
+      Object.assign({}, option)
+    );
+
+    // Update analysis
+    this.analysis.setConfig(this.convertConfigToObject(this.config));
+    this.analysis.options = this.convertOptionsToObject(this.options);
+
+    console.log(this.analysis);
+  }
+
+  private convertConfigToObject(config: Config[]): object {
+    const output = {};
+
+    for (const configOption of config) {
+      output[configOption.key] = configOption.value;
+    }
+
+    return output;
+  }
+
+  private convertOptionsToObject(options: Option[]): object {
+    const output = {};
+
+    for (const option of options) {
+      if (option.value) {
+        output[option.id] = option.value;
+      }
+    }
+
+    return output;
   }
 
   private convertToArray(config: object): Config[] {
     const output: Config[] = [];
+    let index = 0;
 
     for (const key in config) {
       if (config.hasOwnProperty(key)) {
@@ -148,11 +189,18 @@ export class AdvancedComponent implements OnInit {
           value = config[key];
         }
 
-        output.push({ key, value, hasChildren });
+        output.push({ key, index, value, hasChildren });
+        index++;
       }
     }
 
     return output;
+  }
+
+  private updateOption(index: number, key: string) {
+    if (this.analysis.options[key]) {
+      this.options[index].value = this.analysis.options[key];
+    }
   }
 
   /**
@@ -160,8 +208,9 @@ export class AdvancedComponent implements OnInit {
    */
   public resetOptions(): void {
     // Need to be very careful to create new objects
-    this.analysis.options = Object.assign({}, this.originalOptions);
-    this.options = this.options.slice();
+    this.options = this.originalOptions.map(option =>
+      Object.assign({}, option)
+    );
   }
 
   /**
@@ -169,7 +218,8 @@ export class AdvancedComponent implements OnInit {
    */
   public resetConfig(): void {
     // Need to be very careful to create new objects
-    this.analysis.setConfig(Object.assign({}, this.originalConfig));
-    this.config = this.convertToArray(Object.assign({}, this.originalConfig));
+    this.config = this.originalConfig.map(configOption =>
+      Object.assign({}, configOption)
+    );
   }
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, OnChanges } from "@angular/core";
 
 @Component({
-  selector: "app-config-option",
+  selector: "app-config",
   template: `
-    <div *ngFor="let option of config" class="form-group row">
+    <div *ngFor="let option of config; let i = index" class="form-group row">
       <!-- Input form -->
       <ng-container *ngIf="!option.hasChildren; else children">
         <label
@@ -16,8 +16,9 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
           <input
             class="form-control"
             [id]="option.key"
-            [type]="getType(option)"
+            [type]="configTypes[i]"
             [value]="option.value.toString()"
+            [(ngModel)]="option.value"
           />
         </div>
       </ng-container>
@@ -27,28 +28,37 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
         <label class="col-12">{{ option.key }}</label>
 
         <div class="pl-5 col-12">
-          <app-config-option
-            [config]="getChildConfig(option.value)"
-          ></app-config-option>
+          <app-config [config]="getChildConfig(option.value)"></app-config>
         </div>
       </ng-template>
     </div>
   `
 })
-export class ConfigOptionComponent implements OnInit, OnChanges {
+export class ConfigComponent implements OnInit, OnChanges {
   @Input() config: Config[];
+  public configTypes: string[];
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.ngOnChanges();
+  }
 
-  ngOnChanges(): void {}
+  ngOnChanges(): void {
+    this.configTypes = this.config.map(option => {
+      if (typeof option.value === "number") {
+        return "number";
+      } else {
+        return "text";
+      }
+    });
+  }
 
   public getType(config: Config): string {
     if (typeof config.value === "number") {
       return "number";
     } else {
-      return "test";
+      return "text";
     }
   }
 
@@ -63,6 +73,7 @@ export class ConfigOptionComponent implements OnInit, OnChanges {
 
 export interface Config {
   key: string;
+  index: number;
   value: string | number | Config[];
   hasChildren: boolean;
 }

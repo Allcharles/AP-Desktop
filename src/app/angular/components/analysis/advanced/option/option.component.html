@@ -29,7 +29,7 @@
         [(ngModel)]="value"
         (change)="setValue()"
       >
-        <option value="unselected">Not Selected</option>
+        <option value=""></option>
         <option
           *ngFor="let item of option.options"
           [value]="item.id"
