@@ -20,6 +20,8 @@
   "scripts": {
     "ap_download:windows": "pwsh -NoProfile -ExecutionPolicy ByPass -File ./dev/script_ap.ps1",
     "ap_download:linux": "npx pwsh -NoProfile -ExecutionPolicy ByPass -File ./dev/script_ap.ps1",
+    "copy_ap:windows": "pwsh -NoProfile -ExecutionPolicy ByPass -File ./dev/azure_setup.ps1",
+    "copy_ap:linux": "npx pwsh -NoProfile -ExecutionPolicy ByPass -File ./dev/azure_setup.ps1",
     "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p ng:serve electron:serve",

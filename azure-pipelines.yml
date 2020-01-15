@@ -11,6 +11,8 @@ jobs:
         displayName: "Installing App Dependencies"
       - script: npm run ap_download:windows
         displayName: "Installing AP"
+      - script: npm run copy_ap:windows
+        displayName: "Copy AP Files to Location"
       - script: npm run lint
         displayName: "Lint project"
       - script: npm test
@@ -40,6 +42,8 @@ jobs:
         displayName: "Installing App Dependencies"
       - script: npm run ap_download:linux
         displayName: "Installing AP"
+      - script: npm run copy_ap:linux
+        displayName: "Copy AP Files to Location"
       - script: npm run lint
         displayName: "Lint project"
       # - script: npm test

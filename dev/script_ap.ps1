@@ -19,7 +19,7 @@ else {
 }
 
 # Extract AP to folder
-./src/assets/ap/download_ap.ps1 -package Weekly -destination ./ap
+./src/assets/ap/download_ap.ps1 -package Weekly -destination ./src/assets/ap
 
 #Remove AP Downloader
 Remove-Item -Path ./src/assets/ap/download_ap.ps1
