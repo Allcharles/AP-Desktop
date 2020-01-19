@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { AnalysisItem, AnalysisType } from "../../../electron/models/analysis";
+import { AnalysisItem } from "../../../electron/models/analysisItem";
+import { AnalysisType } from "../../../electron/models/analysisType";
 
 @Component({
   selector: "app-analysis",

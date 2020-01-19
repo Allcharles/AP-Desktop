@@ -2,9 +2,9 @@ import {
   AnalysisMixDownToMono,
   AnalysisOptions,
   AnalysisProcessingType,
-  AnalysisType,
   AnalysisOption
 } from "./analysis";
+import { AnalysisType } from "./analysisType";
 
 export const DEFAULT_OPTIONS: AnalysisOptions = {
   [AnalysisOption.mixDownToMono]: AnalysisMixDownToMono.True,

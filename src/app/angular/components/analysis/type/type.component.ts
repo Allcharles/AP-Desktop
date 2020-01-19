@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { AnalysisType } from "../../../../electron/models/analysis";
+import { AnalysisType } from "../../../../electron/models/analysisType";
 import { APService } from "../../../../electron/services/AP/ap.service";
 import { AnalysisEvent } from "../analysis.component";
 

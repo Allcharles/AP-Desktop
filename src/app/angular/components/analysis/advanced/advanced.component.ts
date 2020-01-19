@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, OnDestroy } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import {
-  AnalysisType,
-  AnalysisOption,
   AnalysisAlignToMinute,
+  AnalysisLogLevel,
   AnalysisMixDownToMono,
-  AnalysisLogLevel
+  AnalysisOption
 } from "../../../../electron/models/analysis";
-import { Option } from "./option/option.component";
+import { AnalysisType } from "../../../../electron/models/analysisType";
 import { Config } from "./config/config.component";
+import { Option } from "./option/option.component";
 
 @Component({
   selector: "app-analysis-advanced",

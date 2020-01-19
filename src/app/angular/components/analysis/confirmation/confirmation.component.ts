@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { AnalysisType } from "../../../../electron/models/analysis";
+import { AnalysisType } from "../../../../electron/models/analysisType";
 
 @Component({
   selector: "app-analysis-confirmation",

@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { extname, join, basename } from "path";
-import { AnalysisType, AnalysisItem } from "../../models/analysis";
-import { analysisTypes } from "../../models/analysisTypes";
+import { AnalysisType } from "../../models/analysisType";
+import { AnalysisItem } from "../../models/analysisItem";
+import { analysisTypes } from "../../models/defaultAnalyses";
 import { ElectronService } from "../electron/electron.service";
 import { Subject } from "rxjs";
 import APTerminal from "../../models/terminal";
