@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy } from "@angular/core";
 import {
   AnalysisType,
   AnalysisOption,
@@ -13,9 +13,10 @@ import { Config } from "./config/config.component";
   selector: "app-analysis-advanced",
   templateUrl: "./advanced.component.html"
 })
-export class AdvancedComponent implements OnInit {
+export class AdvancedComponent implements OnInit, OnDestroy {
   @Input() analysis: AnalysisType;
 
+  public showAdvanced = false;
   public options: Option[];
   public config: Config[];
   private originalOptions: Option[];
@@ -145,6 +146,12 @@ export class AdvancedComponent implements OnInit {
       Object.assign({}, option)
     );
 
+    // Update analysis
+    this.analysis.setConfig(this.convertConfigToObject(this.config));
+    this.analysis.options = this.convertOptionsToObject(this.options);
+  }
+
+  ngOnDestroy() {
     // Update analysis
     this.analysis.setConfig(this.convertConfigToObject(this.config));
     this.analysis.options = this.convertOptionsToObject(this.options);
