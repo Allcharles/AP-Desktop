@@ -36,7 +36,10 @@
 <!-- Ask use for advanced setup -->
 <app-analysis-advanced
   *ngIf="showStage(stages.Advanced)"
-  [analysis]="currentAnalysis"
+  [originalConfig]="originalConfig"
+  [originalOptions]="originalOptions"
+  [config]="currentSelection.config"
+  [options]="currentSelection.options"
 >
   <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
   </app-analysis-nav>

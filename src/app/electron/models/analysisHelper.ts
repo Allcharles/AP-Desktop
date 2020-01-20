@@ -3,9 +3,16 @@
  * @param template File path after ConfigFiles directory
  * @param changes Changes to config file options (optional)
  */
-export interface AnalysisConfig {
+export interface AnalysisConfigDetails {
   template: string;
   changes?: {};
+}
+
+/**
+ * AP analysis config
+ */
+export interface AnalysisConfig {
+  [key: string]: string | number | AnalysisConfig;
 }
 
 /**

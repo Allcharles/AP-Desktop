@@ -3,6 +3,7 @@ import APTerminal from "./terminal";
 import {
   AnalysisProcessingType,
   AnalysisOptions,
+  AnalysisConfigDetails,
   AnalysisConfig
 } from "./analysisHelper";
 import { AnalysisItem } from "./analysisItem";
@@ -19,6 +20,10 @@ export class APAnalysis {
     "ConfigFiles"
   );
 
+  public config: AnalysisConfig;
+  public audioFiles: string[] = [];
+  public output: string = "";
+
   /**
    * Manages analysis object to interface with the clients terminal
    * @param type Type of analysis
@@ -31,16 +36,15 @@ export class APAnalysis {
   constructor(
     public readonly type: AnalysisProcessingType,
     public readonly label: string,
-    public readonly configFile: AnalysisConfig,
+    public readonly configFile: AnalysisConfigDetails,
     public readonly shortDescription: string,
     public readonly description: string,
-    public options: AnalysisOptions,
-    public audioFiles: string[] = [],
-    public config: object = {},
-    public output: string = ""
+    public options: AnalysisOptions
   ) {
     // TODO Find the configFile path from ap/ConfigFiles. Eg. /RecognizerConfigFiles/Ecosounds.MultiRecognizer.yml
     // This is required as the config file assumes the location is from the /ConfigFiles directory
+
+    this.config = this.getConfig();
   }
 
   /**
@@ -52,8 +56,8 @@ export class APAnalysis {
 
   public generateBatch(): AnalysisItem[] {
     // Read config file
-    if (this.config === {}) {
-      this.setConfig(this.getConfig());
+    if (!this.config) {
+      this.config = this.getConfig();
     }
 
     // Generate inputs for analysis
@@ -82,7 +86,7 @@ export class APAnalysis {
   /**
    * Get JSON schema of file
    */
-  public getConfig(): object {
+  private getConfig(): AnalysisConfig {
     const configFilePath = join(
       APAnalysis.CONFIG_DIRECTORY,
       this.configFile.template
@@ -101,10 +105,6 @@ export class APAnalysis {
       console.error(err);
       throw Error(err);
     }
-  }
-
-  public setConfig(config: object): void {
-    this.config = config;
   }
 
   /**
@@ -165,7 +165,9 @@ export class APAnalysis {
     const tempFilePath = join(tempDirectory, tempFilename);
 
     try {
-      writeFileSync(tempFilePath, safeDump(this.config), { mode: 0o755 });
+      writeFileSync(tempFilePath, safeDump(this.config), {
+        mode: 0o755
+      });
     } catch (err) {
       console.error("Failed to write temporary config file: " + tempFilePath);
       console.error(err);

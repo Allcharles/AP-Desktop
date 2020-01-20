@@ -5,7 +5,11 @@
         Advanced Options
       </div>
       <div class="card-body d-flex justify-content-center">
-        <button class="btn btn-warning" (click)="showAdvanced = true">
+        <button
+          *ngIf="!showAdvanced"
+          class="btn btn-warning"
+          (click)="showAdvanced = true"
+        >
           Enable Advanced Features
         </button>
       </div>
