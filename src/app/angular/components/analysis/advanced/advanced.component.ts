@@ -24,11 +24,7 @@ export class AdvancedComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.originalConfig);
-
-    console.log(this.config);
-  }
+  ngOnInit(): void {}
 
   /**
    * Reset options to previous state
@@ -50,7 +46,7 @@ export class AdvancedComponent implements OnInit {
  * @param options Options
  */
 export function getOptionsArray(options: AnalysisOptions): Option[] {
-  let output: Option[] = [
+  const output: Option[] = [
     {
       id: AnalysisOption.temporaryDirectory,
       label: "Temporary Directory",
@@ -178,7 +174,7 @@ export function getOptionsArray(options: AnalysisOptions): Option[] {
  * @param options Options
  */
 export function convertToOptions(options: Option[]): AnalysisOptions {
-  let output: AnalysisOptions = {};
+  const output: AnalysisOptions = {};
 
   options.map(option => {
     if (option.value) {

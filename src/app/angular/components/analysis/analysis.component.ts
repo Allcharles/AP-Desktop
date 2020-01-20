@@ -92,8 +92,6 @@ export class AnalysisComponent implements OnInit {
         options: getOptionsArray(this.currentAnalysis.options),
         config: getConfigArray(this.currentAnalysis.config)
       };
-
-      console.log(this.currentSelection);
     } else {
       this.currentSelection = {};
     }
@@ -177,7 +175,7 @@ export class AnalysisComponent implements OnInit {
   private copyObject(obj: object): object {
     const copy = {};
 
-    for (var attr in obj) {
+    for (const attr in obj) {
       if (obj.hasOwnProperty(attr)) {
         if (obj[attr] instanceof Array) {
           copy[attr] = (obj[attr] as Array<any>).slice();

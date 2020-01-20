@@ -1,17 +1,19 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { AdvancedComponent } from "./advanced.component";
 import {
-  AnalysisType,
-  AnalysisProcessingType
-} from "src/app/electron/models/analysis";
-import { DEFAULT_OPTIONS } from "src/app/electron/models/analysisTypes";
+  AdvancedComponent,
+  getConfigArray,
+  getOptionsArray
+} from "./advanced.component";
 import { AnalysisModule } from "../analysis.module";
 import { SharedModule } from "../../shared/shared.module";
+import { AnalysisProcessingType } from "../../../../electron/models/analysisHelper";
+import { DEFAULT_OPTIONS } from "../../../../electron/models/defaultAnalyses";
+import { APAnalysis } from "../../../../electron/models/analysis";
 
 describe("AdvancedComponent", () => {
   let component: AdvancedComponent;
   let fixture: ComponentFixture<AdvancedComponent>;
-  let analysis: AnalysisType;
+  let analysis: APAnalysis;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -26,7 +28,7 @@ describe("AdvancedComponent", () => {
   });
 
   it("should create", () => {
-    analysis = new AnalysisType(
+    analysis = new APAnalysis(
       AnalysisProcessingType.audio2csv,
       "Basic Analysis",
       {
@@ -40,7 +42,10 @@ describe("AdvancedComponent", () => {
     analysis.audioFiles = ["audio_file.mp3"];
     analysis.output = "output_folder/";
 
-    component.analysis = analysis;
+    component.originalConfig = analysis.config;
+    component.originalOptions = analysis.options;
+    component.config = getConfigArray(analysis.config);
+    component.options = getOptionsArray(analysis.options);
     fixture.detectChanges();
 
     expect(component).toBeTruthy();

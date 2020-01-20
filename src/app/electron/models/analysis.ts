@@ -22,7 +22,7 @@ export class APAnalysis {
 
   public config: AnalysisConfig;
   public audioFiles: string[] = [];
-  public output: string = "";
+  public output = "";
 
   /**
    * Manages analysis object to interface with the clients terminal
