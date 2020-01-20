@@ -1,13 +1,12 @@
-
 import {
+  ChangeDetectorRef,
   Component,
-  OnInit,
-  Input,
-  Output,
   EventEmitter,
-  ChangeDetectorRef
+  Input,
+  OnInit,
+  Output
 } from "@angular/core";
-import { AnalysisItem } from "../../../../electron/models/analysis";
+import { AnalysisItem } from "../../../../electron/models/analysisItem";
 import { APService } from "../../../../electron/services/AP/ap.service";
 
 @Component({

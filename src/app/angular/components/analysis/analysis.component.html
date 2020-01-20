@@ -33,6 +33,18 @@
   </app-analysis-nav>
 </app-analysis-folder>
 
+<!-- Ask use for advanced setup -->
+<app-analysis-advanced
+  *ngIf="showStage(stages.Advanced)"
+  [originalConfig]="originalConfig"
+  [originalOptions]="originalOptions"
+  [config]="currentSelection.config"
+  [options]="currentSelection.options"
+>
+  <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
+  </app-analysis-nav>
+</app-analysis-advanced>
+
 <!-- Confirmation -->
 <app-analysis-confirmation
   *ngIf="showStage(stages.Confirmation)"

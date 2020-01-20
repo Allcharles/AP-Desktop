@@ -1,5 +1,18 @@
 import { Component, OnInit } from "@angular/core";
-import { AnalysisItem, AnalysisType } from "../../../electron/models/analysis";
+import { AnalysisItem } from "../../../electron/models/analysisItem";
+import { APAnalysis } from "../../../electron/models/analysis";
+import {
+  AnalysisOptions,
+  AnalysisConfig
+} from "../../../electron/models/analysisHelper";
+import { Option } from "./advanced/option/option.component";
+import { Config } from "./advanced/config/config.component";
+import {
+  getOptionsArray,
+  getConfigArray,
+  convertToConfig,
+  convertToOptions
+} from "./advanced/advanced.component";
 
 @Component({
   selector: "app-analysis",
@@ -8,16 +21,20 @@ import { AnalysisItem, AnalysisType } from "../../../electron/models/analysis";
 })
 export class AnalysisComponent implements OnInit {
   public analyses: AnalysisItem[];
-  public analysisBatch: AnalysisType[];
-  public currentAnalysis: AnalysisType;
+  public analysisBatch: APAnalysis[];
+  public currentAnalysis: APAnalysis;
   public currentStage: Stages;
+  public originalConfig: AnalysisConfig;
+  public originalOptions: AnalysisOptions;
   public stages = Stages;
   public isValid: boolean;
 
   public currentSelection: {
-    analysisType?: AnalysisType;
+    analysisType?: APAnalysis;
     audioFiles?: string[];
     outputFolder?: string;
+    options?: Option[];
+    config?: Config[];
   };
 
   constructor() {}
@@ -28,6 +45,8 @@ export class AnalysisComponent implements OnInit {
     this.analysisBatch = [];
     this.currentSelection = {};
     this.isValid = false;
+
+    // TODO Deep Equality check on config -> originalConfig + options to check if showActivated is true
   }
 
   /**
@@ -44,23 +63,34 @@ export class AnalysisComponent implements OnInit {
    */
   public next(): void {
     // Push current analysis to analysis batch before showing confirmation
-    if (this.currentStage === Stages.SelectFolder) {
+    if (this.currentStage === Stages.Advanced) {
       this.analysisBatch.push(this.currentAnalysis);
     }
 
-    if (this.currentStage === Stages.SelectFolder) {
-      this.currentStage = Stages.Confirmation;
-    } else if (this.currentStage === Stages.Confirmation) {
+    if (this.currentStage === Stages.Confirmation) {
       this.currentStage = Stages.SelectType;
     } else {
       this.currentStage++;
     }
 
     if (this.currentAnalysis) {
+      // Update config and options
+      if (this.currentSelection.config && this.currentSelection.options) {
+        this.currentAnalysis.config = convertToConfig(
+          this.currentSelection.config
+        );
+
+        this.currentAnalysis.options = convertToOptions(
+          this.currentSelection.options
+        );
+      }
+
       this.currentSelection = {
         analysisType: this.currentAnalysis,
         audioFiles: this.currentAnalysis.audioFiles,
-        outputFolder: this.currentAnalysis.outputFolder
+        outputFolder: this.currentAnalysis.output,
+        options: getOptionsArray(this.currentAnalysis.options),
+        config: getConfigArray(this.currentAnalysis.config)
       };
     } else {
       this.currentSelection = {};
@@ -76,9 +106,7 @@ export class AnalysisComponent implements OnInit {
       this.analysisBatch.pop();
     }
 
-    if (this.currentStage === Stages.Confirmation) {
-      this.currentStage = Stages.SelectFolder;
-    } else if (this.currentStage === Stages.SelectType) {
+    if (this.currentStage === Stages.SelectType) {
       this.currentStage = Stages.Confirmation;
     } else {
       this.currentStage--;
@@ -92,6 +120,15 @@ export class AnalysisComponent implements OnInit {
   public receiveAnalysisType($event: AnalysisEvent): void {
     this.isValid = $event.isValid;
     this.currentAnalysis = $event.output;
+
+    if (this.currentAnalysis) {
+      this.originalConfig = this.copyObject(
+        this.currentAnalysis.config
+      ) as AnalysisConfig;
+      this.originalOptions = this.copyObject(
+        this.currentAnalysis.options
+      ) as AnalysisOptions;
+    }
   }
 
   /**
@@ -109,7 +146,7 @@ export class AnalysisComponent implements OnInit {
    */
   public receiveOutputFolder($event: AnalysisEvent): void {
     this.isValid = $event.isValid;
-    this.currentAnalysis.outputFolder = $event.output;
+    this.currentAnalysis.output = $event.output;
   }
 
   /**
@@ -130,6 +167,28 @@ export class AnalysisComponent implements OnInit {
     });
     this.currentStage = Stages.DisplayOutput;
   }
+
+  /**
+   * Correctly copy an object such that the new object does not affect the original
+   * @param obj Object
+   */
+  private copyObject(obj: object): object {
+    const copy = {};
+
+    for (const attr in obj) {
+      if (obj.hasOwnProperty(attr)) {
+        if (obj[attr] instanceof Array) {
+          copy[attr] = (obj[attr] as Array<any>).slice();
+        } else if (typeof obj[attr] === "object") {
+          copy[attr] = this.copyObject(obj[attr]);
+        } else {
+          copy[attr] = obj[attr];
+        }
+      }
+    }
+
+    return copy;
+  }
 }
 
 export interface AnalysisEvent {
@@ -141,9 +200,7 @@ enum Stages {
   SelectType,
   SelectAudio,
   SelectFolder,
-  OpenAdvanced,
-  ChangeConfig,
-  ChangeOptions,
+  Advanced,
   Confirmation,
   DisplayOutput
 }

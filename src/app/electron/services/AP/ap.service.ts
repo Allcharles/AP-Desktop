@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { extname, join, basename } from "path";
-import { AnalysisType, AnalysisItem } from "../../models/analysis";
-import { analysisTypes } from "../../models/analysisTypes";
+import { APAnalysis } from "../../models/analysis";
+import { AnalysisItem } from "../../models/analysisItem";
+import { defaultAnalyses } from "../../models/defaultAnalyses";
 import { ElectronService } from "../electron/electron.service";
 import { Subject } from "rxjs";
 import APTerminal from "../../models/terminal";
@@ -66,12 +67,12 @@ export class APService extends ElectronService {
   /**
    * Returns list of supported analysis types
    */
-  public getAnalysisTypes(): AnalysisType[] {
+  public getAnalysisTypes(): APAnalysis[] {
     if (!this.isElectron) {
       return [];
     }
 
-    return analysisTypes;
+    return defaultAnalyses;
   }
 
   /**
@@ -119,7 +120,7 @@ export class APService extends ElectronService {
     fileNumber = 1
   ): void {
     if (analyses.length === 0) {
-      AnalysisType.cleanupTemporaryFiles();
+      APAnalysis.cleanupTemporaryFiles();
       subject.complete();
       return;
     }

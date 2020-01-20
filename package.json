@@ -20,6 +20,8 @@
   "scripts": {
     "ap_download:windows": "pwsh -NoProfile -ExecutionPolicy ByPass -File ./dev/script_ap.ps1",
     "ap_download:linux": "npx pwsh -NoProfile -ExecutionPolicy ByPass -File ./dev/script_ap.ps1",
+    "copy_ap:windows": "pwsh -NoProfile -ExecutionPolicy ByPass -File ./dev/azure_setup.ps1",
+    "copy_ap:linux": "npx pwsh -NoProfile -ExecutionPolicy ByPass -File ./dev/azure_setup.ps1",
     "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p ng:serve electron:serve",
@@ -42,7 +44,7 @@
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "8.2.0",
-    "@angular-devkit/build-angular": "0.803.21",
+    "@angular-devkit/build-angular": "0.803.23",
     "@angular-eslint/builder": "0.0.1-alpha.17",
     "@angular/cli": "8.3.21",
     "@angular/common": "8.2.14",
@@ -58,6 +60,7 @@
     "@ngx-translate/http-loader": "4.0.0",
     "@types/jasmine": "3.3.16",
     "@types/jasminewd2": "2.0.8",
+    "@types/js-yaml": "3.12.1",
     "@types/mocha": "5.2.7",
     "@types/node": "12.6.9",
     "@typescript-eslint/eslint-plugin": "2.8.0",
@@ -103,6 +106,7 @@
     "@ng-bootstrap/ng-bootstrap": "5.1.5",
     "@swimlane/ngx-datatable": "16.0.3",
     "bootstrap": "4.4.1",
-    "immutable": "4.0.0-rc.12"
+    "immutable": "4.0.0-rc.12",
+    "js-yaml": "3.13.1"
   }
 }
