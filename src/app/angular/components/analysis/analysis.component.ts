@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AnalysisItem } from "../../../electron/models/analysisItem";
-import { AnalysisType } from "../../../electron/models/analysisType";
+import { APAnalysis } from "../../../electron/models/analysis";
 
 @Component({
   selector: "app-analysis",
@@ -9,14 +9,14 @@ import { AnalysisType } from "../../../electron/models/analysisType";
 })
 export class AnalysisComponent implements OnInit {
   public analyses: AnalysisItem[];
-  public analysisBatch: AnalysisType[];
-  public currentAnalysis: AnalysisType;
+  public analysisBatch: APAnalysis[];
+  public currentAnalysis: APAnalysis;
   public currentStage: Stages;
   public stages = Stages;
   public isValid: boolean;
 
   public currentSelection: {
-    analysisType?: AnalysisType;
+    analysisType?: APAnalysis;
     audioFiles?: string[];
     outputFolder?: string;
   };

@@ -4,8 +4,8 @@ import {
   AnalysisLogLevel,
   AnalysisMixDownToMono,
   AnalysisOption
-} from "../../../../electron/models/analysis";
-import { AnalysisType } from "../../../../electron/models/analysisType";
+} from "../../../../electron/models/analysisHelper";
+import { APAnalysis } from "../../../../electron/models/analysis";
 import { Config } from "./config/config.component";
 import { Option } from "./option/option.component";
 
@@ -14,7 +14,7 @@ import { Option } from "./option/option.component";
   templateUrl: "./advanced.component.html"
 })
 export class AdvancedComponent implements OnInit, OnDestroy {
-  @Input() analysis: AnalysisType;
+  @Input() analysis: APAnalysis;
 
   public showAdvanced = false;
   public options: Option[];

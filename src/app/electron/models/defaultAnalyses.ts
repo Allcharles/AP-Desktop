@@ -3,8 +3,8 @@ import {
   AnalysisOptions,
   AnalysisProcessingType,
   AnalysisOption
-} from "./analysis";
-import { AnalysisType } from "./analysisType";
+} from "./analysisHelper";
+import { APAnalysis } from "./analysis";
 
 export const DEFAULT_OPTIONS: AnalysisOptions = {
   [AnalysisOption.mixDownToMono]: AnalysisMixDownToMono.True,
@@ -12,8 +12,8 @@ export const DEFAULT_OPTIONS: AnalysisOptions = {
 };
 
 // TODO Update this to read from AP's AnalysesAvailable command
-export const analysisTypes: AnalysisType[] = [
-  new AnalysisType(
+export const defaultAnalyses: APAnalysis[] = [
+  new APAnalysis(
     AnalysisProcessingType.audio2csv,
     "Basic Analysis",
     {
@@ -24,7 +24,7 @@ export const analysisTypes: AnalysisType[] = [
     "[BETA] Generates all our default summary & spectral acoustic indices. Also generates false color spectrograms IFF IndexCalculationDuration==60.0.",
     { ...DEFAULT_OPTIONS }
   ),
-  new AnalysisType(
+  new APAnalysis(
     AnalysisProcessingType.audio2csv,
     "Crow Event Detection",
     {
@@ -38,7 +38,7 @@ export const analysisTypes: AnalysisType[] = [
     "Automatic detection of crow 'caw' sounds in audio files GREATER than 5 minutes long. This combines with the EventDetection utility under the Utilities tab.",
     { ...DEFAULT_OPTIONS }
   ),
-  new AnalysisType(
+  new APAnalysis(
     AnalysisProcessingType.audio2csv,
     "Human Event Detection",
     {
@@ -52,7 +52,7 @@ export const analysisTypes: AnalysisType[] = [
     "Automatic detection of human (male/female) voices in audio files GREATER than 5 minutes long. This combines with the EventDetection utility under the Utilities tab.",
     { ...DEFAULT_OPTIONS }
   ),
-  new AnalysisType(
+  new APAnalysis(
     AnalysisProcessingType.audio2csv,
     "Koala Event Detection",
     {

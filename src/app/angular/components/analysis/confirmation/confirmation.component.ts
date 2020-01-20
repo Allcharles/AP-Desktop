@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { AnalysisType } from "../../../../electron/models/analysisType";
+import { APAnalysis } from "../../../../electron/models/analysis";
 
 @Component({
   selector: "app-analysis-confirmation",
@@ -7,7 +7,7 @@ import { AnalysisType } from "../../../../electron/models/analysisType";
   styleUrls: ["./confirmation.component.scss"]
 })
 export class ConfirmationComponent implements OnInit {
-  @Input() analysisBatch: AnalysisType[];
+  @Input() analysisBatch: APAnalysis[];
 
   constructor() {}
 

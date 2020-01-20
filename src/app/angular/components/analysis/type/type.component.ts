@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { AnalysisType } from "../../../../electron/models/analysisType";
+import { APAnalysis } from "../../../../electron/models/analysis";
 import { APService } from "../../../../electron/services/AP/ap.service";
 import { AnalysisEvent } from "../analysis.component";
 
@@ -9,11 +9,11 @@ import { AnalysisEvent } from "../analysis.component";
   styleUrls: ["./type.component.scss"]
 })
 export class TypeComponent implements OnInit {
-  @Input() analysisType?: AnalysisType;
+  @Input() analysisType?: APAnalysis;
   @Output() analysisTypeEvent = new EventEmitter<AnalysisTypeEvent>();
 
   public analysisTypeOptions: AnalysisOption[];
-  private analysisTypeCurrent: AnalysisType;
+  private analysisTypeCurrent: APAnalysis;
 
   constructor(private ap: APService) {}
 
@@ -53,10 +53,10 @@ export class TypeComponent implements OnInit {
 }
 
 interface AnalysisTypeEvent extends AnalysisEvent {
-  output: AnalysisType;
+  output: APAnalysis;
 }
 
 interface AnalysisOption {
-  analysis: AnalysisType;
+  analysis: APAnalysis;
   isSelected: boolean;
 }
