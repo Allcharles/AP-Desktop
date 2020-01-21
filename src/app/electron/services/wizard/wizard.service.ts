@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { ElectronService } from "../electron/electron.service";
 import { APAnalysis } from "../../models/analysis";
 import { AnalysisOptions, AnalysisConfig } from "../../models/analysisHelper";
+import { List, fromJS } from "immutable";
 
 @Injectable({
   providedIn: "root"
@@ -22,6 +23,13 @@ export class WizardService extends ElectronService {
    */
   public getAnalysis(): APAnalysis {
     return this.currentAnalysis;
+  }
+
+  /**
+   * Returns the list of analyses
+   */
+  public getAnalyses(): List<APAnalysis> {
+    return List(this.analyses);
   }
 
   /**
@@ -71,11 +79,25 @@ export class WizardService extends ElectronService {
   }
 
   /**
+   * Get current analysis options
+   */
+  public getOptions(): AnalysisOptions {
+    return fromJS(this.currentAnalysis.options);
+  }
+
+  /**
    * Set the analysis options for the current analysis
    * @param options Analysis Options
    */
   public setOptions(options: AnalysisOptions) {
     this.currentAnalysis.options = options;
+  }
+
+  /**
+   * Get current analysis config
+   */
+  public getConfig(): AnalysisConfig {
+    return fromJS(this.currentAnalysis.config);
   }
 
   /**

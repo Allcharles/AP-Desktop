@@ -10,21 +10,23 @@ import { FolderComponent } from "./folder/folder.component";
 import { OutputComponent } from "./output/output.component";
 import { AdvancedModule } from "./advanced/advanced.module";
 
+const analysisComponents = [
+  AnalysisComponent,
+  TypeComponent,
+  AudioComponent,
+  FolderComponent,
+  ConfirmationComponent,
+  OutputComponent
+];
+
 @NgModule({
-  declarations: [
-    AnalysisComponent,
-    TypeComponent,
-    AudioComponent,
-    FolderComponent,
-    ConfirmationComponent,
-    OutputComponent
-  ],
+  declarations: [...analysisComponents],
   imports: [
     SharedModule,
     AdvancedModule,
     RouterModule.forChild(analysisRoutes)
   ],
-  exports: [RouterModule],
+  exports: [RouterModule, ...analysisComponents],
   providers: []
 })
 export class AnalysisModule {}

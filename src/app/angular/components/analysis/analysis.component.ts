@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
+import { WizardService } from "../../../electron/services/wizard/wizard.service";
 
 @Component({
   selector: "app-analysis",
@@ -14,8 +15,13 @@ export class AnalysisComponent implements OnInit {
     description: string;
   }[];
   public isValid: boolean;
+  public backEnabled: boolean;
 
-  constructor(private router: Router, private location: Location) {}
+  constructor(
+    private wizard: WizardService,
+    private router: Router,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
     this.options = [
@@ -31,6 +37,7 @@ export class AnalysisComponent implements OnInit {
     ];
 
     this.isValid = false;
+    this.backEnabled = this.wizard.getAnalyses().count() > 0;
   }
 
   public changeSelection(index: number): void {
@@ -43,6 +50,6 @@ export class AnalysisComponent implements OnInit {
   }
 
   public goNext() {
-    this.router.navigate(["analysis", "type"]);
+    this.router.navigateByUrl("/analysis/type");
   }
 }

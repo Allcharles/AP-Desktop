@@ -56,7 +56,7 @@ export class TypeComponent implements OnInit {
   }
 
   public nextButton() {
-    this.router.navigate(["audio"]);
+    this.router.navigateByUrl("/analysis/audio");
   }
 
   public backButton() {

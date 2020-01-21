@@ -9,8 +9,11 @@ import { ConfirmationComponent } from "./confirmation/confirmation.component";
 export const analysisRoutes: Routes = [
   {
     path: "analysis",
-    component: AnalysisComponent,
     children: [
+      {
+        path: "",
+        component: AnalysisComponent
+      },
       {
         path: "type",
         component: TypeComponent

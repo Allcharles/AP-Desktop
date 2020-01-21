@@ -7,8 +7,9 @@ import { TranslateModule } from "@ngx-translate/core";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { FooterComponent } from "./footer/footer.component";
 import { NavbarComponent } from "./navbar/navbar.component";
+import { NotFoundComponent } from "./not-found/not-found.component";
 
-const sharedComponents = [NavbarComponent, FooterComponent];
+const sharedComponents = [NavbarComponent, FooterComponent, NotFoundComponent];
 
 @NgModule({
   declarations: [sharedComponents],
