@@ -1,13 +1,9 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output
-} from "@angular/core";
+import { Location } from "@angular/common";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { APService } from "../../../../electron/services/AP/ap.service";
 import { FileSystemService } from "../../../../electron/services/file-system/file-system.service";
+import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
 @Component({
   selector: "app-analysis-audio",
@@ -15,27 +11,40 @@ import { FileSystemService } from "../../../../electron/services/file-system/fil
   styleUrls: ["./audio.component.scss"]
 })
 export class AudioComponent implements OnInit {
-  @Input() audioFiles?: string[];
-  @Output() audioFileEvent: EventEmitter<AudioFileEvent> = new EventEmitter();
-
-  public rows: { no: number; filename: string }[];
+  public audioFiles: string[];
   public columns = [{ prop: "no" }, { name: "Filename" }];
   public filesSelected: boolean;
   public loading: boolean;
+  public rows: { no: number; filename: string }[];
+  public isValid: boolean;
   private currentAudioFiles: string[];
 
   constructor(
     private ap: APService,
+    private wizard: WizardService,
     private fileSystem: FileSystemService,
+    private router: Router,
+    private location: Location,
     private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    if (this.audioFiles && this.audioFiles.length !== 0) {
+    this.audioFiles = this.wizard.getAudioFiles();
+
+    if (this.audioFiles.length !== 0) {
       this.updateTable(this.audioFiles);
     } else {
       this.noFiles();
     }
+  }
+
+  public nextButton(): void {
+    this.wizard.setAudioFiles(this.audioFiles);
+    this.router.navigateByUrl("/analysis/output");
+  }
+
+  public backButton(): void {
+    this.location.back();
   }
 
   /**
@@ -131,10 +140,7 @@ export class AudioComponent implements OnInit {
     this.currentAudioFiles = files;
     this.filesSelected = true;
     this.loading = false;
-    this.audioFileEvent.emit({
-      output: this.currentAudioFiles,
-      isValid: true
-    });
+    this.isValid = true;
 
     this.rows = this.currentAudioFiles.map((audioFile, index) => {
       return { no: index + 1, filename: audioFile };
@@ -145,15 +151,10 @@ export class AudioComponent implements OnInit {
    * Handle lack of files
    */
   private noFiles(): void {
-    this.audioFileEvent.emit({ isValid: false, output: [] });
     this.currentAudioFiles = [];
     this.filesSelected = false;
     this.loading = false;
+    this.isValid = false;
     this.rows = [];
   }
-}
-
-interface AudioFileEvent {
-  isValid: boolean;
-  output: string[];
 }

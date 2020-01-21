@@ -63,6 +63,13 @@ export class WizardService extends ElectronService {
   }
 
   /**
+   * Retrieve the audio files for the current analysis
+   */
+  public getAudioFiles(): string[] {
+    return this.currentAnalysis.audioFiles.slice();
+  }
+
+  /**
    * Set the audio files for the current analysis
    * @param files Audio file paths
    */

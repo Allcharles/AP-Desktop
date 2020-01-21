@@ -14,7 +14,7 @@ export class TypeComponent implements OnInit {
   public isValid: boolean;
   public analysisOptions: AnalysisOption[];
   private previousAnalysis: APAnalysis;
-  private selectedAnalysis: APAnalysis;
+  private analysis: APAnalysis;
 
   constructor(
     private ap: APService,
@@ -27,7 +27,7 @@ export class TypeComponent implements OnInit {
     this.previousAnalysis = this.wizard.getAnalysis();
 
     if (this.previousAnalysis) {
-      this.selectedAnalysis = this.wizard.getAnalysis();
+      this.analysis = this.wizard.getAnalysis();
     }
 
     this.analysisOptions = this.ap.getAnalysisTypes().map(analysisType => {
@@ -39,7 +39,7 @@ export class TypeComponent implements OnInit {
       } as AnalysisOption;
     });
 
-    this.isValid = !!this.selectedAnalysis;
+    this.isValid = !!this.analysis;
   }
 
   /**
@@ -47,15 +47,16 @@ export class TypeComponent implements OnInit {
    * @param id ID of analysis option
    */
   public changeSelection(id: number): void {
-    this.selectedAnalysis = this.analysisOptions[id].analysis;
+    this.analysis = this.analysisOptions[id].analysis;
     this.analysisOptions.map((analysisOption, index) => {
       analysisOption.isSelected = index === id;
     });
 
-    this.isValid = !!this.selectedAnalysis;
+    this.isValid = !!this.analysis;
   }
 
   public nextButton(): void {
+    this.wizard.createAnalysis(this.analysis);
     this.router.navigateByUrl("/analysis/audio");
   }
 
