@@ -1,62 +1,19 @@
-<div class="container">
-  <div class="pt-3 pb-3">
-    <div class="card shadow">
-      <div class="card-header">
-        Advanced Options
-      </div>
-      <div class="card-body d-flex justify-content-center">
-        <button
-          *ngIf="!showAdvanced"
-          class="btn btn-warning"
-          (click)="showAdvanced = true"
-          [disabled]="true"
-        >
-          Enable Advanced Features
-        </button>
-      </div>
+<div class="container mt-3">
+  <div class="card shadow">
+    <div class="card-header">
+      Advanced Options
+    </div>
 
-      <ng-content></ng-content>
-    </div>
-  </div>
-  <div class="pt-3 pb-3" *ngIf="showAdvanced">
-    <div class="card shadow">
-      <div class="card-header card-header-form">
-        <div class="header">Analysis Options</div>
-        <div class="flex-fill"></div>
-        <form class="form-inline my-0">
-          <button
-            class="btn btn-outline-danger my-0 py-1"
-            (click)="resetOptions()"
-          >
-            Reset
-          </button>
-        </form>
-      </div>
-      <div class="card-body">
-        <app-option
-          *ngFor="let option of options"
-          [option]="option"
-        ></app-option>
-      </div>
-    </div>
-  </div>
-  <div class="pt-3 pb-3" *ngIf="showAdvanced">
-    <div class="card shadow">
-      <div class="card-header card-header-form">
-        <div class="header">Configuration Editor</div>
-        <div class="flex-fill"></div>
-        <form class="form-inline my-0">
-          <button
-            class="btn btn-outline-danger my-0 py-1"
-            (click)="resetConfig()"
-          >
-            Reset
-          </button>
-        </form>
-      </div>
-      <div class="card-body">
-        <app-config [config]="config"></app-config>
-      </div>
+    <div class="d-flex justify-content-around pt-3 pb-3">
+      <button class="btn btn-warning" (click)="backButton()">
+        Back
+      </button>
+      <button class="btn btn-info" (click)="advancedButton()">
+        Advanced
+      </button>
+      <button class="btn btn-success" (click)="nextButton()">
+        Next
+      </button>
     </div>
   </div>
 </div>

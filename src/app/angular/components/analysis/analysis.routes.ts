@@ -6,6 +6,8 @@ import { ConfirmationComponent } from "./confirmation/confirmation.component";
 import { FolderComponent } from "./folder/folder.component";
 import { OutputComponent } from "./output/output.component";
 import { TypeComponent } from "./type/type.component";
+import { OptionsEditorComponent } from "./options-editor/options-editor.component";
+import { ConfigEditorComponent } from "./config-editor/config-editor.component";
 
 export const analysisRoutes: Routes = [
   {
@@ -33,11 +35,11 @@ export const analysisRoutes: Routes = [
       },
       {
         path: "options",
-        component: AudioComponent
+        component: OptionsEditorComponent
       },
       {
         path: "config",
-        component: AudioComponent
+        component: ConfigEditorComponent
       },
       {
         path: "confirm",

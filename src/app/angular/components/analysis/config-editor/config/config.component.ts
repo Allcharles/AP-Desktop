@@ -72,8 +72,8 @@ export class ConfigComponent implements OnInit, OnChanges {
 }
 
 export interface Config {
-  key: string;
-  index: number;
-  value: string | number | Config[];
+  label: string;
+  type?: "text" | "number";
+  value: string | Config[];
   hasChildren: boolean;
 }

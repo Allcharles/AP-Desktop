@@ -88,7 +88,7 @@ export class WizardService extends ElectronService {
   /**
    * Get current analysis options
    */
-  public getOptions(): AnalysisOptions {
+  public getOptions(): any {
     return fromJS(this.currentAnalysis.options);
   }
 
