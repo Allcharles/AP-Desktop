@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, Input } from "@angular/core";
 import { APService } from "../../../../electron/services/AP/ap.service";
 import { FileSystemService } from "../../../../electron/services/file-system/file-system.service";
-import { AnalysisEvent } from "../analysis.component";
 
 @Component({
   selector: "app-analysis-folder",
@@ -60,6 +59,7 @@ export class FolderComponent implements OnInit {
   }
 }
 
-interface OutputFolderEvent extends AnalysisEvent {
+interface OutputFolderEvent {
+  isValid: boolean;
   output: string;
 }

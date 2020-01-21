@@ -13,5 +13,26 @@
 
   <hr class="my-4" />
 
-  <ng-content></ng-content>
+  <p class="lead d-flex flex-row justify-content-around">
+    <button
+      class="btn btn-danger btn-lg"
+      role="button"
+      (click)="resetProgress()"
+    >
+      Cancel
+    </button>
+    <button class="btn btn-warning btn-lg" role="button" (click)="back()">
+      Back
+    </button>
+    <button class="btn btn-warning btn-lg" role="button" (click)="next()">
+      Add
+    </button>
+    <button
+      class="btn btn-success btn-lg"
+      role="button"
+      (click)="runAnalysis()"
+    >
+      Run
+    </button>
+  </p>
 </div>

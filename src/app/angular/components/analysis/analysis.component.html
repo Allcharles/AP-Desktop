@@ -1,83 +1,36 @@
-<!-- Select analysis type -->
-<app-analysis-type
-  *ngIf="showStage(stages.SelectType)"
-  [analysisType]="currentSelection.analysisType"
-  (analysisTypeEvent)="receiveAnalysisType($event)"
->
-  <app-analysis-nav
-    [isValid]="isValid"
-    [disabledBack]="analysisBatch.length === 0"
-    (back)="back()"
-    (next)="next()"
-  >
-  </app-analysis-nav>
-</app-analysis-type>
+<div class="container mt-3">
+  <div class="card shadow">
+    <div class="card-header">
+      Audio Length
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        <button
+          *ngFor="let option of options; let i = index"
+          class="list-group-item list-group-item-action"
+          [id]="i"
+          [ngClass]="{ selected: selected === i }"
+          (click)="changeSelection(i)"
+        >
+          <div class="d-flex flex-row">
+            <p class="mb-0">
+              {{ option.label }}
+            </p>
+          </div>
+          <p class="description" [ngClass]="{ 'd-none': selected !== i }">
+            {{ option.description }}
+          </p>
+        </button>
+      </ul>
+    </div>
 
-<!-- Select audio files -->
-<app-analysis-audio
-  *ngIf="showStage(stages.SelectAudio)"
-  [audioFiles]="currentSelection.audioFiles"
-  (audioFileEvent)="receiveAudio($event)"
->
-  <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
-  </app-analysis-nav>
-</app-analysis-audio>
-
-<!-- Select output folder -->
-<app-analysis-folder
-  *ngIf="showStage(stages.SelectFolder)"
-  [outputFolder]="currentSelection.outputFolder"
-  (outputFolderEvent)="receiveOutputFolder($event)"
->
-  <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
-  </app-analysis-nav>
-</app-analysis-folder>
-
-<!-- Ask use for advanced setup -->
-<app-analysis-advanced
-  *ngIf="showStage(stages.Advanced)"
-  [originalConfig]="originalConfig"
-  [originalOptions]="originalOptions"
-  [config]="currentSelection.config"
-  [options]="currentSelection.options"
->
-  <app-analysis-nav [isValid]="isValid" (back)="back()" (next)="next()">
-  </app-analysis-nav>
-</app-analysis-advanced>
-
-<!-- Confirmation -->
-<app-analysis-confirmation
-  *ngIf="showStage(stages.Confirmation)"
-  [analysisBatch]="analysisBatch"
->
-  <p class="lead d-flex flex-row justify-content-around">
-    <button
-      class="btn btn-danger btn-lg"
-      role="button"
-      (click)="resetProgress()"
-    >
-      Cancel
-    </button>
-    <button class="btn btn-warning btn-lg" role="button" (click)="back()">
-      Back
-    </button>
-    <button class="btn btn-warning btn-lg" role="button" (click)="next()">
-      Add
-    </button>
-    <button
-      class="btn btn-success btn-lg"
-      role="button"
-      (click)="runAnalysis()"
-    >
-      Run
-    </button>
-  </p>
-</app-analysis-confirmation>
-
-<!-- Output -->
-<app-analysis-output
-  *ngIf="showStage(stages.DisplayOutput)"
-  [analyses]="analyses"
-  (onComplete)="resetProgress()"
->
-</app-analysis-output>
+    <div class="d-flex justify-content-around pb-3">
+      <button *ngIf="!disabledBack" class="btn btn-warning" (click)="goBack()">
+        Back
+      </button>
+      <button class="btn btn-success" [disabled]="!isValid" (click)="goNext()">
+        Next
+      </button>
+    </div>
+  </div>
+</div>

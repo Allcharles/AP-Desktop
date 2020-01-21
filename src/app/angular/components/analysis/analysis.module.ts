@@ -6,7 +6,6 @@ import { analysisRoutes } from "./analysis.routes";
 import { AudioComponent } from "./audio/audio.component";
 import { ConfirmationComponent } from "./confirmation/confirmation.component";
 import { TypeComponent } from "./type/type.component";
-import { NavigationComponent } from "./navigation/navigation.component";
 import { FolderComponent } from "./folder/folder.component";
 import { OutputComponent } from "./output/output.component";
 import { AdvancedModule } from "./advanced/advanced.module";
@@ -18,7 +17,6 @@ import { AdvancedModule } from "./advanced/advanced.module";
     AudioComponent,
     FolderComponent,
     ConfirmationComponent,
-    NavigationComponent,
     OutputComponent
   ],
   imports: [

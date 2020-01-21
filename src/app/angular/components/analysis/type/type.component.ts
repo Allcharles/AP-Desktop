@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Location } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { APAnalysis } from "../../../../electron/models/analysis";
 import { APService } from "../../../../electron/services/AP/ap.service";
-import { AnalysisEvent } from "../analysis.component";
+import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
 @Component({
   selector: "app-analysis-type",
@@ -9,51 +11,57 @@ import { AnalysisEvent } from "../analysis.component";
   styleUrls: ["./type.component.scss"]
 })
 export class TypeComponent implements OnInit {
-  @Input() analysisType?: APAnalysis;
-  @Output() analysisTypeEvent = new EventEmitter<AnalysisTypeEvent>();
+  public isValid: boolean;
+  public analysisOptions: AnalysisOption[];
+  private previousAnalysis: APAnalysis;
+  private selectedAnalysis: APAnalysis;
 
-  public analysisTypeOptions: AnalysisOption[];
-  private analysisTypeCurrent: APAnalysis;
-
-  constructor(private ap: APService) {}
+  constructor(
+    private ap: APService,
+    private wizard: WizardService,
+    private router: Router,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
-    this.analysisTypeCurrent = this.analysisType;
+    this.previousAnalysis = this.wizard.getAnalysis();
 
-    this.analysisTypeOptions = this.ap.getAnalysisTypes().map(analysisType => {
+    if (this.previousAnalysis) {
+      this.selectedAnalysis = this.wizard.getAnalysis();
+    }
+
+    this.analysisOptions = this.ap.getAnalysisTypes().map(analysisType => {
       return {
         analysis: analysisType,
-        isSelected: this.analysisType
-          ? analysisType.label === this.analysisType.label
+        isSelected: this.previousAnalysis
+          ? analysisType.label === this.previousAnalysis.label
           : false
       } as AnalysisOption;
     });
 
-    this.analysisTypeEvent.emit({
-      output: this.analysisTypeCurrent,
-      isValid: !!this.analysisTypeCurrent
-    });
+    this.isValid = !!this.selectedAnalysis;
   }
 
   /**
    * Set the selected analysis type
    * @param id ID of analysis option
    */
-  protected changeSelection(id: number): void {
-    this.analysisTypeCurrent = this.analysisTypeOptions[id].analysis;
-    this.analysisTypeOptions.map((analysisOption, index) => {
+  public changeSelection(id: number): void {
+    this.selectedAnalysis = this.analysisOptions[id].analysis;
+    this.analysisOptions.map((analysisOption, index) => {
       analysisOption.isSelected = index === id;
     });
 
-    this.analysisTypeEvent.emit({
-      output: this.analysisTypeCurrent,
-      isValid: true
-    });
+    this.isValid = !!this.selectedAnalysis;
   }
-}
 
-interface AnalysisTypeEvent extends AnalysisEvent {
-  output: APAnalysis;
+  public nextButton() {
+    this.router.navigate(["audio"]);
+  }
+
+  public backButton() {
+    this.location.back();
+  }
 }
 
 interface AnalysisOption {

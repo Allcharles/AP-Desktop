@@ -29,6 +29,21 @@
       </ul>
     </div>
 
-    <ng-content></ng-content>
+    <div class="d-flex justify-content-around pb-3">
+      <button
+        *ngIf="!disabledBack"
+        class="btn btn-warning"
+        (click)="backButton()"
+      >
+        Back
+      </button>
+      <button
+        class="btn btn-success"
+        [disabled]="!isValid"
+        (click)="nextButton()"
+      >
+        Next
+      </button>
+    </div>
   </div>
 </div>
