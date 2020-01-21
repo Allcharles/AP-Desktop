@@ -11,8 +11,7 @@ import { Config } from "./config/config.component";
   styleUrls: ["./config-editor.component.scss"]
 })
 export class ConfigEditorComponent implements OnInit {
-  public config: AnalysisConfig;
-  public configArray: Config[];
+  public config: Config[];
 
   constructor(
     private wizard: WizardService,
@@ -21,14 +20,11 @@ export class ConfigEditorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.config = this.wizard.getConfig();
-    console.log(this.config);
-
-    this.configArray = this.generateConfigArray(this.config);
-    console.log(this.configArray);
+    this.reset();
   }
 
   public nextButton() {
+    this.wizard.setConfig(this.generateConfigObject(this.config));
     this.router.navigateByUrl("/analysis/confirm");
   }
 
@@ -36,25 +32,54 @@ export class ConfigEditorComponent implements OnInit {
     this.location.back();
   }
 
-  private generateConfigArray(config: AnalysisConfig): Config[] {
+  public reset() {
+    const analysisConfig = this.wizard.getConfig();
+    this.config = this.generateConfigArray(analysisConfig);
+  }
+
+  /**
+   * Convert config array to object
+   * @param config Config Array
+   */
+  private generateConfigObject(config: Config[]): AnalysisConfig {
+    const output: AnalysisConfig = {};
+
+    for (const option of config) {
+      if (option.value instanceof Array) {
+        output[option.label] = this.generateConfigObject(option.value);
+      } else {
+        output[option.label] = option.value;
+      }
+    }
+
+    return output;
+  }
+
+  /**
+   * Convert config object to array
+   * @param config Config Object
+   */
+  private generateConfigArray(config: any): Config[] {
     const output: Config[] = [];
 
-    for (const key of Object.keys(config)) {
-      if (typeof config[key] === "object") {
+    config.keySeq().forEach((key: string) => {
+      const option = config.get(key);
+
+      if (typeof option === "object") {
         output.push({
           label: key,
           hasChildren: true,
-          value: this.generateConfigArray(config[key] as AnalysisConfig)
+          value: this.generateConfigArray(option as AnalysisConfig)
         });
       } else {
         output.push({
           label: key,
           hasChildren: false,
-          type: typeof config[key] === "number" ? "number" : "text",
-          value: config[key] as string
+          type: typeof option === "number" ? "number" : "text",
+          value: option as string
         });
       }
-    }
+    });
 
     return output;
   }

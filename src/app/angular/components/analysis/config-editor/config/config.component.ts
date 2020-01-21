@@ -3,21 +3,21 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
 @Component({
   selector: "app-config",
   template: `
-    <div *ngFor="let option of config; let i = index" class="form-group row">
+    <div *ngFor="let option of config" class="form-group row">
       <!-- Input form -->
       <ng-container *ngIf="!option.hasChildren; else children">
         <label
-          [for]="option.key"
+          [for]="option.label"
           class="col-sm-6 col-md-4 col-lg-3 col-form-label"
         >
-          {{ option.key }}
+          {{ option.label }}
         </label>
         <div class="col-sm-6 col-md-8 col-lg-9">
           <input
             class="form-control"
-            [id]="option.key"
-            [type]="configTypes[i]"
-            [value]="option.value.toString()"
+            [id]="option.label"
+            [type]="option.type"
+            [value]="option.value"
             [(ngModel)]="option.value"
           />
         </div>
@@ -25,7 +25,7 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
 
       <!-- Title with inputs -->
       <ng-template #children>
-        <label class="col-12">{{ option.key }}</label>
+        <label class="col-12">{{ option.label }}</label>
 
         <div class="pl-5 col-12">
           <app-config [config]="getChildConfig(option.value)"></app-config>
@@ -36,23 +36,12 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
 })
 export class ConfigComponent implements OnInit, OnChanges {
   @Input() config: Config[];
-  public configTypes: string[];
 
   constructor() {}
 
-  ngOnInit(): void {
-    this.ngOnChanges();
-  }
+  ngOnInit(): void {}
 
-  ngOnChanges(): void {
-    this.configTypes = this.config.map(option => {
-      if (typeof option.value === "number") {
-        return "number";
-      } else {
-        return "text";
-      }
-    });
-  }
+  ngOnChanges(): void {}
 
   public getType(config: Config): string {
     if (typeof config.value === "number") {
