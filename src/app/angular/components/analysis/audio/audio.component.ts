@@ -17,7 +17,6 @@ export class AudioComponent implements OnInit {
   public loading: boolean;
   public rows: { no: number; filename: string }[];
   public isValid: boolean;
-  private currentAudioFiles: string[];
 
   constructor(
     private ap: APService,
@@ -40,7 +39,7 @@ export class AudioComponent implements OnInit {
 
   public nextButton(): void {
     this.wizard.setAudioFiles(this.audioFiles);
-    this.router.navigateByUrl("/analysis/output");
+    this.router.navigateByUrl("/analysis/folder");
   }
 
   public backButton(): void {
@@ -99,17 +98,17 @@ export class AudioComponent implements OnInit {
    * @param index Index of audio file
    */
   public removeFile(index: number): void {
-    if (this.currentAudioFiles.length === 0) {
+    if (this.audioFiles.length === 0) {
       return;
     }
 
-    this.currentAudioFiles.splice(index, 1);
+    this.audioFiles.splice(index, 1);
 
     // If all files removed, disable next button
-    if (this.currentAudioFiles.length === 0) {
+    if (this.audioFiles.length === 0) {
       this.noFiles();
     } else {
-      this.updateTable(this.currentAudioFiles);
+      this.updateTable(this.audioFiles);
     }
   }
 
@@ -137,12 +136,12 @@ export class AudioComponent implements OnInit {
    * @param files Files
    */
   private updateTable(files: string[]): void {
-    this.currentAudioFiles = files;
+    this.audioFiles = files;
     this.filesSelected = true;
     this.loading = false;
     this.isValid = true;
 
-    this.rows = this.currentAudioFiles.map((audioFile, index) => {
+    this.rows = this.audioFiles.map((audioFile, index) => {
       return { no: index + 1, filename: audioFile };
     });
   }
@@ -151,7 +150,7 @@ export class AudioComponent implements OnInit {
    * Handle lack of files
    */
   private noFiles(): void {
-    this.currentAudioFiles = [];
+    this.audioFiles = [];
     this.filesSelected = false;
     this.loading = false;
     this.isValid = false;

@@ -1,10 +1,11 @@
 import { Routes } from "@angular/router";
-import { AnalysisComponent } from "./analysis.component";
-import { TypeComponent } from "./type/type.component";
-import { AudioComponent } from "./audio/audio.component";
-import { OutputComponent } from "./output/output.component";
 import { AdvancedComponent } from "./advanced/advanced.component";
+import { AnalysisComponent } from "./analysis.component";
+import { AudioComponent } from "./audio/audio.component";
 import { ConfirmationComponent } from "./confirmation/confirmation.component";
+import { FolderComponent } from "./folder/folder.component";
+import { OutputComponent } from "./output/output.component";
+import { TypeComponent } from "./type/type.component";
 
 export const analysisRoutes: Routes = [
   {
@@ -23,8 +24,8 @@ export const analysisRoutes: Routes = [
         component: AudioComponent
       },
       {
-        path: "output",
-        component: OutputComponent
+        path: "folder",
+        component: FolderComponent
       },
       {
         path: "advanced",

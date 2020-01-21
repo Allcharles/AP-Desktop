@@ -20,10 +20,17 @@
     </div>
     <div class="card-body">
       <p class="mb-0">
-        {{ currentOutputFolder }}
+        {{ outputFolder }}
       </p>
     </div>
 
-    <ng-content></ng-content>
+    <div class="d-flex justify-content-around pb-3">
+      <button class="btn btn-warning" (click)="backButton()">
+        Back
+      </button>
+      <button class="btn btn-success" (click)="nextButton()">
+        Next
+      </button>
+    </div>
   </div>
 </div>

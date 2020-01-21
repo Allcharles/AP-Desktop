@@ -1,13 +1,9 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output
-} from "@angular/core";
+import { Location } from "@angular/common";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { AnalysisItem } from "../../../../electron/models/analysisItem";
 import { APService } from "../../../../electron/services/AP/ap.service";
+import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
 @Component({
   selector: "app-analysis-output",
@@ -15,16 +11,20 @@ import { APService } from "../../../../electron/services/AP/ap.service";
   styleUrls: ["./output.component.scss"]
 })
 export class OutputComponent implements OnInit {
-  @Input() analyses: AnalysisItem[];
-  @Output() onComplete = new EventEmitter<any>();
-
+  public analyses: AnalysisItem[];
   public totalFiles: number;
   public completeFiles: number;
   public currentProgress: number;
   public currentAnalysis: AnalysisItem;
   public running: boolean;
 
-  constructor(private ap: APService, private ref: ChangeDetectorRef) {}
+  constructor(
+    private ap: APService,
+    private wizard: WizardService,
+    private router: Router,
+    private location: Location,
+    private ref: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.totalFiles = this.analyses.length;
@@ -63,10 +63,12 @@ export class OutputComponent implements OnInit {
     return Math.floor(this.currentProgress);
   }
 
-  /**
-   * Send user back to analysis selection page
-   */
-  public newAnalysis(): void {
-    this.onComplete.emit(true);
+  public nextButton(): void {
+    this.wizard.destroyAnalyses;
+    this.router.navigateByUrl("/analysis");
+  }
+
+  public backButton(): void {
+    this.location.back();
   }
 }
