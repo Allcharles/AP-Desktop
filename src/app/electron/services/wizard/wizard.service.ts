@@ -42,10 +42,9 @@ export class WizardService extends ElectronService {
 
   /**
    * Save analysis to list of analyses to run
-   * @param analysis AP Analysis
    */
-  public saveAnalysis(analysis: APAnalysis): void {
-    this.analyses.push(analysis);
+  public saveAnalysis(): void {
+    this.analyses.push(this.currentAnalysis);
   }
 
   /**
