@@ -23,16 +23,16 @@ export class ConfigEditorComponent implements OnInit {
     this.reset();
   }
 
-  public nextButton() {
+  public nextButton(): void {
     this.wizard.setConfig(this.generateConfigObject(this.config));
     this.router.navigateByUrl("/analysis/confirm");
   }
 
-  public backButton() {
+  public backButton(): void {
     this.location.back();
   }
 
-  public reset() {
+  public reset(): void {
     const analysisConfig = this.wizard.getConfig();
     this.config = this.generateConfigArray(analysisConfig);
   }

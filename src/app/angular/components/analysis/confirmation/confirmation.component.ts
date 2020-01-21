@@ -22,25 +22,23 @@ export class ConfirmationComponent implements OnInit {
   ngOnInit(): void {
     this.wizard.saveAnalysis();
     this.analyses = this.wizard.getAnalyses();
-
-    console.log(this.analyses);
   }
 
-  public cancelButton() {
+  public cancelButton(): void {
     this.wizard.destroyAnalyses();
     this.router.navigateByUrl("/analysis");
   }
 
-  public backButton() {
+  public backButton(): void {
     this.wizard.destroyAnalysis();
     this.location.back();
   }
 
-  public nextButton() {
+  public nextButton(): void {
     this.router.navigateByUrl("/analysis");
   }
 
-  public runButton() {
+  public runButton(): void {
     this.router.navigateByUrl("/analysis/output");
   }
 }

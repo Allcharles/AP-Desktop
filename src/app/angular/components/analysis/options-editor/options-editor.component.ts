@@ -37,11 +37,11 @@ export class OptionsEditorComponent implements OnInit {
     private location: Location
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.reset();
   }
 
-  public nextButton() {
+  public nextButton(): void {
     const newOptions: AnalysisOptions = {};
 
     this.optionsList.map(option => {
@@ -54,11 +54,11 @@ export class OptionsEditorComponent implements OnInit {
     this.router.navigateByUrl("/analysis/config");
   }
 
-  public backButton() {
+  public backButton(): void {
     this.location.back();
   }
 
-  public reset() {
+  public reset(): void {
     this.options = this.wizard.getOptions();
     this.optionsList = [
       {

@@ -117,7 +117,7 @@ export class APService extends ElectronService {
   private recursiveAnalysis(
     subject: Subject<AnalysisProgress>,
     analyses: AnalysisItem[],
-    fileNumber = 1
+    fileNumber = 0
   ): void {
     if (analyses.length === 0) {
       APAnalysis.cleanupTemporaryFiles();
@@ -140,6 +140,8 @@ export class APService extends ElectronService {
 
       // Handle terminal output
       terminal.stdout.on("data", data => {
+        console.debug("Data: ", data.toString());
+
         const temp = this.handleTerminalData(data.toString());
 
         if (temp) {
@@ -158,6 +160,8 @@ export class APService extends ElectronService {
 
       // Handle terminal error
       terminal.on("error", err => {
+        console.debug("Error: ", err.toString());
+
         progress = 100;
         subject.next({
           error: true,
@@ -171,6 +175,8 @@ export class APService extends ElectronService {
 
       // Handle terminal closing
       terminal.on("close", code => {
+        console.debug("Close: ", code.toString());
+
         progress = 100;
         const error = code !== APTerminal.OK_CODE;
         subject.next({

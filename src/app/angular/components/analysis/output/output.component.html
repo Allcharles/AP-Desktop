@@ -8,15 +8,15 @@
       <h4 class="mb-1">
         Analysis Progress
       </h4>
-      <div class="progress">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          [ngStyle]="{ width: (completeFiles / totalFiles) * 100 + '%' }"
+      <p>
+        <ngb-progressbar
+          max="100"
+          [type]="progressBarType"
+          [value]="formatProgress((completeFiles / totalFiles) * 100)"
         >
-          <p class="mb-0 ml-3">{{ completeFiles }}/{{ totalFiles }}</p>
-        </div>
-      </div>
+          {{ completeFiles }} of {{ totalFiles }} Completed
+        </ngb-progressbar>
+      </p>
 
       <!-- Current Analysis Statistics -->
       <div *ngIf="currentAnalysis">
@@ -57,13 +57,14 @@
 
         <p class="mr-3 mb-0"><strong>Progress</strong></p>
         <div class="progress flex-fill">
-          <div
-            class="progress-bar"
-            role="progressbar"
-            [ngStyle]="{ width: currentProgress + '%' }"
-          >
-            <p class="mb-0 ml-3">{{ displayCurrentProgress() }}%</p>
-          </div>
+          <p>
+            <ngb-progressbar
+              showValue="true"
+              type="info"
+              max="100"
+              [value]="formatProgress(currentProgress)"
+            ></ngb-progressbar>
+          </p>
         </div>
       </div>
     </div>
