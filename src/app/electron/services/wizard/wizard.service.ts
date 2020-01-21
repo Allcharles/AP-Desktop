@@ -36,7 +36,7 @@ export class WizardService extends ElectronService {
    * Save analysis to service
    * @param analysis AP Analysis
    */
-  public createAnalysis(analysis: APAnalysis) {
+  public createAnalysis(analysis: APAnalysis): void {
     this.currentAnalysis = analysis;
   }
 
@@ -44,21 +44,21 @@ export class WizardService extends ElectronService {
    * Save analysis to list of analyses to run
    * @param analysis AP Analysis
    */
-  public saveAnalysis(analysis: APAnalysis) {
+  public saveAnalysis(analysis: APAnalysis): void {
     this.analyses.push(analysis);
   }
 
   /**
    * Remove latest analysis from list of analyses to run
    */
-  public destroyAnalysis() {
+  public destroyAnalysis(): void {
     this.analyses.pop();
   }
 
   /**
    * Remove all analyses from list
    */
-  public destroyAnalyses() {
+  public destroyAnalyses(): void {
     this.analyses = [];
   }
 
@@ -66,7 +66,7 @@ export class WizardService extends ElectronService {
    * Set the audio files for the current analysis
    * @param files Audio file paths
    */
-  public setAudioFiles(files: string[]) {
+  public setAudioFiles(files: string[]): void {
     this.currentAnalysis.audioFiles = files;
   }
 
@@ -74,7 +74,7 @@ export class WizardService extends ElectronService {
    * Set the output folder for the current analysis
    * @param folder Folder path
    */
-  public setOutputFolder(folder: string) {
+  public setOutputFolder(folder: string): void {
     this.currentAnalysis.output = folder;
   }
 
@@ -89,7 +89,7 @@ export class WizardService extends ElectronService {
    * Set the analysis options for the current analysis
    * @param options Analysis Options
    */
-  public setOptions(options: AnalysisOptions) {
+  public setOptions(options: AnalysisOptions): void {
     this.currentAnalysis.options = options;
   }
 
@@ -104,7 +104,7 @@ export class WizardService extends ElectronService {
    * Set the analysis config settings for the current analysis
    * @param config Analysis Config
    */
-  public setConfig(config: AnalysisConfig) {
+  public setConfig(config: AnalysisConfig): void {
     this.currentAnalysis.config = config;
   }
 }

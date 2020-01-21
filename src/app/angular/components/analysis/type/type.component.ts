@@ -55,11 +55,11 @@ export class TypeComponent implements OnInit {
     this.isValid = !!this.selectedAnalysis;
   }
 
-  public nextButton() {
+  public nextButton(): void {
     this.router.navigateByUrl("/analysis/audio");
   }
 
-  public backButton() {
+  public backButton(): void {
     this.location.back();
   }
 }

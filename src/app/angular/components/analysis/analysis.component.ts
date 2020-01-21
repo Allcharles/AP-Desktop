@@ -45,11 +45,11 @@ export class AnalysisComponent implements OnInit {
     this.isValid = true;
   }
 
-  public goBack() {
+  public goBack(): void {
     this.location.back();
   }
 
-  public goNext() {
+  public goNext(): void {
     this.router.navigateByUrl("/analysis/type");
   }
 }
