@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
-import { ElectronService } from "../electron/electron.service";
 import { APAnalysis } from "../../models/analysis";
 import { AnalysisOptions, AnalysisConfig } from "../../models/analysisHelper";
 import { List, fromJS } from "immutable";
+import { APService } from "../AP/ap.service";
 
 @Injectable({
   providedIn: "root"
 })
-export class WizardService extends ElectronService {
+export class WizardService extends APService {
   /**
    * List of analyses to run
    */

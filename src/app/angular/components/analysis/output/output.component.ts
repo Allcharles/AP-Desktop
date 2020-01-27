@@ -30,12 +30,42 @@ export class OutputComponent implements OnInit {
 
   ngOnInit(): void {
     this.progressBarType = "success";
+    this.runAnalysis();
+  }
+
+  public formatProgress(progress: number): number {
+    return Math.floor(progress);
+  }
+
+  public nextButton(): void {
+    this.wizard.destroyAnalyses();
+    this.router.navigateByUrl("/analysis");
+  }
+
+  public backButton(): void {
+    this.location.back();
+  }
+
+  public stopAnalysis(): void {
+    this.wizard.cancelAnalysis();
+  }
+
+  public pauseAnalysis(): void {
+    if (this.wizard.isPaused()) {
+      this.wizard.unpauseAnalysis();
+      this.runAnalysis();
+    } else {
+      this.wizard.pauseAnalysis();
+      this.running = false;
+    }
+  }
+
+  private runAnalysis(): void {
     const analyses: List<APAnalysis> = this.wizard.getAnalyses();
     const items: AnalysisItem[] = [];
     analyses.forEach(analysis => {
       items.push(...analysis.generateBatch());
     });
-
     this.totalFiles = items.length;
     this.completeFiles = 0;
     this.currentProgress = 0;
@@ -64,18 +94,5 @@ export class OutputComponent implements OnInit {
         this.ref.detectChanges();
       }
     );
-  }
-
-  public formatProgress(progress: number): number {
-    return Math.floor(progress);
-  }
-
-  public nextButton(): void {
-    this.wizard.destroyAnalyses();
-    this.router.navigateByUrl("/analysis");
-  }
-
-  public backButton(): void {
-    this.location.back();
   }
 }
