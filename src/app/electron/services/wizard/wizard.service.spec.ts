@@ -1,11 +1,11 @@
 import { TestBed } from "@angular/core/testing";
-import { FileSystemService } from "./file-system.service";
+import { WizardService } from "./wizard.service";
 
-describe("FileSystemService", () => {
+describe("WizardService", () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it("should be created", () => {
-    const service: FileSystemService = TestBed.get(FileSystemService);
+    const service: WizardService = TestBed.get(WizardService);
     expect(service).toBeTruthy();
   });
 });

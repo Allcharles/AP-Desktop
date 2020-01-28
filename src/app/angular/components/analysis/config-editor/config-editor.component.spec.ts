@@ -1,27 +1,28 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ConfigEditorComponent } from "./config-editor.component";
 import { SharedModule } from "../../shared/shared.module";
-import { ConfirmationComponent } from "./confirmation.component";
 import { RouterTestingModule } from "@angular/router/testing";
 import { WizardService } from "src/app/electron/services/wizard/wizard.service";
-import { APAnalysis } from "src/app/electron/models/analysis";
+import { AnalysisModule } from "../analysis.module";
 import { AnalysisProcessingType } from "src/app/electron/models/analysisHelper";
-import { List } from "immutable";
+import { APAnalysis } from "src/app/electron/models/analysis";
+import { fromJS } from "immutable";
 
-describe("ConfirmationComponent", () => {
-  let component: ConfirmationComponent;
-  let fixture: ComponentFixture<ConfirmationComponent>;
+describe("ConfigEditorComponent", () => {
+  let component: ConfigEditorComponent;
+  let fixture: ComponentFixture<ConfigEditorComponent>;
   let wizard: WizardService;
   let analysis: APAnalysis;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConfirmationComponent],
-      imports: [SharedModule, RouterTestingModule]
+      declarations: [ConfigEditorComponent],
+      imports: [SharedModule, AnalysisModule, RouterTestingModule]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfirmationComponent);
+    fixture = TestBed.createComponent(ConfigEditorComponent);
     component = fixture.componentInstance;
     wizard = TestBed.get(WizardService);
 
@@ -39,18 +40,18 @@ describe("ConfirmationComponent", () => {
   });
 
   it("should create", () => {
-    spyOn(wizard, "getAnalyses").and.callFake(() => List([analysis]));
-    fixture.detectChanges();
+    spyOn(wizard, "getConfig").and.callFake(() => fromJS(analysis.config));
 
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
   it("should have header", () => {
-    spyOn(wizard, "getAnalyses").and.callFake(() => List([analysis]));
+    spyOn(wizard, "getConfig").and.callFake(() => fromJS(analysis.config));
     fixture.detectChanges();
 
-    const header = fixture.nativeElement.querySelector("h1.display-4");
+    const header = fixture.nativeElement.querySelector("div.header");
     expect(header).toBeTruthy();
-    expect(header.innerText).toContain("Run Analysis");
+    expect(header.innerText).toContain("Configuration Editor");
   });
 });

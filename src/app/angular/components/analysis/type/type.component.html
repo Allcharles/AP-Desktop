@@ -1,14 +1,13 @@
-<div class="container mt-3">
+<div class="container mt-3 mb-3">
   <div class="card shadow">
     <div class="card-header">
       Analysis Types
     </div>
     <div class="card-body">
       <ul class="list-group">
-        <a
-          href="#"
+        <button
           class="list-group-item list-group-item-action"
-          *ngFor="let analysisType of analysisTypeOptions; let i = index"
+          *ngFor="let analysisType of analysisOptions; let i = index"
           [id]="i.toString()"
           [ngClass]="{ selected: analysisType.isSelected }"
           (click)="changeSelection(i)"
@@ -25,10 +24,21 @@
           >
             {{ analysisType.analysis.description }}
           </p>
-        </a>
+        </button>
       </ul>
     </div>
 
-    <ng-content></ng-content>
+    <div class="d-flex justify-content-around pb-3">
+      <button class="btn btn-warning" (click)="backButton()">
+        Back
+      </button>
+      <button
+        class="btn btn-success"
+        [disabled]="!isValid"
+        (click)="nextButton()"
+      >
+        Next
+      </button>
+    </div>
   </div>
 </div>

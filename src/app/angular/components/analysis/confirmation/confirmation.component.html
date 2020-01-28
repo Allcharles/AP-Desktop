@@ -1,4 +1,4 @@
-<div class="jumbotron container mt-3">
+<div class="jumbotron container mt-3 mb-3">
   <h1 class="display-4">Run Analysis</h1>
 
   <p class="lead">
@@ -7,11 +7,28 @@
 
   <hr class="my-4" />
 
-  <li *ngFor="let analysisGroup of analysisBatch">
-    {{ analysisGroup.label }} on {{ analysisGroup.audioFiles.length }} file/s
+  <li *ngFor="let analysis of analyses">
+    {{ analysis.label }} on {{ analysis.audioFiles.length }} file/s
   </li>
 
   <hr class="my-4" />
 
-  <ng-content></ng-content>
+  <p class="lead d-flex flex-row justify-content-around">
+    <button
+      class="btn btn-danger btn-lg"
+      role="button"
+      (click)="cancelButton()"
+    >
+      Cancel
+    </button>
+    <button class="btn btn-warning btn-lg" role="button" (click)="backButton()">
+      Back
+    </button>
+    <button class="btn btn-warning btn-lg" role="button" (click)="nextButton()">
+      Add
+    </button>
+    <button class="btn btn-success btn-lg" role="button" (click)="runButton()">
+      Run
+    </button>
+  </p>
 </div>

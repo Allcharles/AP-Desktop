@@ -112,6 +112,7 @@ export class APAnalysis {
    */
   private generateOptions(): string[] {
     const output: string[] = [];
+
     for (const option in this.options) {
       switch (typeof this.options[option]) {
         case "boolean":

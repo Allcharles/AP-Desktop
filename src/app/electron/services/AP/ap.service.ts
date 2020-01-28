@@ -18,6 +18,9 @@ import {
   providedIn: "root"
 })
 export class APService extends ElectronService {
+  /**
+   * Supported audio formats for input audio files
+   */
   public readonly supportedAudioFormats = [
     "wav",
     "mp3",
@@ -30,6 +33,14 @@ export class APService extends ElectronService {
     "alac",
     "wma"
   ];
+  /**
+   * Cancel analysis
+   */
+  private cancel: boolean;
+  /**
+   * Pause analysis
+   */
+  private pause: boolean;
 
   constructor() {
     super();
@@ -37,6 +48,9 @@ export class APService extends ElectronService {
     if (!this.isElectron) {
       return;
     }
+
+    this.pause = false;
+    this.cancel = false;
 
     setTimeout(() => {
       //TODO Add a check for the version AP to determine if an update is required
@@ -90,6 +104,34 @@ export class APService extends ElectronService {
   }
 
   /**
+   * Determine if analysis is paused
+   */
+  public isPaused(): boolean {
+    return this.pause;
+  }
+
+  /**
+   * Unpause analysis
+   */
+  public unpauseAnalysis(): void {
+    this.pause = false;
+  }
+
+  /**
+   * Pause analysis
+   */
+  public pauseAnalysis(): void {
+    this.pause = true;
+  }
+
+  /**
+   * Cancel analysis
+   */
+  public cancelAnalysis(): void {
+    this.cancel = true;
+  }
+
+  /**
    * Analysis all files. Sends updates back to program through subject.
    * @param analyses Analysis item list
    */
@@ -97,6 +139,9 @@ export class APService extends ElectronService {
     if (!this.isElectron) {
       return;
     }
+
+    this.pause = false;
+    this.cancel = false;
 
     const subject = new Subject<AnalysisProgress>();
 
@@ -117,9 +162,11 @@ export class APService extends ElectronService {
   private recursiveAnalysis(
     subject: Subject<AnalysisProgress>,
     analyses: AnalysisItem[],
-    fileNumber = 1
+    fileNumber = 0
   ): void {
-    if (analyses.length === 0) {
+    let paused: boolean = this.pause;
+
+    if (analyses.length === 0 || paused || this.cancel) {
       APAnalysis.cleanupTemporaryFiles();
       subject.complete();
       return;
@@ -140,6 +187,9 @@ export class APService extends ElectronService {
 
       // Handle terminal output
       terminal.stdout.on("data", data => {
+        console.debug("Data: ", data.toString());
+
+        paused = this.pause ? true : paused;
         const temp = this.handleTerminalData(data.toString());
 
         if (temp) {
@@ -158,6 +208,10 @@ export class APService extends ElectronService {
 
       // Handle terminal error
       terminal.on("error", err => {
+        console.debug("Error: ", err.toString());
+        fileNumber += 1;
+
+        paused = this.pause ? true : paused;
         progress = 100;
         subject.next({
           error: true,
@@ -166,11 +220,15 @@ export class APService extends ElectronService {
           progress,
           fileNumber
         });
-        this.recursiveAnalysis(subject, analyses, fileNumber + 1);
+        this.recursiveAnalysis(subject, analyses, fileNumber);
       });
 
       // Handle terminal closing
       terminal.on("close", code => {
+        console.debug("Close: ", code.toString());
+        fileNumber += 1;
+
+        paused = this.pause ? true : paused;
         progress = 100;
         const error = code !== APTerminal.OK_CODE;
         subject.next({
@@ -179,7 +237,7 @@ export class APService extends ElectronService {
           progress,
           fileNumber
         });
-        this.recursiveAnalysis(subject, analyses, fileNumber + 1);
+        this.recursiveAnalysis(subject, analyses, fileNumber);
       });
     }
   }

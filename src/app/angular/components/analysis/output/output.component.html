@@ -1,4 +1,4 @@
-<div class="container mt-3">
+<div class="container mt-3 mb-3">
   <div class="card shadow">
     <div class="card-header d-flex">
       Analysis Output
@@ -8,15 +8,14 @@
       <h4 class="mb-1">
         Analysis Progress
       </h4>
-      <div class="progress">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          [ngStyle]="{ width: (completeFiles / totalFiles) * 100 + '%' }"
+      <p>
+        <ngb-progressbar
+          [type]="progressBarType"
+          [value]="formatProgress((completeFiles / totalFiles) * 100)"
         >
-          <p class="mb-0 ml-3">{{ completeFiles }}/{{ totalFiles }}</p>
-        </div>
-      </div>
+          {{ completeFiles }} of {{ totalFiles }} Completed
+        </ngb-progressbar>
+      </p>
 
       <!-- Current Analysis Statistics -->
       <div *ngIf="currentAnalysis">
@@ -56,21 +55,21 @@
         </div>
 
         <p class="mr-3 mb-0"><strong>Progress</strong></p>
-        <div class="progress flex-fill">
-          <div
-            class="progress-bar"
-            role="progressbar"
-            [ngStyle]="{ width: currentProgress + '%' }"
-          >
-            <p class="mb-0 ml-3">{{ displayCurrentProgress() }}%</p>
-          </div>
+        <div>
+          <p>
+            <ngb-progressbar
+              type="info"
+              showValue="true"
+              [value]="formatProgress(currentProgress)"
+            ></ngb-progressbar>
+          </p>
         </div>
       </div>
     </div>
 
     <!-- Analysis options -->
     <div class="d-flex justify-content-around pb-3">
-      <!-- <button
+      <button
         class="btn btn-outline-danger"
         [disabled]="completeFiles === totalFiles"
         (click)="stopAnalysis()"
@@ -83,11 +82,11 @@
         (click)="pauseAnalysis()"
       >
         {{ pause ? "Unpause Analysis" : "Pause Analysis" }}
-      </button> -->
+      </button>
       <button
         class="btn btn-outline-success"
         [disabled]="running"
-        (click)="newAnalysis()"
+        (click)="nextButton()"
       >
         New Analysis
       </button>
