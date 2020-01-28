@@ -11,15 +11,16 @@ AP Desktop is a Graphical User Interface (GUI) for the open source program Analy
 
 Currently runs with:
 
-- Angular v8
-- Electron v7
-- Electron Builder v21
+- Angular v8.3.21
+- Electron v7.1.7
+- Electron Builder v21.2.0
+- Typescript: 3.5.3
 
 Supported Platforms:
 
 - Windows 10
-- Linux Ubuntu 18
-- Linux Ubuntu 16
+- Linux Ubuntu 18 (deb, rpm)
+- Linux Ubuntu 16 (deb, rpm)
 
 ## Getting Started
 
@@ -110,14 +111,11 @@ npm run electron:mac
 
 ## Current Features
 
-- Angular framework
+- Angular Framework
 - AP Installer
-- Basic analysis
-- Linux Support
-- Loading bars for file analysis
-- Multiple analyses
-- Pre-built analysis tools
-- Advanced analysis options
+- Pre-Built Analysis Tools
+- Support for running multiple analyses in one command
+- Advanced Analysis Options (UNTESTED)
   - Config File Editor
   - AP Options Editor
 
