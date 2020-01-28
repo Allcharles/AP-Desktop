@@ -24,4 +24,12 @@ describe("AnalysisComponent", () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
+
+  it("should have header", () => {
+    fixture.detectChanges();
+
+    const header = fixture.nativeElement.querySelector("div.card-header");
+    expect(header).toBeTruthy();
+    expect(header.innerText).toContain("Audio Length");
+  });
 });

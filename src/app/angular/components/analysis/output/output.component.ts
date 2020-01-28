@@ -21,7 +21,6 @@ export class OutputComponent implements OnInit {
   public running: boolean;
 
   constructor(
-    private ap: APService,
     private wizard: WizardService,
     private router: Router,
     private location: Location,
@@ -71,7 +70,7 @@ export class OutputComponent implements OnInit {
     this.currentProgress = 0;
     this.running = true;
 
-    this.ap.analyseFiles(items).subscribe(
+    this.wizard.analyseFiles(items).subscribe(
       update => {
         if (update.error) {
           console.error("Analysis Error: ", update.errorDetails);

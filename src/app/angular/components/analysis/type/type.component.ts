@@ -2,7 +2,6 @@ import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { APAnalysis } from "../../../../electron/models/analysis";
-import { APService } from "../../../../electron/services/AP/ap.service";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
 @Component({
@@ -17,7 +16,6 @@ export class TypeComponent implements OnInit {
   private analysis: APAnalysis;
 
   constructor(
-    private ap: APService,
     private wizard: WizardService,
     private router: Router,
     private location: Location
@@ -30,7 +28,7 @@ export class TypeComponent implements OnInit {
       this.analysis = this.wizard.getAnalysis();
     }
 
-    this.analysisOptions = this.ap.getAnalysisTypes().map(analysisType => {
+    this.analysisOptions = this.wizard.getAnalysisTypes().map(analysisType => {
       return {
         analysis: analysisType,
         isSelected: this.previousAnalysis
