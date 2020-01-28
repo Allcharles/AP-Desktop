@@ -31,7 +31,7 @@ const analysisComponents = [
 @NgModule({
   declarations: [...analysisComponents],
   imports: [SharedModule, RouterModule.forChild(analysisRoutes)],
-  exports: [RouterModule, ...analysisComponents],
+  exports: [RouterModule, SharedModule, ...analysisComponents],
   providers: []
 })
 export class AnalysisModule {}

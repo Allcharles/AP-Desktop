@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     // }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // TODO Remove this once a solution is found to the ChildProcess bug
     const started = sessionStorage.getItem("started");
     if (!started) {
