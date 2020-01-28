@@ -117,12 +117,12 @@ npm run electron:mac
 - Loading bars for file analysis
 - Multiple analyses
 - Pre-built analysis tools
-
-## Features Coming Soon
-
 - Advanced analysis options
   - Config File Editor
   - AP Options Editor
+
+## Features Coming Soon
+
 - Analysis spectrogram display
 - Link to Analysis Output
 - Event Detection Helper utility
