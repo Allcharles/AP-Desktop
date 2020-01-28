@@ -209,6 +209,7 @@ export class APService extends ElectronService {
       // Handle terminal error
       terminal.on("error", err => {
         console.debug("Error: ", err.toString());
+        fileNumber += 1;
 
         paused = this.pause ? true : paused;
         progress = 100;
@@ -219,12 +220,13 @@ export class APService extends ElectronService {
           progress,
           fileNumber
         });
-        this.recursiveAnalysis(subject, analyses, fileNumber + 1);
+        this.recursiveAnalysis(subject, analyses, fileNumber);
       });
 
       // Handle terminal closing
       terminal.on("close", code => {
         console.debug("Close: ", code.toString());
+        fileNumber += 1;
 
         paused = this.pause ? true : paused;
         progress = 100;
@@ -235,7 +237,7 @@ export class APService extends ElectronService {
           progress,
           fileNumber
         });
-        this.recursiveAnalysis(subject, analyses, fileNumber + 1);
+        this.recursiveAnalysis(subject, analyses, fileNumber);
       });
     }
   }

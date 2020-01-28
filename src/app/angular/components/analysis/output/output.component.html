@@ -10,7 +10,6 @@
       </h4>
       <p>
         <ngb-progressbar
-          max="100"
           [type]="progressBarType"
           [value]="formatProgress((completeFiles / totalFiles) * 100)"
         >
@@ -56,12 +55,11 @@
         </div>
 
         <p class="mr-3 mb-0"><strong>Progress</strong></p>
-        <div class="progress flex-fill">
+        <div>
           <p>
             <ngb-progressbar
-              showValue="true"
               type="info"
-              max="100"
+              showValue="true"
               [value]="formatProgress(currentProgress)"
             ></ngb-progressbar>
           </p>
