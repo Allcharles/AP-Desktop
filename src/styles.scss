@@ -1,24 +1,30 @@
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+@import "~@swimlane/ngx-datatable/index.css";
+@import "~@swimlane/ngx-datatable/themes/material.scss";
+@import "~@swimlane/ngx-datatable/assets/icons.css";
+
 /* You can add global styles to this file, and also import other style files */
-@import "https://fonts.googleapis.com/icon?family=Material+Icons";
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import "~@swimlane/ngx-datatable/release/index.css";
-@import "~@swimlane/ngx-datatable/release/themes/material.css";
-@import "~@swimlane/ngx-datatable/release/assets/icons.css";
-
-/* Colour Theme */
-$lightest-green: #d1e7da;
-$light-green: #b5dac5;
-$base-green: #8fc9ab;
-$dark-green: #62ad8c;
-$darkest-green: #519b7a;
-$highlight-color: #e1d4c1;
-$background-color: lightgray;
-
 html,
 body {
   margin: 0;
   padding: 0;
 
   height: 100%;
-  background-color: $background-color;
+}
+
+.card-header-form {
+  display: flex;
+  padding-bottom: 0;
+  padding-right: 0;
+  padding-top: 0;
+
+  .btn {
+    margin-right: 0.25rem;
+    margin-top: -1rem;
+  }
+
+  .header {
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+  }
 }

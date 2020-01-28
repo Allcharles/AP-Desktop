@@ -3,41 +3,36 @@
   "directories": {
     "output": "release/"
   },
-    "files": [
-        "**/*",
-        "!**/*.ts",
-        "!*.code-workspace",
-        "!LICENSE.md",
-        "!package.json",
-        "!package-lock.json",
-        "!src/",
-        "!e2e/",
-        "!hooks/",
-        "!angular.json",
-        "!_config.yml",
-        "!karma.conf.js",
-        "!tsconfig.json",
-        "!tslint.json"
-    ],
+  "files": [
+    "**/*",
+    "!**/*.ts",
+    "!*.code-workspace",
+    "!LICENSE.md",
+    "!package.json",
+    "!package-lock.json",
+    "!src/",
+    "!e2e/",
+    "!hooks/",
+    "!angular.json",
+    "!_config.yml",
+    "!karma.conf.js",
+    "!tsconfig.json",
+    "!tslint.json"
+  ],
   "win": {
+    "artifactName": "${productName}.${ext}",
     "icon": "dist",
-    "target": [
-      "portable"
-    ]
+    "target": ["portable"]
   },
   "mac": {
+    "artifactName": "${productName}.${ext}",
     "icon": "dist",
-    "target": [
-      "dmg"
-    ]
+    "target": ["dmg"]
   },
   "linux": {
+    "artifactName": "${productName}.${ext}",
     "icon": "dist",
     "category": "Utility",
-    "target": [
-      "AppImage",
-      "deb",
-      "rpm"
-    ]
+    "target": ["AppImage", "deb", "rpm"]
   }
 }

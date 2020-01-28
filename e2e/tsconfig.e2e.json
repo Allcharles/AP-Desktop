@@ -3,11 +3,7 @@
   "compilerOptions": {
     "outDir": "../out-tsc/e2e",
     "module": "es2015",
-    "types": [
-      "mocha"
-    ]
+    "types": ["mocha"]
   },
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["**/*.ts"]
 }

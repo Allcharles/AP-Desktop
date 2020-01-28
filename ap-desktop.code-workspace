@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "typescript.preferences.quoteStyle": "double",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.tslint": true
+    },
+    "cSpell.words": [],
+    "cSpell.ignorePaths": [
+      "**/package-lock.json",
+      "**/node_modules/**",
+      "**/vscode-extension/**",
+      "**/.git/objects/**",
+      "**/.vscode/**",
+      "**/tslint.json",
+      "**/ap-desktop.code-workspace",
+      "**/tsconfig*.json",
+      "**/tsconfig.json"
+    ],
+    "angularKarmaTestExplorer.debugMode": true
+  },
+  "extensions": {
+    "recommendations": [
+      "cyrilletuzi.angular-schematics",
+      "ms-vscode.vscode-typescript-tslint-plugin"
+    ]
+  }
+}

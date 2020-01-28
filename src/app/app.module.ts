@@ -1,65 +1,42 @@
-import 'reflect-metadata';
-import '../polyfills';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-
-import { AppRoutingModule } from './app-routing.module';
-
-// NG Translate
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { ElectronService } from './providers/electron.service';
-
-import { WebviewDirective } from './directives/webview.directive';
-
-import { MaterialModule } from './modules/material.module';
-import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
-import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { AnalysisTypeComponent } from './components/analysis-type/analysis-type.component';
-import { AnalysisAudioComponent } from './components/analysis-audio/analysis-audio.component';
-import { AnalysisOutputComponent } from './components/analysis-output/analysis-output.component';
-import { AnalysisRunComponent } from './components/analysis-run/analysis-run.component';
-import { OutputComponent } from './components/output/output.component';
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { RouterModule } from "@angular/router";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import "reflect-metadata";
+import "../polyfills";
+import { AnalysisModule } from "./angular/components/analysis/analysis.module";
+import { SharedModule } from "./angular/components/shared/shared.module";
+import { AppComponent } from "./app.component";
+import { appRoutes } from "./app.routes";
+import { ElectronModule } from "./electron/electron.module";
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    WebviewDirective,
-    NavBarComponent,
-    AnalysisTypeComponent,
-    AnalysisAudioComponent,
-    AnalysisOutputComponent,
-    AnalysisRunComponent,
-    OutputComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MaterialModule,
+    ElectronModule,
+    RouterModule.forRoot(appRoutes),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    SharedModule,
+    AnalysisModule
   ],
-  providers: [ElectronService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

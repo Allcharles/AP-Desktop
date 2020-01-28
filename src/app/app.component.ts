@@ -1,27 +1,32 @@
-import { Component } from '@angular/core';
-import { ElectronService } from './providers/electron.service';
-import { TranslateService } from '@ngx-translate/core';
-import { AppConfig } from '../environments/environment';
+import { Component, OnInit } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"]
 })
-export class AppComponent {
-  constructor(
-    public electronService: ElectronService,
-    private translate: TranslateService
-  ) {
-    translate.setDefaultLang('en');
-    console.log('AppConfig', AppConfig);
+export class AppComponent implements OnInit {
+  constructor(private translate: TranslateService) {
+    this.translate.setDefaultLang("en");
+    // console.log("AppConfig", AppConfig);
 
-    if (electronService.isElectron()) {
-      console.log('Mode electron');
-      console.log('Electron ipcRenderer', electronService.ipcRenderer);
-      console.log('NodeJS childProcess', electronService.childProcess);
-    } else {
-      console.log('Mode web');
+    // if (electronService.isElectron) {
+    //   console.log(process.env);
+    //   console.log("Mode electron");
+    //   console.log("Electron ipcRenderer", electronService.ipcRenderer);
+    //   console.log("NodeJS childProcess", electronService.childProcess);
+    // } else {
+    //   console.log("Mode web");
+    // }
+  }
+
+  ngOnInit(): void {
+    // TODO Remove this once a solution is found to the ChildProcess bug
+    const started = sessionStorage.getItem("started");
+    if (!started) {
+      sessionStorage.setItem("started", "true");
+      window.location.reload();
     }
   }
 }

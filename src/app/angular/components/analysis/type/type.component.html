@@ -1,0 +1,44 @@
+<div class="container mt-3 mb-3">
+  <div class="card shadow">
+    <div class="card-header">
+      Analysis Types
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        <button
+          class="list-group-item list-group-item-action"
+          *ngFor="let analysisType of analysisOptions; let i = index"
+          [id]="i.toString()"
+          [ngClass]="{ selected: analysisType.isSelected }"
+          (click)="changeSelection(i)"
+        >
+          <div class="d-flex flex-row">
+            <p class="mb-0">{{ analysisType.analysis.label }}</p>
+            <p class="flex-fill text-right mb-0 subtext">
+              {{ analysisType.analysis.shortDescription }}
+            </p>
+          </div>
+          <p
+            class="description"
+            [ngClass]="{ 'd-none': !analysisType.isSelected }"
+          >
+            {{ analysisType.analysis.description }}
+          </p>
+        </button>
+      </ul>
+    </div>
+
+    <div class="d-flex justify-content-around pb-3">
+      <button class="btn btn-warning" (click)="backButton()">
+        Back
+      </button>
+      <button
+        class="btn btn-success"
+        [disabled]="!isValid"
+        (click)="nextButton()"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

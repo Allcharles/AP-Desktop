@@ -1,9 +1,8 @@
-import { expect, assert } from 'chai';
-import { SpectronClient } from 'spectron';
+import { expect } from "chai";
+import { SpectronClient } from "spectron";
+import commonSetup from "./common-setup";
 
-import commonSetup from './common-setup';
-
-describe('angular-electron App', function() {
+describe("ap-desktop App", function() {
   commonSetup.apply(this);
 
   let browser: any;
@@ -14,7 +13,7 @@ describe('angular-electron App', function() {
     browser = client as any;
   });
 
-  it('creates initial windows', async function() {
+  it("creates initial windows", async () => {
     const count = await client.getWindowCount();
     expect(count).to.equal(1);
   });
