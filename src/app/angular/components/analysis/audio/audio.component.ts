@@ -119,7 +119,7 @@ export class AudioComponent implements OnInit {
   private retrieveFiles(folders: string[]): void {
     this.fileSystem.searchDirectories(
       folders,
-      file => this.ap.isSupportedAudioFormat(file),
+      file => this.wizard.isSupportedAudioFormat(file),
       (err, files) => {
         if (err || !files || files.length === 0) {
           return;
