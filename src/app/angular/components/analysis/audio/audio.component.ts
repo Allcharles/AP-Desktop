@@ -1,7 +1,6 @@
 import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { APService } from "../../../../electron/services/AP/ap.service";
 import { FileSystemService } from "../../../../electron/services/file-system/file-system.service";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
@@ -19,7 +18,6 @@ export class AudioComponent implements OnInit {
   public isValid: boolean;
 
   constructor(
-    private ap: APService,
     private wizard: WizardService,
     private fileSystem: FileSystemService,
     private router: Router,
@@ -77,7 +75,9 @@ export class AudioComponent implements OnInit {
       .createFileDialog({
         title: "Select Audio Recording Files",
         properties: ["openFile", "multiSelections"],
-        filters: [{ name: "Audio", extensions: this.ap.supportedAudioFormats }]
+        filters: [
+          { name: "Audio", extensions: this.wizard.supportedAudioFormats }
+        ]
       })
       .then(response => {
         if (

@@ -2,7 +2,6 @@ import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
-import { APService } from "../../../../electron/services/AP/ap.service";
 import { FileSystemService } from "../../../../electron/services/file-system/file-system.service";
 
 @Component({
@@ -13,7 +12,6 @@ export class FolderComponent implements OnInit {
   public outputFolder: string;
 
   constructor(
-    private ap: APService,
     private wizard: WizardService,
     private fileSystem: FileSystemService,
     private router: Router,
@@ -60,7 +58,7 @@ export class FolderComponent implements OnInit {
    * Reset output folder to defaults
    */
   public resetFolder(): void {
-    this.setFolder(this.ap.defaultOutputFolder);
+    this.setFolder(this.wizard.defaultOutputFolder);
   }
 
   /**

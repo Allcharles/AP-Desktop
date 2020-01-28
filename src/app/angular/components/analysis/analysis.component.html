@@ -8,7 +8,7 @@
         <button
           *ngFor="let option of options; let i = index"
           class="list-group-item list-group-item-action"
-          [id]="i"
+          [id]="i.toString()"
           [ngClass]="{ selected: selected === i }"
           (click)="changeSelection(i)"
         >

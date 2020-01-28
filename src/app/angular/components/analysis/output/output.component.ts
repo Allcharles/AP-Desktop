@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { List } from "immutable";
 import { APAnalysis } from "../../../../electron/models/analysis";
 import { AnalysisItem } from "../../../../electron/models/analysisItem";
-import { APService } from "../../../../electron/services/AP/ap.service";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
 @Component({
@@ -19,6 +18,7 @@ export class OutputComponent implements OnInit {
   public currentAnalysis: AnalysisItem;
   public progressBarType: "success" | "danger";
   public running: boolean;
+  public pause: boolean;
 
   constructor(
     private wizard: WizardService,
@@ -53,9 +53,12 @@ export class OutputComponent implements OnInit {
     if (this.wizard.isPaused()) {
       this.wizard.unpauseAnalysis();
       this.runAnalysis();
+      this.pause = false;
+      this.running = true;
     } else {
       this.wizard.pauseAnalysis();
       this.running = false;
+      this.pause = true;
     }
   }
 

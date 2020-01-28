@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "app-config",
@@ -17,7 +17,7 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
             class="form-control"
             [id]="option.label"
             [type]="option.type"
-            [value]="option.value"
+            [value]="getValue(option)"
             [(ngModel)]="option.value"
           />
         </div>
@@ -34,21 +34,13 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
     </div>
   `
 })
-export class ConfigComponent implements OnInit, OnChanges {
+export class ConfigComponent {
   @Input() config: Config[];
 
   constructor() {}
 
-  ngOnInit(): void {}
-
-  ngOnChanges(): void {}
-
-  public getType(config: Config): string {
-    if (typeof config.value === "number") {
-      return "number";
-    } else {
-      return "text";
-    }
+  public getValue(config: Config): string {
+    return config.value.toString();
   }
 
   public getChildConfig(value: string | number | Config[]): Config[] {
