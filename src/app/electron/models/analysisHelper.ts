@@ -5,14 +5,25 @@
  */
 export interface AnalysisConfigFile {
   template: string;
-  changes?: {};
+  changes?: AnalysisConfigFileOption;
+}
+
+interface AnalysisConfigFileOption {
+  [key: string]: string | number | AnalysisConfigFileOption;
 }
 
 /**
  * AP analysis config
  */
-export interface AnalysisConfig {
-  [key: string]: string | number | AnalysisConfig;
+export type AnalysisConfig = Array<{
+  key: string;
+  value: string | number | AnalysisConfig;
+}>;
+
+export function isAnalysisConfig(
+  value: string | number | AnalysisConfig
+): value is AnalysisConfig {
+  return typeof value === "object";
 }
 
 /**

@@ -2,7 +2,10 @@ import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { APAnalysis } from "../../../../electron/models/analysis";
-import { AnalysisConfig } from "../../../../electron/models/analysisHelper";
+import {
+  AnalysisConfig,
+  isAnalysisConfig
+} from "../../../../electron/models/analysisHelper";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 import { Config } from "./config/config.component";
 
@@ -27,7 +30,7 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   public nextButton(): void {
-    this.analysis.config = this.generateConfigObject(this.config);
+    this.analysis.config = this.convertToAnalysisConfig(this.config);
     this.router.navigateByUrl("/analysis/confirm");
   }
 
@@ -36,21 +39,24 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   public reset(): void {
-    this.config = this.generateConfigArray(this.analysis.config);
+    this.config = this.convertToConfigOption(this.analysis.config);
   }
 
   /**
    * Convert config array to object
    * @param config Config Array
    */
-  private generateConfigObject(config: Config[]): AnalysisConfig {
-    const output: AnalysisConfig = {};
+  private convertToAnalysisConfig(config: Config[]): AnalysisConfig {
+    const output: AnalysisConfig = [];
 
     for (const option of config) {
       if (option.value instanceof Array) {
-        output[option.label] = this.generateConfigObject(option.value);
+        output.push({
+          key: option.label,
+          value: this.convertToAnalysisConfig(option.value)
+        });
       } else {
-        output[option.label] = option.value;
+        output.push({ key: option.label, value: option.value });
       }
     }
 
@@ -61,24 +67,22 @@ export class ConfigEditorComponent implements OnInit {
    * Convert config object to array
    * @param config Config Object
    */
-  private generateConfigArray(config: AnalysisConfig): Config[] {
+  private convertToConfigOption(config: AnalysisConfig): Config[] {
     const output: Config[] = [];
 
-    for (const key of Object.keys(config)) {
-      const option = config[key];
-
-      if (typeof option === "object") {
+    for (const option of config) {
+      if (isAnalysisConfig(option.value)) {
         output.push({
-          label: key,
+          label: option.key,
           hasChildren: true,
-          value: this.generateConfigArray(option)
+          value: this.convertToConfigOption(option.value)
         });
       } else {
         output.push({
-          label: key,
+          label: option.key,
           hasChildren: false,
-          type: typeof option === "number" ? "number" : "text",
-          value: option.toString()
+          type: typeof option.value === "number" ? "number" : "text",
+          value: option.value.toString()
         });
       }
     }
