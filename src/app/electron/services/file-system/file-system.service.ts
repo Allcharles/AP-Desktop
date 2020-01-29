@@ -10,6 +10,10 @@ import {
 import { basename, join, resolve } from "path";
 import { ElectronService } from "../electron/electron.service";
 
+/**
+ * File System Service
+ * Handles direct access to the file system
+ */
 @Injectable({
   providedIn: "root"
 })

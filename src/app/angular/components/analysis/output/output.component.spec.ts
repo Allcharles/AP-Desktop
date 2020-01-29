@@ -2,7 +2,10 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Subject } from "rxjs";
-import { AnalysisProgress } from "src/app/electron/services/AP/ap.service";
+import {
+  AnalysisProgress,
+  APService
+} from "src/app/electron/services/AP/ap.service";
 import { WizardService } from "src/app/electron/services/wizard/wizard.service";
 import { SharedModule } from "../../shared/shared.module";
 import { OutputComponent } from "./output.component";
@@ -11,6 +14,7 @@ describe("OutputComponent", () => {
   let component: OutputComponent;
   let fixture: ComponentFixture<OutputComponent>;
   let wizard: WizardService;
+  let ap: APService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -23,11 +27,12 @@ describe("OutputComponent", () => {
     fixture = TestBed.createComponent(OutputComponent);
     component = fixture.componentInstance;
     wizard = TestBed.get(WizardService);
+    ap = TestBed.get(APService);
   });
 
   it("should create", () => {
     spyOn(wizard, "getAnalyses").and.callFake(() => List([]).toArray());
-    spyOn(wizard, "analyseFiles").and.callFake(() => {
+    spyOn(ap, "analyseFiles").and.callFake(() => {
       const subject = new Subject<AnalysisProgress>();
 
       return subject;
@@ -39,7 +44,7 @@ describe("OutputComponent", () => {
 
   it("should have header", () => {
     spyOn(wizard, "getAnalyses").and.callFake(() => List([]).toArray());
-    spyOn(wizard, "analyseFiles").and.callFake(() => {
+    spyOn(ap, "analyseFiles").and.callFake(() => {
       const subject = new Subject<AnalysisProgress>();
 
       return subject;

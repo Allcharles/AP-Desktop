@@ -1,15 +1,17 @@
 import { Injectable } from "@angular/core";
 import { existsSync, mkdirSync } from "fs";
-import { List } from "immutable";
-import { extname, join } from "path";
+import { join } from "path";
 import { Subject } from "rxjs";
 import { APAnalysis } from "../../models/analysis";
 import { AnalysisItem } from "../../models/analysisItem";
-import { defaultAnalyses } from "../../models/defaultAnalyses";
 import APTerminal from "../../models/terminal";
 import { ElectronService } from "../electron/electron.service";
 import { FileSystemService } from "../file-system/file-system.service";
 
+/**
+ * AP Service
+ * Handles AP specific logic such as installing AP, and running the analyses.
+ */
 @Injectable({
   providedIn: "root"
 })
@@ -25,10 +27,6 @@ export class APService extends ElectronService {
 
   constructor(private fileSystem: FileSystemService) {
     super();
-
-    if (!this.isElectron) {
-      return;
-    }
 
     this.pause = false;
     this.cancel = false;
@@ -46,31 +44,6 @@ export class APService extends ElectronService {
         );
       }
     }, 0);
-  }
-
-  /**
-   * Returns list of supported analysis types
-   */
-  public getAnalysisTypes(): APAnalysis[] {
-    if (!this.isElectron) {
-      return [];
-    }
-
-    return List<APAnalysis>(defaultAnalyses).toArray();
-  }
-
-  /**
-   * Determine if file is supported audio format
-   * @param file Filename
-   */
-  public isSupportedAudioFormat(file: string): boolean {
-    if (!this.isElectron) {
-      return false;
-    }
-
-    return APAnalysis.supportedAudioFormats.some(ext => {
-      return extname(file) === `.${ext}`;
-    });
   }
 
   /**
@@ -106,10 +79,6 @@ export class APService extends ElectronService {
    * @param analyses Analysis item list
    */
   public analyseFiles(analyses: AnalysisItem[]): Subject<AnalysisProgress> {
-    if (!this.isElectron) {
-      return;
-    }
-
     this.pause = false;
     this.cancel = false;
 
