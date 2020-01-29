@@ -29,6 +29,7 @@ Supported Platforms:
 - [Node](https://nodejs.org/en/download/) 10.13 or later
 - NPM 6.9 or later
 - [Git](https://git-scm.com/download/win)
+- [Audio Analysis Prerequisites](https://github.com/QutEcoacoustics/audio-analysis/blob/master/docs/installing.md#prerequisites)
 
 #### Windows Requirements:
 
