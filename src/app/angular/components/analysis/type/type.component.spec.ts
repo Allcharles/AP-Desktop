@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { List } from "immutable";
+import { APAnalysis } from "src/app/electron/models/analysis";
+import { defaultAnalyses } from "src/app/electron/models/defaultAnalyses";
+import { WizardService } from "src/app/electron/services/wizard/wizard.service";
 import { SharedModule } from "../../shared/shared.module";
 import { TypeComponent } from "./type.component";
-import { RouterTestingModule } from "@angular/router/testing";
-import { WizardService } from "src/app/electron/services/wizard/wizard.service";
-import { defaultAnalyses } from "src/app/electron/models/defaultAnalyses";
 
 describe("TypeComponent", () => {
   let component: TypeComponent;
@@ -25,7 +27,9 @@ describe("TypeComponent", () => {
 
   it("should create", () => {
     spyOn(wizard, "getAnalysis").and.callFake(() => undefined);
-    spyOn(wizard, "getAnalysisTypes").and.callFake(() => defaultAnalyses);
+    spyOn(wizard, "getAnalysisTypes").and.callFake(() =>
+      List<APAnalysis>(defaultAnalyses).toArray()
+    );
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
@@ -34,9 +38,9 @@ describe("TypeComponent", () => {
     spyOn(wizard, "getAnalysis").and.callFake(() => {
       return undefined;
     });
-    spyOn(wizard, "getAnalysisTypes").and.callFake(() => {
-      return defaultAnalyses;
-    });
+    spyOn(wizard, "getAnalysisTypes").and.callFake(() =>
+      List<APAnalysis>(defaultAnalyses).toArray()
+    );
     fixture.detectChanges();
 
     const header = fixture.nativeElement.querySelector("div.card-header");

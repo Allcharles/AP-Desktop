@@ -1,8 +1,9 @@
 import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { WizardService } from "../../../../electron/services/wizard/wizard.service";
+import { APAnalysis } from "src/app/electron/models/analysis";
 import { FileSystemService } from "../../../../electron/services/file-system/file-system.service";
+import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
 @Component({
   selector: "app-analysis-folder",
@@ -10,6 +11,7 @@ import { FileSystemService } from "../../../../electron/services/file-system/fil
 })
 export class FolderComponent implements OnInit {
   public outputFolder: string;
+  private analysis: APAnalysis;
 
   constructor(
     private wizard: WizardService,
@@ -19,7 +21,8 @@ export class FolderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.outputFolder = this.wizard.getAnalysis().output;
+    this.analysis = this.wizard.getAnalysis();
+    this.outputFolder = this.analysis.outputFolder;
 
     if (this.outputFolder) {
       this.setFolder(this.outputFolder);
@@ -29,7 +32,7 @@ export class FolderComponent implements OnInit {
   }
 
   public nextButton(): void {
-    this.wizard.setOutputFolder(this.outputFolder);
+    this.analysis.outputFolder = this.outputFolder;
     this.router.navigateByUrl("/analysis/advanced");
   }
 
@@ -58,7 +61,7 @@ export class FolderComponent implements OnInit {
    * Reset output folder to defaults
    */
   public resetFolder(): void {
-    this.setFolder(this.wizard.defaultOutputFolder);
+    this.setFolder(APAnalysis.defaultOutputFolder);
   }
 
   /**

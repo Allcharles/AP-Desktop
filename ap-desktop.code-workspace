@@ -8,7 +8,8 @@
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "typescript.preferences.quoteStyle": "double",
     "editor.codeActionsOnSave": {
-      "source.fixAll.tslint": true
+      "source.fixAll.tslint": true,
+      "source.organizeImports": true
     },
     "cSpell.words": [],
     "cSpell.ignorePaths": [

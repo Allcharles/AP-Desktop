@@ -26,7 +26,7 @@ describe("OutputComponent", () => {
   });
 
   it("should create", () => {
-    spyOn(wizard, "getAnalyses").and.callFake(() => List([]));
+    spyOn(wizard, "getAnalyses").and.callFake(() => List([]).toArray());
     spyOn(wizard, "analyseFiles").and.callFake(() => {
       const subject = new Subject<AnalysisProgress>();
 
@@ -38,7 +38,7 @@ describe("OutputComponent", () => {
   });
 
   it("should have header", () => {
-    spyOn(wizard, "getAnalyses").and.callFake(() => List([]));
+    spyOn(wizard, "getAnalyses").and.callFake(() => List([]).toArray());
     spyOn(wizard, "analyseFiles").and.callFake(() => {
       const subject = new Subject<AnalysisProgress>();
 

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { OptionComponent } from "./option.component";
-import { SharedModule } from "../../../shared/shared.module";
 import { AnalysisOption } from "../../../../../electron/models/analysisHelper";
+import { SharedModule } from "../../../shared/shared.module";
+import { OptionComponent } from "./option.component";
 
 describe("OptionComponent", () => {
   let component: OptionComponent;

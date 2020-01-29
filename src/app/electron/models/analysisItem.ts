@@ -1,5 +1,5 @@
-import { basename } from "path";
 import { ChildProcess } from "child_process";
+import { basename } from "path";
 import APTerminal from "./terminal";
 
 /**
@@ -24,10 +24,16 @@ export class AnalysisItem {
     public readonly options: string[]
   ) {}
 
+  /**
+   * Get basename of audio file (eg. C:/folder/audiofile.wav => audiofile.wav)
+   */
   getAudioBasename(): string {
     return basename(this.audio);
   }
 
+  /**
+   * Create child process for analysis item
+   */
   spawn(): ChildProcess {
     const args: string[] = [];
     args.push(this.audio);

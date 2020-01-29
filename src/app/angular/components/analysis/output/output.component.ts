@@ -1,7 +1,6 @@
 import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { List } from "immutable";
 import { APAnalysis } from "../../../../electron/models/analysis";
 import { AnalysisItem } from "../../../../electron/models/analysisItem";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
@@ -63,7 +62,7 @@ export class OutputComponent implements OnInit {
   }
 
   private runAnalysis(): void {
-    const analyses: List<APAnalysis> = this.wizard.getAnalyses();
+    const analyses: APAnalysis[] = this.wizard.getAnalyses();
     const items: AnalysisItem[] = [];
     analyses.forEach(analysis => {
       items.push(...analysis.generateBatch());

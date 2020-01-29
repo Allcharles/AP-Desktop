@@ -1,6 +1,7 @@
 import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { APAnalysis } from "../../../../electron/models/analysis";
 import { AnalysisConfig } from "../../../../electron/models/analysisHelper";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 import { Config } from "./config/config.component";
@@ -12,6 +13,7 @@ import { Config } from "./config/config.component";
 })
 export class ConfigEditorComponent implements OnInit {
   public config: Config[];
+  private analysis: APAnalysis;
 
   constructor(
     private wizard: WizardService,
@@ -20,11 +22,12 @@ export class ConfigEditorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.analysis = this.wizard.getAnalysis();
     this.reset();
   }
 
   public nextButton(): void {
-    this.wizard.setConfig(this.generateConfigObject(this.config));
+    this.analysis.config = this.generateConfigObject(this.config);
     this.router.navigateByUrl("/analysis/confirm");
   }
 
@@ -33,8 +36,7 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   public reset(): void {
-    const analysisConfig = this.wizard.getConfig();
-    this.config = this.generateConfigArray(analysisConfig);
+    this.config = this.generateConfigArray(this.analysis.config);
   }
 
   /**

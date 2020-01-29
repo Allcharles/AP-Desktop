@@ -1,7 +1,6 @@
 import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { List } from "immutable";
 import { APAnalysis } from "../../../../electron/models/analysis";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
@@ -11,7 +10,7 @@ import { WizardService } from "../../../../electron/services/wizard/wizard.servi
   styleUrls: ["./confirmation.component.scss"]
 })
 export class ConfirmationComponent implements OnInit {
-  public analyses: List<APAnalysis>;
+  public analyses: APAnalysis[];
 
   constructor(
     private wizard: WizardService,
@@ -30,7 +29,7 @@ export class ConfirmationComponent implements OnInit {
   }
 
   public backButton(): void {
-    this.wizard.destroyAnalysis();
+    this.wizard.unSaveAnalysis();
     this.location.back();
   }
 

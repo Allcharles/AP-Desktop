@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
+import { List } from "immutable";
 import { APAnalysis } from "../../models/analysis";
-import { AnalysisOptions, AnalysisConfig } from "../../models/analysisHelper";
-import { List, fromJS } from "immutable";
 import { APService } from "../AP/ap.service";
 
 @Injectable({
@@ -19,7 +18,7 @@ export class WizardService extends APService {
   private currentAnalysis: APAnalysis;
 
   /**
-   * Returns the current analysis
+   * Returns the current analysis. Undefined if no analysis available
    */
   public getAnalysis(): APAnalysis {
     return this.currentAnalysis;
@@ -28,8 +27,8 @@ export class WizardService extends APService {
   /**
    * Returns the list of analyses
    */
-  public getAnalyses(): List<APAnalysis> {
-    return List(this.analyses);
+  public getAnalyses(): APAnalysis[] {
+    return List(this.analyses).toArray();
   }
 
   /**
@@ -45,13 +44,14 @@ export class WizardService extends APService {
    */
   public saveAnalysis(): void {
     this.analyses.push(this.currentAnalysis);
+    this.currentAnalysis = undefined;
   }
 
   /**
    * Remove latest analysis from list of analyses to run
    */
-  public destroyAnalysis(): void {
-    this.analyses.pop();
+  public unSaveAnalysis(): void {
+    this.currentAnalysis = this.analyses.pop();
   }
 
   /**
@@ -59,58 +59,6 @@ export class WizardService extends APService {
    */
   public destroyAnalyses(): void {
     this.analyses = [];
-  }
-
-  /**
-   * Retrieve the audio files for the current analysis
-   */
-  public getAudioFiles(): string[] {
-    return this.currentAnalysis.audioFiles.slice();
-  }
-
-  /**
-   * Set the audio files for the current analysis
-   * @param files Audio file paths
-   */
-  public setAudioFiles(files: string[]): void {
-    this.currentAnalysis.audioFiles = files;
-  }
-
-  /**
-   * Set the output folder for the current analysis
-   * @param folder Folder path
-   */
-  public setOutputFolder(folder: string): void {
-    this.currentAnalysis.output = folder;
-  }
-
-  /**
-   * Get current analysis options
-   */
-  public getOptions(): any {
-    return fromJS(this.currentAnalysis.options);
-  }
-
-  /**
-   * Set the analysis options for the current analysis
-   * @param options Analysis Options
-   */
-  public setOptions(options: AnalysisOptions): void {
-    this.currentAnalysis.options = options;
-  }
-
-  /**
-   * Get current analysis config
-   */
-  public getConfig(): AnalysisConfig {
-    return fromJS(this.currentAnalysis.config);
-  }
-
-  /**
-   * Set the analysis config settings for the current analysis
-   * @param config Analysis Config
-   */
-  public setConfig(config: AnalysisConfig): void {
-    this.currentAnalysis.config = config;
+    this.currentAnalysis = undefined;
   }
 }

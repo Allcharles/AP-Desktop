@@ -1,38 +1,19 @@
 import { Injectable } from "@angular/core";
-import { extname, join, basename } from "path";
+import { existsSync, mkdirSync } from "fs";
+import { List } from "immutable";
+import { extname, join } from "path";
+import { Subject } from "rxjs";
 import { APAnalysis } from "../../models/analysis";
 import { AnalysisItem } from "../../models/analysisItem";
 import { defaultAnalyses } from "../../models/defaultAnalyses";
-import { ElectronService } from "../electron/electron.service";
-import { Subject } from "rxjs";
 import APTerminal from "../../models/terminal";
-import {
-  existsSync,
-  mkdirSync,
-  lstatSync,
-  readdirSync,
-  copyFileSync
-} from "fs";
+import { ElectronService } from "../electron/electron.service";
+import { FileSystemService } from "../file-system/file-system.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class APService extends ElectronService {
-  /**
-   * Supported audio formats for input audio files
-   */
-  public readonly supportedAudioFormats = [
-    "wav",
-    "mp3",
-    "pcm",
-    "aiff",
-    "aac",
-    "ogg",
-    "wma",
-    "flac",
-    "alac",
-    "wma"
-  ];
   /**
    * Cancel analysis
    */
@@ -42,7 +23,7 @@ export class APService extends ElectronService {
    */
   private pause: boolean;
 
-  constructor() {
+  constructor(private fileSystem: FileSystemService) {
     super();
 
     if (!this.isElectron) {
@@ -56,26 +37,15 @@ export class APService extends ElectronService {
       //TODO Add a check for the version AP to determine if an update is required
 
       // Download AP to client computer
-      if (!existsSync(APTerminal.apFolder)) {
-        mkdirSync(APTerminal.apFolder);
+      if (!existsSync(APAnalysis.apFolder)) {
+        mkdirSync(APAnalysis.apFolder);
 
-        this.copyFolderRecursiveSync(
+        this.fileSystem.copyFolderRecursiveSync(
           join(this.remote.app.getAppPath(), "dist", "assets", "ap"),
-          APTerminal.apLocation
+          APAnalysis.apLocation
         );
       }
     }, 0);
-  }
-
-  /**
-   * Returns the default output folder
-   */
-  public get defaultOutputFolder(): string {
-    if (!this.isElectron) {
-      return "";
-    } else {
-      return join(this.remote.app.getPath("documents"), "AP Desktop");
-    }
   }
 
   /**
@@ -86,7 +56,7 @@ export class APService extends ElectronService {
       return [];
     }
 
-    return defaultAnalyses;
+    return List<APAnalysis>(defaultAnalyses).toArray();
   }
 
   /**
@@ -98,7 +68,7 @@ export class APService extends ElectronService {
       return false;
     }
 
-    return this.supportedAudioFormats.some(ext => {
+    return APAnalysis.supportedAudioFormats.some(ext => {
       return extname(file) === `.${ext}`;
     });
   }
@@ -282,44 +252,6 @@ export class APService extends ElectronService {
     }
 
     return (segNumber / segTotal) * 100;
-  }
-
-  /**
-   * Copy folder and its files recursively
-   * @param source Source folder path
-   * @param target Output folder path
-   */
-  private copyFolderRecursiveSync(source: string, target: string): void {
-    let files = [];
-
-    //check if folder needs to be created or integrated
-    const targetFolder = join(target, basename(source));
-    if (!existsSync(targetFolder)) {
-      mkdirSync(targetFolder);
-    }
-
-    //copy
-    if (lstatSync(source).isDirectory()) {
-      files = readdirSync(source);
-
-      for (const file of files) {
-        const curSource = join(source, file);
-        if (lstatSync(curSource).isDirectory()) {
-          this.copyFolderRecursiveSync(curSource, targetFolder);
-        } else {
-          let targetFile = targetFolder;
-
-          //if target is a directory a new file with the same name will be created
-          if (existsSync(targetFolder)) {
-            if (lstatSync(targetFolder).isDirectory()) {
-              targetFile = join(targetFolder, basename(curSource));
-            }
-          }
-
-          copyFileSync(curSource, targetFile);
-        }
-      }
-    }
   }
 }
 

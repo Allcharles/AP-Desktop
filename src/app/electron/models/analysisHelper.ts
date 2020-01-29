@@ -3,7 +3,7 @@
  * @param template File path after ConfigFiles directory
  * @param changes Changes to config file options (optional)
  */
-export interface AnalysisConfigDetails {
+export interface AnalysisConfigFile {
   template: string;
   changes?: {};
 }
@@ -44,7 +44,7 @@ export interface AnalysisOptions {
   [AnalysisOption.audioOffset]?: string;
   [AnalysisOption.alignToMinute]?: AnalysisAlignToMinute;
   [AnalysisOption.channels]?: string;
-  [AnalysisOption.mixDownToMono]?: AnalysisMixDownToMono;
+  [AnalysisOption.mixDownToMono]?: Enabled;
   [AnalysisOption.parallel]?: boolean;
   [AnalysisOption.copyLog]?: boolean;
   [AnalysisOption.copyConfig]?: boolean;
@@ -52,9 +52,10 @@ export interface AnalysisOptions {
 }
 
 /**
- * AP analysis mix down to mono option
+ * AP analysis enabled/disabled
+ * This is used for flags (eg. --flag=True)
  */
-export enum AnalysisMixDownToMono {
+export enum Enabled {
   False = "false",
   True = "true"
 }
