@@ -11,13 +11,12 @@ import {
   AnalysisProcessingType
 } from "./analysisHelper";
 import { AnalysisItem } from "./analysisItem";
+import APTerminal from "./terminal";
 
 /**
  * This class manages all the details required to perform a group of analyses using AP.
  */
 export class APAnalysis {
-  public static readonly apLocation = remote.app.getPath("home");
-  public static readonly apFolder = join(APAnalysis.apLocation, "ap");
   public static readonly defaultOutputFolder = join(
     remote.app.getPath("documents"),
     "AP Desktop"
@@ -35,7 +34,7 @@ export class APAnalysis {
     "wma"
   ];
   private static readonly apConfigDirectory = join(
-    APAnalysis.apFolder,
+    APTerminal.apFolder,
     "ConfigFiles"
   );
 

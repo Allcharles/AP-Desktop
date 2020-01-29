@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { APAnalysis } from "src/app/electron/models/analysis";
+import { APAnalysis } from "../../../../electron/models/analysis";
 import { FileSystemService } from "../../../../electron/services/file-system/file-system.service";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 

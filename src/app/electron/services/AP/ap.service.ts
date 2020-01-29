@@ -37,12 +37,12 @@ export class APService extends ElectronService {
       //TODO Add a check for the version AP to determine if an update is required
 
       // Download AP to client computer
-      if (!existsSync(APAnalysis.apFolder)) {
-        mkdirSync(APAnalysis.apFolder);
+      if (!existsSync(APTerminal.apFolder)) {
+        mkdirSync(APTerminal.apFolder);
 
         this.fileSystem.copyFolderRecursiveSync(
           join(this.remote.app.getAppPath(), "dist", "assets", "ap"),
-          APAnalysis.apLocation
+          APTerminal.apLocation
         );
       }
     }, 0);

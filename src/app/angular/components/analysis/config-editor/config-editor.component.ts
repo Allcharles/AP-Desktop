@@ -61,27 +61,27 @@ export class ConfigEditorComponent implements OnInit {
    * Convert config object to array
    * @param config Config Object
    */
-  private generateConfigArray(config: any): Config[] {
+  private generateConfigArray(config: AnalysisConfig): Config[] {
     const output: Config[] = [];
 
-    config.keySeq().forEach((key: string) => {
-      const option = config.get(key);
+    for (const key of Object.keys(config)) {
+      const option = config[key];
 
       if (typeof option === "object") {
         output.push({
           label: key,
           hasChildren: true,
-          value: this.generateConfigArray(option as AnalysisConfig)
+          value: this.generateConfigArray(option)
         });
       } else {
         output.push({
           label: key,
           hasChildren: false,
           type: typeof option === "number" ? "number" : "text",
-          value: option as string
+          value: option.toString()
         });
       }
-    });
+    }
 
     return output;
   }

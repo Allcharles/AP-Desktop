@@ -20,7 +20,7 @@ import { Option } from "./option/option.component";
 export class OptionsEditorComponent implements OnInit {
   public optionsList: Option[];
   private analysis: APAnalysis;
-  private options: any;
+  private options: AnalysisOptions;
   private changes = [
     { index: 0, key: AnalysisOption.temporaryDirectory },
     { index: 1, key: AnalysisOption.audioOffset },
@@ -168,8 +168,8 @@ export class OptionsEditorComponent implements OnInit {
     ];
 
     this.changes.map(change => {
-      if (this.options.get(change.key)) {
-        this.optionsList[change.index].value = this.options.get(change.key);
+      if (this.options[change.key]) {
+        this.optionsList[change.index].value = this.options[change.key];
       }
     });
   }

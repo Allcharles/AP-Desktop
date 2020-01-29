@@ -1,13 +1,15 @@
 import { ChildProcess, spawn } from "child_process";
+import { remote } from "electron";
 import { join } from "path";
-import { APAnalysis } from "./analysis";
 
 /**
  * Create AP specific terminal commands
  */
 export default class APTerminal {
+  public static readonly apLocation = remote.app.getPath("home");
+  public static readonly apFolder = join(APTerminal.apLocation, "ap");
   private static readonly AP = join(
-    APAnalysis.apFolder,
+    APTerminal.apFolder,
     "AnalysisPrograms.exe"
   );
 
