@@ -255,7 +255,9 @@ export class APAnalysis {
     for (const key of Object.keys(yml)) {
       const value = yml[key];
 
-      if (typeof value === "object") {
+      if (!value) {
+        continue;
+      } else if (typeof value === "object") {
         output.push({ key, value: this.convertYamlToAnalysisConfig(value) });
       } else {
         output.push({ key, value });
