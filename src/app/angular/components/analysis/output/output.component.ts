@@ -50,15 +50,12 @@ export class OutputComponent implements OnInit {
     this.ap.cancelAnalysis();
   }
 
-  public pauseAnalysis(): void {
+  public togglePause(): void {
     if (this.ap.isPaused()) {
       this.ap.unpauseAnalysis();
-      this.runAnalysis();
       this.pause = false;
-      this.running = true;
     } else {
       this.ap.pauseAnalysis();
-      this.running = false;
       this.pause = true;
     }
   }
@@ -73,6 +70,7 @@ export class OutputComponent implements OnInit {
     this.completeFiles = 0;
     this.currentProgress = 0;
     this.running = true;
+    this.pause = false;
 
     this.ap.analyseFiles(items).subscribe(
       update => {
@@ -90,10 +88,12 @@ export class OutputComponent implements OnInit {
         console.error("Analysis Error: ", err);
         this.progressBarType = "danger";
         this.running = false;
+        this.pause = false;
         this.ref.detectChanges();
       },
       () => {
         this.running = false;
+        this.pause = false;
         this.ref.detectChanges();
       }
     );
