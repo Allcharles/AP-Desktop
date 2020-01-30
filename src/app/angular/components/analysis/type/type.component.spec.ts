@@ -28,7 +28,19 @@ describe("TypeComponent", () => {
   it("should create", () => {
     spyOn(wizard, "getAnalysis").and.callFake(() => undefined);
     spyOn(wizard, "getAnalysisTypes").and.callFake(() =>
-      List<APAnalysis>(defaultAnalyses).toArray()
+      List<APAnalysis>(
+        defaultAnalyses.map(
+          analysis =>
+            new APAnalysis(
+              analysis.type,
+              analysis.label,
+              analysis.configFile,
+              analysis.shortDescription,
+              analysis.description,
+              analysis.options
+            )
+        )
+      ).toArray()
     );
     fixture.detectChanges();
     expect(component).toBeTruthy();
@@ -39,7 +51,19 @@ describe("TypeComponent", () => {
       return undefined;
     });
     spyOn(wizard, "getAnalysisTypes").and.callFake(() =>
-      List<APAnalysis>(defaultAnalyses).toArray()
+      List<APAnalysis>(
+        defaultAnalyses.map(
+          analysis =>
+            new APAnalysis(
+              analysis.type,
+              analysis.label,
+              analysis.configFile,
+              analysis.shortDescription,
+              analysis.description,
+              analysis.options
+            )
+        )
+      ).toArray()
     );
     fixture.detectChanges();
 

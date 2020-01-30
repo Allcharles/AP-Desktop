@@ -82,6 +82,18 @@ export class WizardService extends ElectronService {
    * Returns list of supported analysis types
    */
   public getAnalysisTypes(): APAnalysis[] {
-    return List<APAnalysis>(defaultAnalyses).toArray();
+    return List<APAnalysis>(
+      defaultAnalyses.map(
+        analysis =>
+          new APAnalysis(
+            analysis.type,
+            analysis.label,
+            analysis.configFile,
+            analysis.shortDescription,
+            analysis.description,
+            analysis.options
+          )
+      )
+    ).toArray();
   }
 }
