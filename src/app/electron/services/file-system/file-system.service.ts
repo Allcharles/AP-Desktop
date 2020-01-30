@@ -25,10 +25,6 @@ export class FileSystemService extends ElectronService {
   public async createFileDialog(
     windowSettings: OpenDialogOptions
   ): Promise<OpenDialogReturnValue> {
-    if (!this.isElectron) {
-      return;
-    }
-
     return this.remote.dialog.showOpenDialog(windowSettings);
   }
 
@@ -43,10 +39,6 @@ export class FileSystemService extends ElectronService {
     filter: (f: string) => boolean,
     done: (err: Error | null, results?: string[]) => void
   ): void {
-    if (!this.isElectron) {
-      return;
-    }
-
     let results: string[] = [];
     let pending = dirs.length;
 
@@ -76,12 +68,8 @@ export class FileSystemService extends ElectronService {
   public searchDirectoryRecursively(
     dir: string,
     filter: (f: string) => boolean,
-    done: (err: Error | null, results?: string[]) => void
+    done: (err?: Error, results?: string[]) => void
   ): void {
-    if (!this.isElectron) {
-      return;
-    }
-
     let results: string[] = [];
     this.fs.readdir(dir, (err: Error, list: string[]) => {
       if (err) {
@@ -93,9 +81,9 @@ export class FileSystemService extends ElectronService {
       }
       list.forEach((file: string) => {
         file = resolve(dir, file);
-        this.fs.stat(file, (err2, fileStats) => {
+        this.fs.stat(file, (_, fileStats) => {
           if (fileStats && fileStats.isDirectory()) {
-            this.searchDirectoryRecursively(file, filter, (err3, res) => {
+            this.searchDirectoryRecursively(file, filter, (_, res) => {
               if (res) {
                 results = results.concat(res);
               }
@@ -152,5 +140,23 @@ export class FileSystemService extends ElectronService {
         }
       }
     }
+  }
+
+  /**
+   * Locate a file inside a directory
+   * @param dir Directory to search
+   * @param match File to find(eg. Towsey.Acoustic.yml)
+   * @param done Output
+   */
+  public locateFile(
+    dir: string,
+    match: string,
+    done: (err?: Error, file?: string[]) => void
+  ): void {
+    this.searchDirectoryRecursively(
+      dir,
+      file => basename(file) === match,
+      done
+    );
   }
 }

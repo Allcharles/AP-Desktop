@@ -27,12 +27,11 @@ describe("AudioComponent", () => {
     analysis = new APAnalysis(
       AnalysisProcessingType.audio2csv,
       "Basic Analysis",
+      "Description",
       {
-        template: "Towsey.Acoustic.yml",
+        template: APAnalysis.apConfigDirectory + "/Towsey.Acoustic.yml",
         changes: {}
       },
-      "Short Description.",
-      "Description",
       {}
     );
   });

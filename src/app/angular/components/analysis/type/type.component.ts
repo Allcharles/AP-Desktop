@@ -1,6 +1,19 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from "@angular/core";
 import { Router } from "@angular/router";
+import {
+  ColumnMode,
+  DatatableComponent,
+  SelectionType
+} from "@swimlane/ngx-datatable";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { APAnalysis } from "../../../../electron/models/analysis";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
@@ -9,16 +22,26 @@ import { WizardService } from "../../../../electron/services/wizard/wizard.servi
   templateUrl: "./type.component.html",
   styleUrls: ["./type.component.scss"]
 })
-export class TypeComponent implements OnInit {
+export class TypeComponent implements OnInit, OnDestroy {
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+
+  public rows: { type: string; description: string; value: APAnalysis }[] = [];
+  public temp = [];
+  public selected = [];
+  public columns = [{ name: "Type" }, { name: "Description" }];
+  public ColumnMode = ColumnMode;
+  public SelectionType = SelectionType;
   public isValid: boolean;
   public analysisOptions: AnalysisOption[];
   private previousAnalysis: APAnalysis;
   private analysis: APAnalysis;
+  private unsubscribe = new Subject();
 
   constructor(
     private wizard: WizardService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -28,29 +51,57 @@ export class TypeComponent implements OnInit {
       this.analysis = this.wizard.getAnalysis();
     }
 
-    this.analysisOptions = this.wizard.getAnalysisTypes().map(analysisType => {
-      return {
-        analysis: analysisType,
-        isSelected: this.previousAnalysis
-          ? analysisType.label === this.previousAnalysis.label
-          : false
-      } as AnalysisOption;
-    });
+    this.wizard
+      .getAnalysisTypes()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(analysisTypes => {
+        this.rows = analysisTypes.map(analysisType => {
+          const row = {
+            type: analysisType.label,
+            description: analysisType.description,
+            value: analysisType
+          };
 
-    this.isValid = !!this.analysis;
+          // Select Basic Analysis by default
+          if (
+            (this.analysis && analysisType.label === this.analysis.label) ||
+            (!this.analysis && analysisType.label === "Basic Analysis")
+          ) {
+            this.analysis = analysisType;
+            this.selected = [row];
+          }
+
+          return row;
+        });
+        this.temp = [...this.rows];
+        this.isValid = !!this.analysis;
+        this.ref.detectChanges();
+      });
   }
 
-  /**
-   * Set the selected analysis type
-   * @param id ID of analysis option
-   */
-  public changeSelection(id: number): void {
-    this.analysis = this.analysisOptions[id].analysis;
-    this.analysisOptions.map((analysisOption, index) => {
-      analysisOption.isSelected = index === id;
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
+  public onSelect({ selected }): void {
+    this.analysis = selected[0].value;
+    this.isValid = true;
+    this.ref.detectChanges();
+  }
+
+  public updateFilter($event): void {
+    const val = $event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.temp.filter(function(d) {
+      return d.type.toLowerCase().indexOf(val) !== -1 || !val;
     });
 
-    this.isValid = !!this.analysis;
+    // update the rows
+    this.rows = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
   }
 
   public nextButton(): void {

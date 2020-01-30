@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { extname } from "path";
+import { Subject } from "rxjs";
 import { APAnalysis } from "../../models/analysis";
 import { defaultAnalyses } from "../../models/defaultAnalyses";
 import { ElectronService } from "../electron/electron.service";
+import { FileSystemService } from "../file-system/file-system.service";
 
 /**
  * Wizard Service
@@ -13,15 +15,12 @@ import { ElectronService } from "../electron/electron.service";
   providedIn: "root"
 })
 export class WizardService extends ElectronService {
-  /**
-   * List of analyses to run
-   */
   private analyses: APAnalysis[] = [];
-
-  /**
-   * Current analysis being constructed
-   */
   private currentAnalysis: APAnalysis;
+
+  constructor(private fileSystem: FileSystemService) {
+    super();
+  }
 
   /**
    * Returns the current analysis. Undefined if no analysis available
@@ -81,19 +80,61 @@ export class WizardService extends ElectronService {
   /**
    * Returns list of supported analysis types
    */
-  public getAnalysisTypes(): APAnalysis[] {
-    return List<APAnalysis>(
-      defaultAnalyses.map(
-        analysis =>
-          new APAnalysis(
-            analysis.type,
-            analysis.label,
-            analysis.configFile,
-            analysis.shortDescription,
-            analysis.description,
-            analysis.options
-          )
-      )
-    ).toArray();
+  public getAnalysisTypes(): Subject<APAnalysis[]> {
+    const subject = new Subject<APAnalysis[]>();
+    const analysisTypes: APAnalysis[] = [];
+    const numTemplates = defaultAnalyses.length;
+    let completedTypes = 0;
+
+    // For each analysis type
+    defaultAnalyses.forEach(analysisType => {
+      // Locate config file
+      this.fileSystem.locateFile(
+        APAnalysis.apConfigDirectory,
+        analysisType.configFile.template,
+        (err, files) => {
+          completedTypes++;
+
+          if (err || files.length === 0) {
+            // Skip if config file not found
+            console.error(
+              "Failed to find config file: " + analysisType.configFile.template
+            );
+            console.error(err);
+          } else {
+            // Add analysis to list
+            const template = files[0];
+            analysisTypes.push(
+              new APAnalysis(
+                analysisType.type,
+                analysisType.label,
+                analysisType.description,
+                {
+                  template,
+                  changes: analysisType.configFile.changes
+                },
+                analysisType.options
+              )
+            );
+          }
+
+          // If all analyses found, complete subscription
+          if (completedTypes === numTemplates) {
+            analysisTypes.sort((a, b) => {
+              if (a.label === b.label) {
+                return 0;
+              }
+
+              return a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1;
+            });
+
+            subject.next(analysisTypes);
+            subject.complete();
+          }
+        }
+      );
+    });
+
+    return subject;
   }
 }
