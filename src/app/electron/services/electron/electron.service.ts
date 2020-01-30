@@ -3,6 +3,10 @@ import * as childProcess from "child_process";
 import { ipcRenderer, remote, webFrame } from "electron";
 import * as fs from "fs";
 
+/**
+ * Electron Service
+ * Handles checking electron is enabled
+ */
 @Injectable({
   providedIn: "root"
 })

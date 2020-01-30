@@ -6,9 +6,12 @@ import { join } from "path";
  * Create AP specific terminal commands
  */
 export default class APTerminal {
-  public static apLocation = remote.app.getPath("home");
-  public static apFolder = join(APTerminal.apLocation, "ap");
-  private static AP = join(APTerminal.apFolder, "AnalysisPrograms.exe");
+  public static readonly apLocation = remote.app.getPath("home");
+  public static readonly apFolder = join(APTerminal.apLocation, "ap");
+  private static readonly AP = join(
+    APTerminal.apFolder,
+    "AnalysisPrograms.exe"
+  );
 
   /**
    * AP Error Codes

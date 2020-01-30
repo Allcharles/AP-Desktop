@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { SharedModule } from "../../shared/shared.module";
-import { ConfirmationComponent } from "./confirmation.component";
 import { RouterTestingModule } from "@angular/router/testing";
-import { WizardService } from "src/app/electron/services/wizard/wizard.service";
+import { List } from "immutable";
 import { APAnalysis } from "src/app/electron/models/analysis";
 import { AnalysisProcessingType } from "src/app/electron/models/analysisHelper";
-import { List } from "immutable";
+import { WizardService } from "src/app/electron/services/wizard/wizard.service";
+import { SharedModule } from "../../shared/shared.module";
+import { ConfirmationComponent } from "./confirmation.component";
 
 describe("ConfirmationComponent", () => {
   let component: ConfirmationComponent;
@@ -39,14 +39,14 @@ describe("ConfirmationComponent", () => {
   });
 
   it("should create", () => {
-    spyOn(wizard, "getAnalyses").and.callFake(() => List([analysis]));
+    spyOn(wizard, "getAnalyses").and.callFake(() => List([analysis]).toArray());
     fixture.detectChanges();
 
     expect(component).toBeTruthy();
   });
 
   it("should have header", () => {
-    spyOn(wizard, "getAnalyses").and.callFake(() => List([analysis]));
+    spyOn(wizard, "getAnalyses").and.callFake(() => List([analysis]).toArray());
     fixture.detectChanges();
 
     const header = fixture.nativeElement.querySelector("h1.display-4");

@@ -1,6 +1,7 @@
 import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { APAnalysis } from "../../../../electron/models/analysis";
 import { FileSystemService } from "../../../../electron/services/file-system/file-system.service";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
@@ -16,6 +17,7 @@ export class AudioComponent implements OnInit {
   public loading: boolean;
   public rows: { no: number; filename: string }[];
   public isValid: boolean;
+  private analysis: APAnalysis;
 
   constructor(
     private wizard: WizardService,
@@ -26,7 +28,8 @@ export class AudioComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.audioFiles = this.wizard.getAudioFiles();
+    this.analysis = this.wizard.getAnalysis();
+    this.audioFiles = this.analysis.audioFiles;
 
     if (this.audioFiles.length !== 0) {
       this.updateTable(this.audioFiles);
@@ -36,7 +39,7 @@ export class AudioComponent implements OnInit {
   }
 
   public nextButton(): void {
-    this.wizard.setAudioFiles(this.audioFiles);
+    this.analysis.audioFiles = this.audioFiles;
     this.router.navigateByUrl("/analysis/folder");
   }
 
@@ -76,7 +79,7 @@ export class AudioComponent implements OnInit {
         title: "Select Audio Recording Files",
         properties: ["openFile", "multiSelections"],
         filters: [
-          { name: "Audio", extensions: this.wizard.supportedAudioFormats }
+          { name: "Audio", extensions: APAnalysis.supportedAudioFormats }
         ]
       })
       .then(response => {
@@ -117,7 +120,7 @@ export class AudioComponent implements OnInit {
    * @param folders Folders to search
    */
   private retrieveFiles(folders: string[]): void {
-    this.fileSystem.searchDirectories(
+    this.fileSystem.searchDirectoriesRecursively(
       folders,
       file => this.wizard.isSupportedAudioFormat(file),
       (err, files) => {

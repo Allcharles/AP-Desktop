@@ -1,12 +1,13 @@
 import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { APAnalysis } from "../../../../electron/models/analysis";
 import {
   AnalysisAlignToMinute,
   AnalysisLogLevel,
-  AnalysisMixDownToMono,
   AnalysisOption,
-  AnalysisOptions
+  AnalysisOptions,
+  Enabled
 } from "../../../../electron/models/analysisHelper";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 import { Option } from "./option/option.component";
@@ -18,7 +19,8 @@ import { Option } from "./option/option.component";
 })
 export class OptionsEditorComponent implements OnInit {
   public optionsList: Option[];
-  private options: any;
+  private analysis: APAnalysis;
+  private options: AnalysisOptions;
   private changes = [
     { index: 0, key: AnalysisOption.temporaryDirectory },
     { index: 1, key: AnalysisOption.audioOffset },
@@ -38,6 +40,7 @@ export class OptionsEditorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.analysis = this.wizard.getAnalysis();
     this.reset();
   }
 
@@ -50,7 +53,7 @@ export class OptionsEditorComponent implements OnInit {
       }
     });
 
-    this.wizard.setOptions(newOptions);
+    this.analysis.options = newOptions;
     this.router.navigateByUrl("/analysis/config");
   }
 
@@ -59,7 +62,9 @@ export class OptionsEditorComponent implements OnInit {
   }
 
   public reset(): void {
-    this.options = this.wizard.getOptions();
+    this.options = this.analysis.options;
+
+    // TODO Extract this to APAnalysis and defaultAnalyses
     this.optionsList = [
       {
         id: AnalysisOption.temporaryDirectory,
@@ -109,11 +114,11 @@ export class OptionsEditorComponent implements OnInit {
         type: "select",
         options: [
           {
-            id: AnalysisMixDownToMono.True,
+            id: Enabled.True,
             label: "Enabled"
           },
           {
-            id: AnalysisMixDownToMono.False,
+            id: Enabled.False,
             label: "Disabled"
           }
         ]
@@ -163,8 +168,8 @@ export class OptionsEditorComponent implements OnInit {
     ];
 
     this.changes.map(change => {
-      if (this.options.get(change.key)) {
-        this.optionsList[change.index].value = this.options.get(change.key);
+      if (this.options[change.key]) {
+        this.optionsList[change.index].value = this.options[change.key];
       }
     });
   }

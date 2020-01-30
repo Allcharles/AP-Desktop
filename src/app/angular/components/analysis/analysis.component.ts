@@ -1,6 +1,6 @@
+import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Location } from "@angular/common";
 import { WizardService } from "../../../electron/services/wizard/wizard.service";
 
 @Component({
@@ -37,7 +37,7 @@ export class AnalysisComponent implements OnInit {
     ];
 
     this.isValid = false;
-    this.backEnabled = this.wizard.getAnalyses().count() > 0;
+    this.backEnabled = this.wizard.getAnalyses().length > 0;
   }
 
   public changeSelection(index: number): void {

@@ -1,13 +1,13 @@
+import { APAnalysis } from "./analysis";
 import {
-  AnalysisMixDownToMono,
+  AnalysisOption,
   AnalysisOptions,
   AnalysisProcessingType,
-  AnalysisOption
+  Enabled
 } from "./analysisHelper";
-import { APAnalysis } from "./analysis";
 
 export const DEFAULT_OPTIONS: AnalysisOptions = {
-  [AnalysisOption.mixDownToMono]: AnalysisMixDownToMono.True,
+  [AnalysisOption.mixDownToMono]: Enabled.True,
   [AnalysisOption.parallel]: true
 };
 

@@ -1,9 +1,9 @@
 import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { List } from "immutable";
 import { APAnalysis } from "../../../../electron/models/analysis";
 import { AnalysisItem } from "../../../../electron/models/analysisItem";
+import { APService } from "../../../../electron/services/AP/ap.service";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
 @Component({
@@ -21,6 +21,7 @@ export class OutputComponent implements OnInit {
   public pause: boolean;
 
   constructor(
+    private ap: APService,
     private wizard: WizardService,
     private router: Router,
     private location: Location,
@@ -46,24 +47,24 @@ export class OutputComponent implements OnInit {
   }
 
   public stopAnalysis(): void {
-    this.wizard.cancelAnalysis();
+    this.ap.cancelAnalysis();
   }
 
   public pauseAnalysis(): void {
-    if (this.wizard.isPaused()) {
-      this.wizard.unpauseAnalysis();
+    if (this.ap.isPaused()) {
+      this.ap.unpauseAnalysis();
       this.runAnalysis();
       this.pause = false;
       this.running = true;
     } else {
-      this.wizard.pauseAnalysis();
+      this.ap.pauseAnalysis();
       this.running = false;
       this.pause = true;
     }
   }
 
   private runAnalysis(): void {
-    const analyses: List<APAnalysis> = this.wizard.getAnalyses();
+    const analyses: APAnalysis[] = this.wizard.getAnalyses();
     const items: AnalysisItem[] = [];
     analyses.forEach(analysis => {
       items.push(...analysis.generateBatch());
@@ -73,7 +74,7 @@ export class OutputComponent implements OnInit {
     this.currentProgress = 0;
     this.running = true;
 
-    this.wizard.analyseFiles(items).subscribe(
+    this.ap.analyseFiles(items).subscribe(
       update => {
         if (update.error) {
           console.error("Analysis Error: ", update.errorDetails);
