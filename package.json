@@ -1,6 +1,6 @@
 {
   "name": "ap-desktop",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Graphical User Interface (GUI) for QUT EcoAcoustics Analysis Programs tool",
   "homepage": "https://github.com/QutEcoacoustics/ap-desktop",
   "author": {
@@ -40,7 +40,8 @@
     "test": "ng test",
     "e2e": "npm run build:prod && mocha --timeout 300000 --require ts-node/register e2e/**/*.spec.ts",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "release": "standard-version"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "8.2.0",
@@ -86,6 +87,7 @@
     "rxjs": "6.5.3",
     "rxjs-tslint-rules": "4.28.0",
     "spectron": "9.0.0",
+    "standard-version": "7.1.0",
     "ts-node": "8.3.0",
     "tslint": "5.20.1",
     "tslint-angular": "3.0.2",
