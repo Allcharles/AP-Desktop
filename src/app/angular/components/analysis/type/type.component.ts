@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import {
   ColumnMode,
@@ -17,7 +17,7 @@ import { WizardService } from "../../../../electron/services/wizard/wizard.servi
 export class TypeComponent implements OnInit {
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
 
-  public rows = [];
+  public rows: { type: string; description: string; value: APAnalysis }[] = [];
   public temp = [];
   public selected = [];
   public columns = [{ name: "Type" }, { name: "Description" }];
@@ -32,7 +32,8 @@ export class TypeComponent implements OnInit {
   constructor(
     private wizard: WizardService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -42,28 +43,37 @@ export class TypeComponent implements OnInit {
       this.analysis = this.wizard.getAnalysis();
     }
 
-    this.rows = this.wizard.getAnalysisTypes().map(analysisType => {
-      const row = {
-        type: analysisType.label,
-        description: analysisType.description,
-        value: analysisType
-      };
+    this.wizard.getAnalysisTypes().subscribe(analysisTypes => {
+      this.rows = analysisTypes.map(analysisType => {
+        const row = {
+          type: analysisType.label,
+          description: analysisType.description,
+          value: analysisType
+        };
 
-      // Select Basic Analysis by default
-      if (analysisType.label === "Basic Analysis") {
-        this.analysis = analysisType;
-        this.selected = [row];
-      }
+        // Select Basic Analysis by default
+        if (
+          (this.analysis && analysisType.label === this.analysis.label) ||
+          (!this.analysis && analysisType.label === "Basic Analysis")
+        ) {
+          this.analysis = analysisType;
+          this.selected = [row];
+        }
 
-      return row;
+        return row;
+      });
+      this.temp = [...this.rows];
+      this.isValid = !!this.analysis;
+      this.ref.detectChanges();
     });
-    this.temp = [...this.rows];
-    this.isValid = !!this.analysis;
   }
 
   public onSelect({ selected }): void {
+    console.log("Selected");
+
     this.analysis = selected[0].value;
     this.isValid = true;
+    this.ref.detectChanges();
   }
 
   public updateFilter($event): void {

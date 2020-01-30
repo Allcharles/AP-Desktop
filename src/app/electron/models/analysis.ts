@@ -34,7 +34,7 @@ export class APAnalysis {
     "alac",
     "wma"
   ];
-  private static readonly apConfigDirectory = join(
+  public static readonly apConfigDirectory = join(
     APTerminal.apFolder,
     "ConfigFiles"
   );
@@ -47,23 +47,23 @@ export class APAnalysis {
    * Manages analysis object to interface with the clients terminal
    * @param type Type of analysis
    * @param label Display label for analysis
-   * @param configFile Configuration for analysis
-   * @param shortDescription Short description of analysis
    * @param description Description of analysis
+   * @param configFile Configuration for analysis
    * @param options Advanced options for analysis
    */
   constructor(
     public readonly type: AnalysisProcessingType,
     public readonly label: string,
-    public readonly configFile: AnalysisConfigFile,
     public readonly description: string,
+    private readonly configFile: AnalysisConfigFile,
     private _options: AnalysisOptions
   ) {
-    // TODO Find the configFile path from ap/ConfigFiles. Eg. /RecognizerConfigFiles/Ecosounds.MultiRecognizer.yml
-    // This is required as the config file assumes the location is from the /ConfigFiles directory
-
     this._audioFiles = [];
     this._config = this.generateConfig();
+
+    if (!this._config) {
+      throw Error("Failed to create analysis.");
+    }
   }
 
   /**
@@ -103,8 +103,9 @@ export class APAnalysis {
 
   public generateBatch(): AnalysisItem[] {
     // Read config file
+    this._config = this._config ? this._config : this.generateConfig();
     if (!this._config) {
-      this._config = this.generateConfig();
+      return [];
     }
 
     // Generate inputs for analysis
@@ -134,12 +135,8 @@ export class APAnalysis {
    * Generate config from config file
    */
   private generateConfig(): AnalysisConfig {
-    const configFilePath = join(
-      APAnalysis.apConfigDirectory,
-      this.configFile.template
-    );
     try {
-      const file = readFileSync(configFilePath);
+      const file = readFileSync(this.configFile.template);
       const configObject = safeLoad(file.toString(), { schema: JSON_SCHEMA });
 
       // Apply changes
@@ -149,9 +146,9 @@ export class APAnalysis {
 
       return this.convertYamlToAnalysisConfig(configObject) as AnalysisConfig;
     } catch (err) {
-      console.error("Failed to read config file: " + configFilePath);
+      console.error("Failed to read config file: " + this.configFile.template);
       console.error(err);
-      throw Error(err);
+      return undefined;
     }
   }
 
@@ -208,9 +205,7 @@ export class APAnalysis {
       this.configFile.template,
       ".yml"
     )}.AP_DESKTOP_TEMP.${timestamp}.yml`;
-    const tempDirectory = dirname(
-      join(APAnalysis.apConfigDirectory, this.configFile.template)
-    );
+    const tempDirectory = dirname(this.configFile.template);
     const tempFilePath = join(tempDirectory, tempFilename);
 
     try {
