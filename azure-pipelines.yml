@@ -19,6 +19,8 @@ jobs:
         displayName: "Unit tests"
       - script: npm run e2e
         displayName: "End to end tests"
+      - script: npm run release
+        displayName: "Update version"
       - script: npm run electron:windows
         displayName: "Build project"
       - task: PublishBuildArtifacts@1
