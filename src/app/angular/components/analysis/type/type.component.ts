@@ -1,6 +1,11 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import {
+  ColumnMode,
+  DatatableComponent,
+  SelectionType
+} from "@swimlane/ngx-datatable";
 import { APAnalysis } from "../../../../electron/models/analysis";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
@@ -10,6 +15,15 @@ import { WizardService } from "../../../../electron/services/wizard/wizard.servi
   styleUrls: ["./type.component.scss"]
 })
 export class TypeComponent implements OnInit {
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+
+  public rows = [];
+  public temp = [];
+  public selected = [];
+  public columns = [{ name: "Type" }, { name: "Description" }];
+  public ColumnMode = ColumnMode;
+  public SelectionType = SelectionType;
+
   public isValid: boolean;
   public analysisOptions: AnalysisOption[];
   private previousAnalysis: APAnalysis;
@@ -28,29 +42,34 @@ export class TypeComponent implements OnInit {
       this.analysis = this.wizard.getAnalysis();
     }
 
-    this.analysisOptions = this.wizard.getAnalysisTypes().map(analysisType => {
+    this.rows = this.wizard.getAnalysisTypes().map(analysisType => {
       return {
-        analysis: analysisType,
-        isSelected: this.previousAnalysis
-          ? analysisType.label === this.previousAnalysis.label
-          : false
-      } as AnalysisOption;
+        type: analysisType.label,
+        description: analysisType.description,
+        value: analysisType
+      };
     });
-
+    this.temp = [...this.rows];
     this.isValid = !!this.analysis;
   }
 
-  /**
-   * Set the selected analysis type
-   * @param id ID of analysis option
-   */
-  public changeSelection(id: number): void {
-    this.analysis = this.analysisOptions[id].analysis;
-    this.analysisOptions.map((analysisOption, index) => {
-      analysisOption.isSelected = index === id;
+  public onSelect({ selected }): void {
+    this.analysis = selected[0].value;
+    this.isValid = true;
+  }
+
+  public updateFilter($event): void {
+    const val = $event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.temp.filter(function(d) {
+      return d.type.toLowerCase().indexOf(val) !== -1 || !val;
     });
 
-    this.isValid = !!this.analysis;
+    // update the rows
+    this.rows = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
   }
 
   public nextButton(): void {

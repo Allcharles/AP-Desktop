@@ -94,6 +94,8 @@ export class WizardService extends ElectronService {
             analysis.options
           )
       )
-    ).toArray();
+    )
+      .sortBy(analysis => analysis.label)
+      .toArray();
   }
 }
