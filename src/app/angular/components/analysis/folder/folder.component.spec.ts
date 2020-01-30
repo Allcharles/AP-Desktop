@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { SharedModule } from "../../shared/shared.module";
-import { FolderComponent } from "./folder.component";
 import { RouterTestingModule } from "@angular/router/testing";
-import { WizardService } from "src/app/electron/services/wizard/wizard.service";
 import { APAnalysis } from "src/app/electron/models/analysis";
 import { AnalysisProcessingType } from "src/app/electron/models/analysisHelper";
+import { WizardService } from "src/app/electron/services/wizard/wizard.service";
+import { SharedModule } from "../../shared/shared.module";
+import { FolderComponent } from "./folder.component";
 
 describe("FolderComponent", () => {
   let component: FolderComponent;
@@ -27,12 +27,11 @@ describe("FolderComponent", () => {
     analysis = new APAnalysis(
       AnalysisProcessingType.audio2csv,
       "Basic Analysis",
+      "Description",
       {
-        template: "Towsey.Acoustic.yml",
+        template: APAnalysis.apConfigDirectory + "/Towsey.Acoustic.yml",
         changes: {}
       },
-      "Short Description.",
-      "Description",
       {}
     );
   });

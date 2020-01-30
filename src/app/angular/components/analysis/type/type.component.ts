@@ -1,11 +1,19 @@
 import { Location } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from "@angular/core";
 import { Router } from "@angular/router";
 import {
   ColumnMode,
   DatatableComponent,
   SelectionType
 } from "@swimlane/ngx-datatable";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { APAnalysis } from "../../../../electron/models/analysis";
 import { WizardService } from "../../../../electron/services/wizard/wizard.service";
 
@@ -14,7 +22,7 @@ import { WizardService } from "../../../../electron/services/wizard/wizard.servi
   templateUrl: "./type.component.html",
   styleUrls: ["./type.component.scss"]
 })
-export class TypeComponent implements OnInit {
+export class TypeComponent implements OnInit, OnDestroy {
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
 
   public rows: { type: string; description: string; value: APAnalysis }[] = [];
@@ -23,11 +31,11 @@ export class TypeComponent implements OnInit {
   public columns = [{ name: "Type" }, { name: "Description" }];
   public ColumnMode = ColumnMode;
   public SelectionType = SelectionType;
-
   public isValid: boolean;
   public analysisOptions: AnalysisOption[];
   private previousAnalysis: APAnalysis;
   private analysis: APAnalysis;
+  private unsubscribe = new Subject();
 
   constructor(
     private wizard: WizardService,
@@ -43,34 +51,40 @@ export class TypeComponent implements OnInit {
       this.analysis = this.wizard.getAnalysis();
     }
 
-    this.wizard.getAnalysisTypes().subscribe(analysisTypes => {
-      this.rows = analysisTypes.map(analysisType => {
-        const row = {
-          type: analysisType.label,
-          description: analysisType.description,
-          value: analysisType
-        };
+    this.wizard
+      .getAnalysisTypes()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(analysisTypes => {
+        this.rows = analysisTypes.map(analysisType => {
+          const row = {
+            type: analysisType.label,
+            description: analysisType.description,
+            value: analysisType
+          };
 
-        // Select Basic Analysis by default
-        if (
-          (this.analysis && analysisType.label === this.analysis.label) ||
-          (!this.analysis && analysisType.label === "Basic Analysis")
-        ) {
-          this.analysis = analysisType;
-          this.selected = [row];
-        }
+          // Select Basic Analysis by default
+          if (
+            (this.analysis && analysisType.label === this.analysis.label) ||
+            (!this.analysis && analysisType.label === "Basic Analysis")
+          ) {
+            this.analysis = analysisType;
+            this.selected = [row];
+          }
 
-        return row;
+          return row;
+        });
+        this.temp = [...this.rows];
+        this.isValid = !!this.analysis;
+        this.ref.detectChanges();
       });
-      this.temp = [...this.rows];
-      this.isValid = !!this.analysis;
-      this.ref.detectChanges();
-    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   public onSelect({ selected }): void {
-    console.log("Selected");
-
     this.analysis = selected[0].value;
     this.isValid = true;
     this.ref.detectChanges();

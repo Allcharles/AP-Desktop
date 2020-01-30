@@ -152,7 +152,7 @@ export class FileSystemService extends ElectronService {
     dir: string,
     match: string,
     done: (err?: Error, file?: string[]) => void
-  ) {
+  ): void {
     this.searchDirectoryRecursively(
       dir,
       file => basename(file) === match,
