@@ -110,6 +110,7 @@ export class APService extends ElectronService {
     let paused = this.pause;
 
     if (this.analyses.length === 0 || this.cancel) {
+      this.analyses = [];
       APAnalysis.cleanupTemporaryFiles();
       this.subject.complete();
       return;
