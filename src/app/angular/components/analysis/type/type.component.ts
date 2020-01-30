@@ -43,11 +43,19 @@ export class TypeComponent implements OnInit {
     }
 
     this.rows = this.wizard.getAnalysisTypes().map(analysisType => {
-      return {
+      const row = {
         type: analysisType.label,
         description: analysisType.description,
         value: analysisType
       };
+
+      // Select Basic Analysis by default
+      if (analysisType.label === "Basic Analysis") {
+        this.analysis = analysisType;
+        this.selected = [row];
+      }
+
+      return row;
     });
     this.temp = [...this.rows];
     this.isValid = !!this.analysis;
