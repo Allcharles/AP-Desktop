@@ -35,7 +35,6 @@ describe("TypeComponent", () => {
               analysis.type,
               analysis.label,
               analysis.configFile,
-              analysis.shortDescription,
               analysis.description,
               analysis.options
             )
@@ -58,7 +57,6 @@ describe("TypeComponent", () => {
               analysis.type,
               analysis.label,
               analysis.configFile,
-              analysis.shortDescription,
               analysis.description,
               analysis.options
             )

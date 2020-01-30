@@ -89,7 +89,6 @@ export class WizardService extends ElectronService {
             analysis.type,
             analysis.label,
             analysis.configFile,
-            analysis.shortDescription,
             analysis.description,
             analysis.options
           )

@@ -56,7 +56,6 @@ export class APAnalysis {
     public readonly type: AnalysisProcessingType,
     public readonly label: string,
     public readonly configFile: AnalysisConfigFile,
-    public readonly shortDescription: string,
     public readonly description: string,
     private _options: AnalysisOptions
   ) {
