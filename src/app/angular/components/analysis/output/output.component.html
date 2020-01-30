@@ -71,15 +71,15 @@
     <div class="d-flex justify-content-around pb-3">
       <button
         class="btn btn-outline-danger"
-        [disabled]="completeFiles === totalFiles"
+        [disabled]="!running"
         (click)="stopAnalysis()"
       >
         Stop Analysis
       </button>
       <button
         class="btn btn-outline-warning"
-        [disabled]="completeFiles === totalFiles"
-        (click)="pauseAnalysis()"
+        [disabled]="!running"
+        (click)="togglePause()"
       >
         {{ pause ? "Unpause Analysis" : "Pause Analysis" }}
       </button>

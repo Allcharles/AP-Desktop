@@ -16,14 +16,12 @@ import { FileSystemService } from "../file-system/file-system.service";
   providedIn: "root"
 })
 export class APService extends ElectronService {
-  /**
-   * Cancel analysis
-   */
+  private inProgress: boolean;
   private cancel: boolean;
-  /**
-   * Pause analysis
-   */
   private pause: boolean;
+  private subject: Subject<AnalysisProgress>;
+  private analyses: AnalysisItem[];
+  private fileNumber: number;
 
   constructor(private fileSystem: FileSystemService) {
     super();
@@ -58,6 +56,12 @@ export class APService extends ElectronService {
    */
   public unpauseAnalysis(): void {
     this.pause = false;
+
+    if (!this.inProgress && this.analyses.length !== 0) {
+      console.log("unPausing inProgress: ", this.inProgress);
+
+      this.recursiveAnalysis();
+    }
   }
 
   /**
@@ -76,20 +80,24 @@ export class APService extends ElectronService {
 
   /**
    * Analysis all files. Sends updates back to program through subject.
-   * @param analyses Analysis item list
+   * @param analysisItems Analysis item list
    */
-  public analyseFiles(analyses: AnalysisItem[]): Subject<AnalysisProgress> {
+  public analyseFiles(
+    analysisItems: AnalysisItem[]
+  ): Subject<AnalysisProgress> {
     this.pause = false;
     this.cancel = false;
-
-    const subject = new Subject<AnalysisProgress>();
+    this.inProgress = false;
+    this.subject = new Subject<AnalysisProgress>();
+    this.analyses = analysisItems;
+    this.fileNumber = 0;
 
     // Run analysis in separate thread
     setTimeout(() => {
-      this.recursiveAnalysis(subject, analyses);
+      this.recursiveAnalysis();
     }, 0);
 
-    return subject;
+    return this.subject;
   }
 
   /**
@@ -98,34 +106,44 @@ export class APService extends ElectronService {
    * @param analyses Analysis item list
    * @param fileNumber Number of file to analyse
    */
-  private recursiveAnalysis(
-    subject: Subject<AnalysisProgress>,
-    analyses: AnalysisItem[],
-    fileNumber = 0
-  ): void {
-    let paused: boolean = this.pause;
+  private recursiveAnalysis(): void {
+    let paused = this.pause;
 
-    if (analyses.length === 0 || paused || this.cancel) {
+    if (this.analyses.length === 0 || this.cancel) {
+      this.analyses = [];
       APAnalysis.cleanupTemporaryFiles();
-      subject.complete();
+      this.subject.complete();
+      return;
+    }
+
+    // Don't run if paused
+    if (paused) {
       return;
     }
 
     // Loop over all analysis items
-    if (analyses.length > 0) {
-      const analysis = analyses.pop();
+    if (this.analyses.length > 0) {
+      this.inProgress = true;
+      console.log("inProgress: ", this.inProgress);
+      const analysis = this.analyses.pop();
       const terminal = analysis.spawn();
       let progress = 0;
 
-      subject.next({
+      this.subject.next({
         error: false,
         analysis,
         progress,
-        fileNumber
+        fileNumber: this.fileNumber
       });
 
       // Handle terminal output
       terminal.stdout.on("data", data => {
+        if (this.cancel) {
+          // Hard kill terminal
+          terminal.kill();
+          return;
+        }
+
         console.debug("Data: ", data.toString());
 
         paused = this.pause ? true : paused;
@@ -137,46 +155,50 @@ export class APService extends ElectronService {
           return;
         }
 
-        subject.next({
+        this.subject.next({
           error: false,
           analysis,
           progress,
-          fileNumber
+          fileNumber: this.fileNumber
         });
       });
 
       // Handle terminal error
       terminal.on("error", err => {
         console.debug("Error: ", err.toString());
-        fileNumber += 1;
+        this.fileNumber += 1;
+        this.inProgress = false;
+        console.log("inProgress: ", this.inProgress);
 
         paused = this.pause ? true : paused;
         progress = 100;
-        subject.next({
+        this.subject.next({
           error: true,
           errorDetails: err,
           analysis,
           progress,
-          fileNumber
+          fileNumber: this.fileNumber
         });
-        this.recursiveAnalysis(subject, analyses, fileNumber);
+        this.recursiveAnalysis();
       });
 
       // Handle terminal closing
       terminal.on("close", code => {
-        console.debug("Close: ", code.toString());
-        fileNumber += 1;
-
+        this.fileNumber += 1;
+        this.inProgress = false;
         paused = this.pause ? true : paused;
         progress = 100;
-        const error = code !== APTerminal.OK_CODE;
-        subject.next({
-          error,
+
+        console.debug("Code: ", code);
+
+        this.subject.next({
+          error: code ? code !== APTerminal.OK_CODE : false,
           analysis,
           progress,
-          fileNumber
+          fileNumber: this.fileNumber
         });
-        this.recursiveAnalysis(subject, analyses, fileNumber);
+
+        this.recursiveAnalysis();
       });
     }
   }
