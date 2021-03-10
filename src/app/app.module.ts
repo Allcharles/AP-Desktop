@@ -1,22 +1,13 @@
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
-import { RouterModule } from "@angular/router";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import "reflect-metadata";
-import "../polyfills";
-import { AnalysisModule } from "./angular/components/analysis/analysis.module";
-import { SharedModule } from "./angular/components/shared/shared.module";
+import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { appRoutes } from "./app.routes";
-import { ElectronModule } from "./electron/electron.module";
-
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
-}
+import { CoreModule } from "./core/core.module";
+import { DetailModule } from "./detail/detail.module";
+import { HomeModule } from "./home/home.module";
+import { SharedModule } from "./shared/shared.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,19 +15,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    ElectronModule,
-    RouterModule.forRoot(appRoutes),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
+    CoreModule,
     SharedModule,
-    AnalysisModule
+    HomeModule,
+    DetailModule,
+    AppRoutingModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

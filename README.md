@@ -90,7 +90,7 @@ npm run electron:windows
 npm run electron:linux
 ```
 
-### Max (Unsupported)
+### Mac (Unsupported)
 
 ```bash
 npm run electron:mac

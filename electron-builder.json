@@ -1,5 +1,5 @@
 {
-  "productName": "AP Desktop",
+  "productName": "ap-desktop",
   "directories": {
     "output": "release/"
   },
@@ -21,17 +21,17 @@
   ],
   "win": {
     "artifactName": "${productName}.${ext}",
-    "icon": "dist",
+    "icon": "dist/assets/icons",
     "target": ["portable"]
   },
   "mac": {
     "artifactName": "${productName}.${ext}",
-    "icon": "dist",
+    "icon": "dist/assets/icons",
     "target": ["dmg"]
   },
   "linux": {
     "artifactName": "${productName}.${ext}",
-    "icon": "dist",
+    "icon": "dist/assets/icons",
     "category": "Utility",
     "target": ["AppImage", "deb", "rpm"]
   }

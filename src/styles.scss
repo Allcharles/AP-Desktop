@@ -1,42 +1,48 @@
-$primary: #337ab7;
-$secondary: #6c757d;
-$success: #28a745;
-$danger: #dc3545;
-$warning: #ffc107;
-$info: #17a2b8;
-$light: #f8f9fa;
-$dark: #343a40;
-$white: #fff;
-$enable-responsive-font-sizes: true;
-$ngx-datatable-selected-active-background: lightgrey;
-$ngx-datatable-selected-active-background-hover: rgba(lightgrey, 0.5);
-
-@import "../node_modules/bootstrap/scss/bootstrap.scss";
-@import "~@swimlane/ngx-datatable/index.css";
-@import "~@swimlane/ngx-datatable/themes/material.scss";
-@import "~@swimlane/ngx-datatable/assets/icons.css";
-
-html,
-body {
+/* You can add global styles to this file, and also import other style files */
+html, body {
   margin: 0;
   padding: 0;
 
   height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.card-header-form {
+/* CAN (MUST) BE REMOVED ! Sample Global style */
+.container {
+  height: 100%;
   display: flex;
-  padding-bottom: 0;
-  padding-right: 0;
-  padding-top: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  .btn {
-    margin-right: 0.25rem;
-    margin-top: -1rem;
+  -webkit-background-size: cover; /* pour anciens Chrome et Safari */
+  background-size: cover; /* version standardisée */
+
+  .title {
+    color: white;
+    margin: 0;
+    padding: 50px 20px;
   }
 
-  .header {
-    padding-bottom: 0.5rem;
-    padding-top: 0.5rem;
+  a {
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #ed3330;
+    padding: 20px;
+    border-radius: 5px;
+    display: inline-block;
+    border: none;
+    transition: all 0.4s ease 0s;
+
+    &:hover {
+      background: #fff;
+      color: #ed3330 !important;
+      letter-spacing: 1px;
+      -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+      -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+      box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+      transition: all 0.4s ease 0s;
+    }
   }
 }

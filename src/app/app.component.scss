@@ -1,17 +1,3 @@
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+:host {
 
-.content {
-  flex: 1;
-
-  &:last-child {
-    min-height: 100%;
-  }
-}
-
-div.container {
-  min-height: 100%;
 }
